@@ -387,7 +387,7 @@
             <ol>
                 <li><strong>Answers immediately</strong> — no hold time, no business hours restriction</li>
                 <li><strong>Verifies Sarah's identity</strong> — policy number, last name, date of birth</li>
-                <li><strong>Collects the new vehicle details</strong> — year, make, model, VIN, primary use</li>
+                <li><strong>Collects the new vehicle details</strong> — year, make, model, primary use</li>
                 <li><strong>Confirms and processes the addition</strong> — adds the CR-V to her existing auto policy</li>
                 <li><strong>Asks how she'd like proof of insurance delivered:</strong>
                     <ul>
@@ -553,7 +553,6 @@ Your tone is warm but efficient — you understand that customers contacting you
    - Year of the vehicle
    - Make (manufacturer)
    - Model
-   - VIN (Vehicle Identification Number) — explain this is the 17-character code found on the dashboard or driver's side door jamb
    - Primary use (commute, pleasure, business)
 
 4. DELIVERY PREFERENCE: Ask how they'd like their updated proof of insurance delivered:
@@ -638,7 +637,6 @@ Any active Farmers Insurance auto policyholder can add a new or used vehicle to 
 
 ## Required Information
 To add a vehicle, the following information is needed:
-- Vehicle Identification Number (VIN) - 17 characters, alphanumeric
 - Year of manufacture
 - Make (manufacturer name)
 - Model
@@ -661,15 +659,7 @@ The policyholder will receive an updated declaration page within 3 business days
 ## Billing
 - Premium adjustments are pro-rated from the date of addition
 - Updated billing statement sent within 3 business days
-- No additional fees for adding a vehicle
-
-## VIN Location Guide
-The VIN can be found:
-- On the dashboard on the driver's side (visible through windshield)
-- On the driver's side door jamb (sticker on the door frame)
-- On the vehicle registration card
-- On the vehicle title document
-- On the dealer's purchase paperwork</code>
+- No additional fees for adding a vehicle</code>
             </div>
             <p>Click <strong>Save Article</strong>.</p>
 
@@ -705,7 +695,7 @@ The insurance ID card contains:
 - Policy number
 - Named insured(s)
 - Vehicle year, make, and model
-- VIN
+- Vehicle year, make, and model
 - Coverage effective dates
 - Policy expiration date
 - Farmers Insurance company name and contact information
@@ -846,7 +836,6 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                     <tr><td>vehicle_year</td><td>Integer</td><td>Yes</td><td>Year of manufacture</td></tr>
                     <tr><td>vehicle_make</td><td>String</td><td>Yes</td><td>Manufacturer (Honda, Toyota, etc.)</td></tr>
                     <tr><td>vehicle_model</td><td>String</td><td>Yes</td><td>Model (CR-V, Camry, etc.)</td></tr>
-                    <tr><td>vehicle_vin</td><td>String</td><td>Yes</td><td>17-character VIN</td></tr>
                     <tr><td>primary_use</td><td>String</td><td>Yes</td><td>commute, pleasure, or business</td></tr>
                 </tbody>
             </table>
@@ -859,7 +848,6 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                 <tbody>
                     <tr><td>policy_number</td><td>String</td><td>Yes</td><td>Policy to generate proof for</td></tr>
                     <tr><td>delivery_method</td><td>String</td><td>Yes</td><td>sms, email, or app</td></tr>
-                    <tr><td>vehicle_vin</td><td>String</td><td>Yes</td><td>VIN of newly added vehicle</td></tr>
                 </tbody>
             </table>
             <div class="info-box">
@@ -920,8 +908,8 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                     <tr><td>Hi, I just bought a new car and need to add it to my insurance right away</td><td>Agent greets warmly, acknowledges urgency, asks for verification</td></tr>
                     <tr><td>My policy number is FRM-2024-8847291, last name Martinez</td><td>Agent asks for date of birth to complete verification</td></tr>
                     <tr><td>March 15, 1985</td><td>Agent confirms identity, transitions to collecting vehicle info</td></tr>
-                    <tr><td>It's a 2024 Honda CR-V</td><td>Agent asks for VIN and primary use</td></tr>
-                    <tr><td>VIN is 1HGCV1F34RA012345, I'll use it for commuting</td><td>Agent asks for delivery preference</td></tr>
+                    <tr><td>It's a 2024 Honda CR-V</td><td>Agent asks for primary use</td></tr>
+                    <tr><td>I'll use it for commuting</td><td>Agent asks for delivery preference</td></tr>
                     <tr><td>Text it to me please</td><td>Agent reads back all info, asks for confirmation</td></tr>
                     <tr><td>Yes that's all correct</td><td>Agent processes, provides confirmation number, confirms SMS delivery</td></tr>
                 </tbody>
