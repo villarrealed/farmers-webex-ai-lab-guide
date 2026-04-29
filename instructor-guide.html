@@ -354,6 +354,7 @@
 
         <div class="nav-section">
             <div class="nav-section-title">Pre-Lab Setup</div>
+            <a href="#wxcc-sandbox" class="nav-item">WxCC Sandbox Setup</a>
             <a href="#setup-checklist" class="nav-item">Setup Checklist</a>
             <a href="#mcp-deployment" class="nav-item">MCP Server Deployment</a>
             <a href="#developer-portal" class="nav-item">Developer Portal Registration</a>
@@ -390,17 +391,164 @@
         <!-- PRE-LAB SETUP -->
         <!-- ============================================================ -->
 
+        <section id="wxcc-sandbox">
+            <h2>WxCC Sandbox Setup</h2>
+            <p>Before anything else, you need a Webex Contact Center sandbox environment configured for up to 10 lab participants. This section walks through provisioning the org, creating user accounts, and ensuring AI Agent Studio access for everyone.</p>
+
+            <h3>Option A: Request a New WxCC Trial Sandbox</h3>
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Provision a Contact Center Trial</div>
+            </div>
+            <p>Partners and SEs can provision a WxCC trial through Cisco Commerce Workspace (CCW) or via the partner self-service trial flow:</p>
+            <ol>
+                <li>Go to <a href="https://admin.webex.com" target="_blank">admin.webex.com</a> → Start a Trial (or use your partner CCW access)</li>
+                <li>Select <strong>Contact Center</strong> with the <strong>AI Agent add-on</strong> (Collaboration Flex 3.0)</li>
+                <li>Provision with at least <strong>10 Premium Agent licenses</strong></li>
+                <li>Wait for the provisioning email (typically 15–30 minutes)</li>
+            </ol>
+
+            <div class="info-box">
+                <strong>Why not the Developer Sandbox?</strong> The developer sandbox at developer.webex.com only provisions 2 agent users — not enough for a 10-person lab. Use a trial tenant or partner demo org instead.
+            </div>
+
+            <h3>Option B: Use an Existing Partner Demo Org</h3>
+            <p>If you already have a WxCC demo org (e.g., from a prior engagement or dCloud), you can reuse it — just ensure it has the AI Agent entitlement and enough user licenses. Skip to Step 2 below.</p>
+
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Create 10 Participant User Accounts</div>
+            </div>
+            <p>Each participant needs their own user account. You can add them manually or via CSV bulk upload.</p>
+
+            <h4>Manual Method (up to 25 users)</h4>
+            <ol>
+                <li>In Control Hub → <strong>Users</strong> → <strong>Manage Users</strong> → <strong>Manually Add Users</strong></li>
+                <li>Enter each participant's email address</li>
+                <li>Assign licenses:
+                    <ul>
+                        <li>✓ <strong>Webex Contact Center — Premium Agent</strong></li>
+                        <li>✓ <strong>Webex Connect</strong> (required for AI Agent Studio access)</li>
+                    </ul>
+                </li>
+                <li>Repeat for all 10 participants</li>
+            </ol>
+
+            <h4>CSV Bulk Upload (faster for 10+ users)</h4>
+            <ol>
+                <li>In Control Hub → <strong>Users</strong> → <strong>Manage Users</strong> → <strong>CSV Add or Modify Users</strong></li>
+                <li>Download the CSV template</li>
+                <li>Fill in participant emails and set these columns to <code>TRUE</code>:
+                    <ul>
+                        <li><code>Webex Contact Center Premium</code> = TRUE</li>
+                    </ul>
+                </li>
+                <li>Upload the completed CSV</li>
+            </ol>
+
+            <div class="info-box warning">
+                <strong>Important:</strong> If participants don't have existing Webex accounts, they'll receive activation emails. Allow time for them to activate <em>before</em> the lab — ideally send invitations 24 hours in advance.
+            </div>
+
+            <h4>Suggested Naming Convention</h4>
+            <p>If creating accounts specifically for the lab (not using participants' real emails):</p>
+            <div class="copy-block">
+                <button class="copy-btn">Copy</button>
+                <code>labuser01@&lt;your-sandbox-domain&gt;.wbx.ai
+labuser02@&lt;your-sandbox-domain&gt;.wbx.ai
+labuser03@&lt;your-sandbox-domain&gt;.wbx.ai
+...
+labuser10@&lt;your-sandbox-domain&gt;.wbx.ai</code>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Synchronize Users with Contact Center</div>
+            </div>
+            <ol>
+                <li>In Control Hub → <strong>Services</strong> → <strong>Contact Center</strong></li>
+                <li>Navigate to <strong>Tenant Settings</strong> → <strong>General</strong></li>
+                <li>Click <strong>Synchronize Users</strong></li>
+                <li>Wait for sync to complete (1–2 minutes)</li>
+            </ol>
+            <p>This step is critical — without it, users won't have Contact Center privileges even if licenses are assigned.</p>
+
+            <div class="step-indicator">
+                <div class="step-number">4</div>
+                <div class="step-title">Verify AI Agent Studio Access</div>
+            </div>
+            <ol>
+                <li>In Control Hub → <strong>Services</strong> → <strong>Contact Center</strong> → <strong>Customer Experience</strong> → <strong>AI Agent</strong></li>
+                <li>Confirm <strong>Webex AI Agent</strong> appears and is accessible</li>
+                <li>If not visible: confirm the AI Agent add-on is part of your subscription/trial. Contact Cisco Support if the entitlement is missing.</li>
+            </ol>
+
+            <div class="step-indicator">
+                <div class="step-number">5</div>
+                <div class="step-title">Verify Webex Connect Access</div>
+            </div>
+            <ol>
+                <li>In Control Hub → <strong>Services</strong> → <strong>Contact Center</strong> → <strong>Tenant Settings</strong> → <strong>Digital</strong></li>
+                <li>Click <strong>Webex Connect</strong> — confirm it opens</li>
+                <li>From Webex Connect → <strong>App Tray</strong> (left nav) → <strong>Webex AI Agent</strong></li>
+                <li>Confirm AI Agent Studio loads for your admin account</li>
+            </ol>
+
+            <div class="step-indicator">
+                <div class="step-number">6</div>
+                <div class="step-title">Test Participant Login</div>
+            </div>
+            <p>Before the lab, log in as one of the participant accounts to verify the full path works:</p>
+            <ol>
+                <li>Open an incognito/private browser window</li>
+                <li>Sign in to <a href="https://admin.webex.com" target="_blank">admin.webex.com</a> with a participant account (e.g., <code>labuser01</code>)</li>
+                <li>Navigate to Services → Contact Center → Tenant Settings → Digital → Webex Connect → App Tray → Webex AI Agent</li>
+                <li>Confirm the participant can:
+                    <ul>
+                        <li>✓ Access AI Agent Studio</li>
+                        <li>✓ Create a new agent</li>
+                        <li>✓ See MCP actions available (after Control Hub provisioning is complete)</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <div class="instructor-note">
+                Full administrators and Contact Center admins see everything by default. Participant accounts (Premium Agent role) may have restricted views. Test with an actual participant-level account to avoid surprises during the lab. If participants can't access AI Agent Studio, they likely need the Webex Connect entitlement added to their user profile.
+            </div>
+
+            <h3>Capacity Planning for 10 Participants</h3>
+            <table>
+                <thead>
+                    <tr><th>Resource</th><th>Per Participant</th><th>Total (10 users)</th><th>Notes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>WxCC Premium Agent License</td><td>1</td><td>10</td><td>Required for Contact Center access</td></tr>
+                    <tr><td>Webex Connect Seat</td><td>1</td><td>10</td><td>Required for AI Agent Studio access</td></tr>
+                    <tr><td>AI Agents Created</td><td>1–2</td><td>10–20</td><td>No hard limit per user; each builds their own</td></tr>
+                    <tr><td>Knowledge Bases</td><td>1</td><td>10</td><td>Each participant creates their own KB</td></tr>
+                    <tr><td>MCP Tool Connections</td><td>3</td><td>Shared</td><td>All participants connect to the same MCP server</td></tr>
+                </tbody>
+            </table>
+
+            <div class="info-box success">
+                <strong>Good news:</strong> The MCP server handles all 10 participants simultaneously — it's stateless and each request is independent. No resource contention issues.
+            </div>
+        </section>
+
         <section id="setup-checklist">
             <h2>Pre-Lab Setup Checklist</h2>
             <p>Complete all items below before participants arrive. Allow 30–45 minutes for first-time setup.</p>
 
             <ul class="checklist">
+                <li>Provision WxCC sandbox with 10 Premium Agent licenses + AI Agent add-on</li>
+                <li>Create 10 participant user accounts with Webex Connect entitlement</li>
+                <li>Synchronize users in Contact Center tenant settings</li>
+                <li>Test participant login path (incognito → AI Agent Studio access confirmed)</li>
                 <li>Deploy MCP server to Render.com — confirm <code>/health</code> returns OK</li>
                 <li>Register agentic app on developer.webex.com (name: <code>edvill_Farmers_Insurance_Tools</code>)</li>
                 <li>Provision app in Control Hub — authorize for your org</li>
                 <li>Verify all 3 tools appear in AI Agent Studio (Actions → +Add Action → MCP Server)</li>
                 <li>Create a test agent and run the full happy path to confirm end-to-end flow</li>
-                <li>Prepare lab environment — ensure participants have Webex Connect access with AI Agent Studio entitlement</li>
                 <li>Share participant guide link: <code>https://farmers-webex-ai-lab-guide.onrender.com/participant-guide.html</code></li>
                 <li>Test voice preview with your microphone (browser permissions required)</li>
             </ul>
