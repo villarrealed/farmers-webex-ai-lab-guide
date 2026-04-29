@@ -339,22 +339,122 @@
         <!-- OVERVIEW -->
         <section id="welcome">
             <h2>Welcome</h2>
-            <p><em>Content placeholder — Welcome section</em></p>
+            <p>Welcome to the Farmers Insurance Webex AI Agent Lab. In this hands-on session, you'll build an AI-powered virtual agent that helps policyholders add vehicles to their insurance policy — anytime, anywhere, without waiting for business hours.</p>
+            <p><strong>By the end of this lab, you will have:</strong></p>
+            <ul>
+                <li>Created an autonomous AI agent in Webex AI Agent Studio</li>
+                <li>Built a knowledge base with insurance policy information</li>
+                <li>Connected pre-configured fulfillment actions via MCP servers</li>
+                <li>Tested your agent using built-in voice and chat previews</li>
+            </ul>
+            <p><strong>Prerequisites:</strong></p>
+            <ul>
+                <li>Access to Webex AI Agent Studio (credentials provided by your instructor)</li>
+                <li>A modern web browser (Chrome recommended)</li>
+            </ul>
         </section>
 
         <section id="use-case">
             <h2>Use Case: "After-Hours Vehicle Addition"</h2>
-            <p><em>Content placeholder — Use case scenario</em></p>
+            <div class="info-box">
+                <strong>The Scenario:</strong> It's 9:47 PM on a Saturday night. Sarah Martinez just signed the paperwork on a 2024 Honda CR-V at a dealership. Her two kids are asleep in the back of her trade-in. The finance manager tells her: <em>"We need proof of insurance covering this specific vehicle before we can hand you the keys."</em><br><br>
+                Sarah calls Farmers Insurance and hears: <em>"Our offices are currently closed. Business hours are Monday through Friday, 8 AM to 6 PM..."</em><br><br>
+                The dealership closes in <strong>28 minutes</strong>.
+            </div>
+            <p><strong>If Sarah can't get proof of insurance tonight, she has to:</strong></p>
+            <ul>
+                <li>Leave the new car at the dealership</li>
+                <li>Come back Monday (taking time off work)</li>
+                <li>Hope the financing terms don't require renegotiation after the weekend</li>
+                <li>Deal with two disappointed kids who were promised a ride home in the new car</li>
+            </ul>
+            <p><strong>Why This Matters to Farmers Insurance:</strong></p>
+            <table>
+                <thead>
+                    <tr><th>Business Impact</th><th>Data Point</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Vehicle purchases outside business hours</td><td>47% occur evenings/weekends</td></tr>
+                    <tr><td>Customer satisfaction drop from delayed service</td><td>34% consider switching carriers</td></tr>
+                    <tr><td>Average policy cancellation cost</td><td>$1,200/year in lost premium</td></tr>
+                    <tr><td>Competitor digital adoption</td><td>Progressive, GEICO, USAA offer 24/7 self-service</td></tr>
+                </tbody>
+            </table>
+            <p>This isn't an edge case — it's <strong>nearly half of all vehicle purchases</strong>. Every one of these is a moment where Farmers either proves its value or pushes a policyholder toward a competitor.</p>
+
+            <h3>The Solution We'll Build Today</h3>
+            <p>An <strong>autonomous AI agent</strong> in Webex AI Agent Studio that:</p>
+            <ol>
+                <li><strong>Answers immediately</strong> — no hold time, no business hours restriction</li>
+                <li><strong>Verifies Sarah's identity</strong> — policy number, last name, date of birth</li>
+                <li><strong>Collects the new vehicle details</strong> — year, make, model, VIN, primary use</li>
+                <li><strong>Confirms and processes the addition</strong> — adds the CR-V to her existing auto policy</li>
+                <li><strong>Asks how she'd like proof of insurance delivered:</strong>
+                    <ul>
+                        <li><strong>SMS</strong> — a link texted to her phone (fastest for showing the dealership)</li>
+                        <li><strong>Email</strong> — full PDF insurance card sent to her email</li>
+                        <li><strong>Mobile App</strong> — push notification in the Farmers app</li>
+                    </ul>
+                </li>
+            </ol>
+            <p>Sarah's experience changes from a dead-end phone tree to a <strong>3-minute conversation</strong> that ends with her showing the finance manager proof of insurance on her phone and driving home.</p>
         </section>
 
         <section id="what-youll-build">
             <h2>What You'll Build</h2>
-            <p><em>Content placeholder — Module overview table</em></p>
+            <table>
+                <thead>
+                    <tr><th>Module</th><th>What You'll Do</th><th>Why It Matters</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1. Create AI Agent</td><td>Set up an autonomous agent with persona and goal</td><td>Defines HOW your agent thinks and communicates</td></tr>
+                    <tr><td>2. Knowledge Base</td><td>Add policy articles and FAQs</td><td>Gives your agent accurate, company-specific INFORMATION</td></tr>
+                    <tr><td>3. Actions</td><td>Connect MCP server actions for real transactions</td><td>Enables your agent to DO things — not just talk</td></tr>
+                    <tr><td>4. Test & Validate</td><td>Preview via chat and voice</td><td>Validates the experience before customers see it</td></tr>
+                    <tr><td>5. AI Assistant</td><td>Understand the human agent handoff</td><td>Completes the picture for escalation scenarios</td></tr>
+                </tbody>
+            </table>
         </section>
 
         <section id="architecture">
             <h2>Lab Architecture</h2>
-            <p><em>Content placeholder — Architecture diagram and key concepts</em></p>
+            <div class="info-box">
+                <strong>How the pieces fit together:</strong> The AI Agent is the brain — it manages the conversation. The Knowledge Base gives it facts. MCP Actions let it take real action. And when escalation is needed, AI Assistant ensures the human agent has full context.
+            </div>
+            <div class="diagram"><pre>Customer (Voice or Chat)
+       │
+       ▼
+┌─────────────────────────┐
+│   Webex AI Agent        │  ← You'll build this
+│   "Alex"                │
+└────────┬────────────────┘
+         │
+    ┌────┴─────┐
+    ▼          ▼
+┌────────┐  ┌──────────────┐
+│Knowledge│  │ MCP Actions  │
+│  Base   │  │(Pre-configured)│
+├─────────┤  ├──────────────┤
+│• Policy │  │• Verify      │
+│  FAQ    │  │  Identity    │
+│• Vehicle│  │• Add Vehicle │
+│  Addition│ │• Deliver     │
+│• Proof  │  │  Proof via:  │
+│  of Ins.│  │  SMS/Email/App│
+└─────────┘  └──────────────┘
+         │
+         ▼ (If escalation needed)
+┌─────────────────────────┐
+│   Human Agent           │
+│   + AI Assistant        │  ← Summaries, suggested responses
+└─────────────────────────┘</pre></div>
+            <p><strong>Key Concepts:</strong></p>
+            <ul>
+                <li><strong>Autonomous AI Agent</strong> — Uses large language models (LLMs) for natural, adaptive conversations. Understands varied phrasing without explicit programming for each variation.</li>
+                <li><strong>Knowledge Base</strong> — Curated documents the agent references for accurate, grounded answers specific to your company.</li>
+                <li><strong>MCP Server Actions</strong> — Pre-built integrations that let the agent take real action (verify identity, add vehicle, deliver documents) by calling backend systems.</li>
+                <li><strong>AI Assistant</strong> — A separate Cisco AI feature that helps human agents when interactions escalate — providing transfer summaries and suggested responses.</li>
+            </ul>
         </section>
 
         <!-- MODULE 1 -->
