@@ -902,17 +902,87 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
 
         <section id="chat-preview">
             <h3>Step 1: Test via Chat Preview</h3>
-            <p><em>Content placeholder — Chat test scenarios</em></p>
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Test via Chat Preview</div>
+            </div>
+            <ol>
+                <li>Click the <strong>Preview</strong> button (play icon) in the top-right corner</li>
+                <li>Ensure <strong>Chat</strong> mode is selected</li>
+                <li>Walk through Sarah's scenario using the messages below:</li>
+            </ol>
+            <p><strong>Happy Path Test:</strong></p>
+            <table>
+                <thead>
+                    <tr><th>You Type</th><th>What to Observe</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Hi, I just bought a new car and need to add it to my insurance right away</td><td>Agent greets warmly, acknowledges urgency, asks for verification</td></tr>
+                    <tr><td>My policy number is FRM-2024-8847291, last name Martinez</td><td>Agent asks for date of birth to complete verification</td></tr>
+                    <tr><td>March 15, 1985</td><td>Agent confirms identity, transitions to collecting vehicle info</td></tr>
+                    <tr><td>It's a 2024 Honda CR-V</td><td>Agent asks for VIN and primary use</td></tr>
+                    <tr><td>VIN is 1HGCV1F34RA012345, I'll use it for commuting</td><td>Agent asks for delivery preference</td></tr>
+                    <tr><td>Text it to me please</td><td>Agent reads back all info, asks for confirmation</td></tr>
+                    <tr><td>Yes that's all correct</td><td>Agent processes, provides confirmation number, confirms SMS delivery</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box success">
+                <strong>✓ What good looks like:</strong> Natural conversation flow, collects info without feeling like a form, confirms before processing, provides clear next steps including delivery confirmation.
+            </div>
         </section>
 
         <section id="voice-preview">
             <h3>Step 2: Test via Voice Preview</h3>
-            <p><em>Content placeholder — Voice test steps</em></p>
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Test via Voice Preview</div>
+            </div>
+            <ol>
+                <li>Switch to <strong>Voice</strong> mode in the preview panel</li>
+                <li>Click the microphone icon</li>
+                <li>Say: <em>"I just purchased a new vehicle and I need to add it to my insurance policy"</em></li>
+                <li>Listen to the response — note the tone, pacing, and clarity</li>
+            </ol>
+            <div class="info-box warning">
+                <strong>Voice consideration:</strong> Responses that read well in chat can sound overwhelming when spoken aloud. If responses feel too long in voice, add a note to your Instructions: "For voice interactions, keep responses concise — no more than 2-3 sentences before pausing for the customer's reply."
+            </div>
         </section>
 
         <section id="iterate">
             <h3>Step 3: Test Edge Cases and Iterate</h3>
-            <p><em>Content placeholder — Edge cases and iteration guide</em></p>
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Test Edge Cases and Iterate</div>
+            </div>
+            <p><strong>Edge Case Test — Failed Verification:</strong></p>
+            <table>
+                <thead>
+                    <tr><th>You Type</th><th>What to Observe</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>I need to add a car to my policy</td><td>Agent asks for verification</td></tr>
+                    <tr><td>I don't remember my policy number, try 555-000-1234</td><td>Agent attempts with phone number</td></tr>
+                    <tr><td>Last name is Johnson, DOB January 1, 1990</td><td>Verification fails — agent offers one more attempt</td></tr>
+                    <tr><td>I really can't remember the right info</td><td>After 2 failures, agent offers transfer to human agent</td></tr>
+                </tbody>
+            </table>
+
+            <p><strong>Iteration Guide — What to fix when something sounds wrong:</strong></p>
+            <table>
+                <thead>
+                    <tr><th>Issue You Notice</th><th>Where to Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Agent doesn't acknowledge urgency</td><td>Instructions → add urgency awareness to greeting step</td></tr>
+                    <tr><td>Agent asks for info already provided</td><td>Instructions → add "track what the customer already told you"</td></tr>
+                    <tr><td>Wrong info about policy process</td><td>Knowledge Base → update the relevant article</td></tr>
+                    <tr><td>Agent triggers action before confirming</td><td>Instructions → strengthen "always confirm before processing"</td></tr>
+                    <tr><td>Voice responses too long</td><td>Instructions → add voice-specific brevity note</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>The iterate loop is how production agents are built.</strong> No agent is perfect on the first try. Real teams test dozens of scenarios, refine instructions, expand knowledge, and retest — continuously improving the experience based on real conversation patterns.
+            </div>
         </section>
 
         <!-- MODULE 5 -->
