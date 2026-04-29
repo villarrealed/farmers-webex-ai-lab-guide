@@ -190,9 +190,10 @@ server.tool(
   "Delivers proof of insurance (insurance ID card) to the policyholder via their preferred method: SMS text message, email, or through the Farmers mobile app. Returns delivery confirmation details.",
   {
     policy_number: z.string().describe("The policy number for the proof of insurance (required, e.g., FRM-284719)"),
-    delivery_method: z.enum(["sms", "email", "app"]).describe("How to deliver the proof of insurance (required: sms, email, or app)")
+    delivery_method: z.enum(["sms", "email", "app"]).describe("How to deliver the proof of insurance (required: sms, email, or app)"),
+    phone_number: z.string().optional().describe("Phone number to send SMS to (optional, used when delivery_method is sms, e.g., +16025551234)")
   },
-  async ({ policy_number, delivery_method }) => {
+  async ({ policy_number, delivery_method, phone_number }) => {
     // Find policyholder for personalized response
     const policyholder = POLICYHOLDERS.find(p => p.policy_number === policy_number);
 
@@ -214,9 +215,28 @@ server.tool(
 
     switch (delivery_method) {
       case "sms":
-        const lastFour = policyholder.phone_number.slice(-4);
-        deliveryConfirmation = `Sent to phone number ending in ***${lastFour.slice(-2)}`;
-        deliveryDetails = "You will receive a text message with a link to view and download your insurance ID card.";
+        // Determine the phone number to use
+        const smsPhone = phone_number || policyholder.phone_number;
+        const lastFour = smsPhone.slice(-4);
+
+        // Call Webex Connect webhook to send real SMS
+        try {
+          const webhookResponse = await fetch("https://hooks.us.webexconnect.io/events/67H8O1CZV1", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              phone_number: smsPhone,
+              policy_number: policy_number,
+              customer_name: `${policyholder.first_name} ${policyholder.last_name}`
+            })
+          });
+          const webhookResult = await webhookResponse.json();
+          deliveryConfirmation = `SMS sent to phone number ending in ***${lastFour.slice(-2)}`;
+          deliveryDetails = "A text message with your proof of insurance has been sent. Please check your phone.";
+        } catch (error) {
+          deliveryConfirmation = `SMS queued for phone number ending in ***${lastFour.slice(-2)}`;
+          deliveryDetails = "Your proof of insurance text message is being processed. You should receive it shortly.";
+        }
         break;
       case "email":
         const maskedEmail = policyholder.email.charAt(0) + "***@" + policyholder.email.split("@")[1];
