@@ -468,17 +468,118 @@
 
         <section id="access-studio">
             <h3>Step 1: Access Webex AI Agent Studio</h3>
-            <p><em>Content placeholder — Access steps</em></p>
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Access Webex AI Agent Studio</div>
+            </div>
+            <ol>
+                <li>Open your browser and navigate to <strong>Control Hub</strong>: <code>https://admin.webex.com</code></li>
+                <li>Sign in with the credentials provided by your instructor</li>
+                <li>In the left navigation, click <strong>Services</strong> → <strong>Contact Center</strong></li>
+                <li>Under <strong>Quick Links</strong>, find <strong>Contact Center Suite</strong></li>
+                <li>Click <strong>Webex AI Agent Studio</strong> — it opens in a new tab</li>
+            </ol>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> You should see the AI Agent Studio home page with a dashboard and a "+ Create Agent" button.
+            </div>
+            <div class="info-box warning">
+                <strong>Alternative access:</strong> If your environment uses Webex Connect, access AI Agent Studio from the App Tray menu in the left navigation pane.
+            </div>
         </section>
 
         <section id="configure-profile">
             <h3>Step 2: Create and Configure Your Agent</h3>
-            <p><em>Content placeholder — Agent creation steps</em></p>
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Create and Configure Your Agent</div>
+            </div>
+            <ol>
+                <li>Click <strong>"+ Create Agent"</strong> (upper right)</li>
+                <li>Select <strong>"Autonomous"</strong> as the agent type</li>
+            </ol>
+            <div class="info-box">
+                <strong>Why Autonomous?</strong> Sarah might say "I just bought a car" or "I need to add a vehicle" or "Can you update my insurance?" — an autonomous agent powered by an LLM understands all these variations without programming each one. Scripted agents are better for highly structured flows where exact repeatability is critical.
+            </div>
+            <p>Fill in the following fields:</p>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Agent Name</td><td>Farmers Vehicle Addition Agent</td></tr>
+                    <tr><td>Description</td><td>Helps policyholders add new vehicles to their existing auto insurance policy 24/7</td></tr>
+                    <tr><td>AI Engine</td><td>(Select the default — your instructor will confirm)</td></tr>
+                </tbody>
+            </table>
+            <ol start="3">
+                <li>Click <strong>Create</strong></li>
+            </ol>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> You're now on the agent configuration page with tabs for Profile, Knowledge, Actions, and Settings.
+            </div>
         </section>
 
         <section id="agent-instructions">
             <h3>Step 3: Write Agent Instructions</h3>
-            <p><em>Content placeholder — Instructions with copy blocks</em></p>
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Write Agent Instructions</div>
+            </div>
+            <p>Navigate to the <strong>Profile</strong> tab. In the <strong>System Persona</strong> field, paste the following:</p>
+            <div class="copy-block">
+                <button class="copy-btn">📋 Copy</button>
+                <code>You are a friendly, professional insurance assistant for Farmers Insurance. Your name is Alex. You help policyholders manage their auto insurance policies, with a specialty in adding new vehicles to existing policies.
+
+Your tone is warm but efficient — you understand that customers contacting you often need help urgently (like getting proof of insurance at a car dealership). Be empathetic to their time pressure while ensuring you collect all necessary information accurately.</code>
+            </div>
+            <p>In the <strong>Agent Goal</strong> field, paste:</p>
+            <div class="copy-block">
+                <button class="copy-btn">📋 Copy</button>
+                <code>Help Farmers Insurance policyholders add new vehicles to their existing auto insurance policies. Verify the customer's identity, collect vehicle information, process the addition, and deliver updated proof of insurance via the customer's preferred method (SMS, email, or mobile app).</code>
+            </div>
+            <p>Now expand the <strong>Instructions</strong> section and paste:</p>
+            <div class="copy-block">
+                <button class="copy-btn">📋 Copy</button>
+                <code>## Conversation Flow
+
+1. GREETING: Warmly greet the customer and ask how you can help today.
+
+2. IDENTITY VERIFICATION: Before making any policy changes, verify the customer's identity by asking for:
+   - Their policy number OR the phone number on file
+   - Last name on the policy
+   - Date of birth of the primary policyholder
+
+3. COLLECT VEHICLE INFORMATION: Once verified, collect:
+   - Year of the vehicle
+   - Make (manufacturer)
+   - Model
+   - VIN (Vehicle Identification Number) — explain this is the 17-character code found on the dashboard or driver's side door jamb
+   - Primary use (commute, pleasure, business)
+
+4. DELIVERY PREFERENCE: Ask how they'd like their updated proof of insurance delivered:
+   - SMS (text message to phone on file)
+   - Email (PDF to email on file)
+   - Mobile App (push notification in Farmers app)
+
+5. CONFIRM AND PROCESS: Read back all collected information and ask for confirmation before processing.
+
+6. COMPLETION: After processing, inform the customer that:
+   - The vehicle has been added to their policy
+   - Proof of insurance is being delivered via their chosen method
+   - Provide a confirmation number
+   - Ask if there's anything else you can help with
+
+## Guardrails
+- Never provide specific premium amounts — inform the customer they will receive an updated billing statement
+- If the customer asks about coverage types or limits, provide general information from the knowledge base but recommend speaking with their agent for personalized advice
+- If you cannot verify the customer's identity after 2 attempts, offer to transfer to the next available agent
+- Always confirm information before processing any changes
+- Do not proceed with any policy changes until identity is verified</code>
+            </div>
+            <p>Click <strong>Save Changes</strong>.</p>
+            <div class="info-box">
+                <strong>Why such detailed instructions?</strong> These instructions are sent to the LLM with every conversation turn. They directly control the agent's behavior — when to ask for info, when to refuse, when to escalate. Without them, the agent "wings it" and may share inappropriate information or skip verification steps. Think of instructions as the agent's training manual that it reads before every single response.
+            </div>
         </section>
 
         <!-- MODULE 2 -->
