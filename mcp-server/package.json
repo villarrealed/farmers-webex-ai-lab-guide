@@ -1,0 +1,17 @@
+{
+  "name": "farmers-insurance-mcp-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCP server for Farmers Insurance Webex AI Agent Lab - provides identity verification, vehicle addition, and proof of insurance delivery tools",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "express": "^4.21.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
