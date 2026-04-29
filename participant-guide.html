@@ -799,17 +799,96 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
 
         <section id="connect-actions">
             <h3>Step 1: Connect Pre-Configured MCP Server Actions</h3>
-            <p><em>Content placeholder — MCP connection steps</em></p>
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Connect Pre-Configured MCP Server Actions</div>
+            </div>
+            <p>Your lab environment has three MCP server actions already provisioned. You'll connect them to your agent.</p>
+            <ol>
+                <li>In your agent configuration, navigate to the <strong>Actions</strong> tab</li>
+                <li>Click <strong>"+ Add Action"</strong></li>
+                <li>Select <strong>"MCP Server"</strong> as the action source</li>
+                <li>You should see the three pre-configured actions listed — select all three and click <strong>Connect</strong></li>
+            </ol>
+            <div class="info-box">
+                <strong>What are MCP Servers?</strong> Model Context Protocol (MCP) servers are standardized integrations that let your AI agent call external systems. Think of them as pre-built "skills" — someone has already built the connection to Farmers' backend systems (policy database, SMS gateway, email service). You just tell your agent when and how to use them.
+            </div>
         </section>
 
         <section id="review-entities">
             <h3>Step 2: Review the Available Actions</h3>
-            <p><em>Content placeholder — Action entity tables</em></p>
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Review the Available Actions</div>
+            </div>
+            <p>Select each action to review its input entities — these are the pieces of data the action needs to execute:</p>
+
+            <h4>Action 1: <code>verify_policyholder_identity</code></h4>
+            <table>
+                <thead>
+                    <tr><th>Input Entity</th><th>Type</th><th>Required</th><th>Purpose</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>policy_number</td><td>String</td><td>No</td><td>Policy number (alternative to phone)</td></tr>
+                    <tr><td>phone_number</td><td>String</td><td>No</td><td>Phone number on file (alternative to policy number)</td></tr>
+                    <tr><td>last_name</td><td>String</td><td>Yes</td><td>Last name on the policy</td></tr>
+                    <tr><td>date_of_birth</td><td>String</td><td>Yes</td><td>DOB of primary policyholder (MM/DD/YYYY)</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Action 2: <code>add_vehicle_to_policy</code></h4>
+            <table>
+                <thead>
+                    <tr><th>Input Entity</th><th>Type</th><th>Required</th><th>Purpose</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>policy_number</td><td>String</td><td>Yes</td><td>Verified policy number</td></tr>
+                    <tr><td>vehicle_year</td><td>Integer</td><td>Yes</td><td>Year of manufacture</td></tr>
+                    <tr><td>vehicle_make</td><td>String</td><td>Yes</td><td>Manufacturer (Honda, Toyota, etc.)</td></tr>
+                    <tr><td>vehicle_model</td><td>String</td><td>Yes</td><td>Model (CR-V, Camry, etc.)</td></tr>
+                    <tr><td>vehicle_vin</td><td>String</td><td>Yes</td><td>17-character VIN</td></tr>
+                    <tr><td>primary_use</td><td>String</td><td>Yes</td><td>commute, pleasure, or business</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Action 3: <code>deliver_proof_of_insurance</code></h4>
+            <table>
+                <thead>
+                    <tr><th>Input Entity</th><th>Type</th><th>Required</th><th>Purpose</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>policy_number</td><td>String</td><td>Yes</td><td>Policy to generate proof for</td></tr>
+                    <tr><td>delivery_method</td><td>String</td><td>Yes</td><td>sms, email, or app</td></tr>
+                    <tr><td>vehicle_vin</td><td>String</td><td>Yes</td><td>VIN of newly added vehicle</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>Notice the pattern:</strong> Each action has clearly defined inputs. The AI agent's job is to collect this information naturally through conversation — not as a rigid form, but as a flowing dialogue. The agent decides when it has enough info to call each action.
+            </div>
         </section>
 
         <section id="action-flow">
             <h3>Step 3: Understand How Actions Connect</h3>
-            <p><em>Content placeholder — Action flow explanation</em></p>
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Understand How Actions Connect</div>
+            </div>
+            <div class="info-box">
+                <strong>The agent decides when to call each action based on conversation context:</strong><br><br>
+                1. Customer says they want to add a vehicle → Agent begins verification<br>
+                2. Agent has collected name + DOB + policy/phone → Calls <code>verify_policyholder_identity</code><br>
+                3. Verification succeeds → Agent collects vehicle info<br>
+                4. Agent has all vehicle details + confirmation → Calls <code>add_vehicle_to_policy</code><br>
+                5. Addition succeeds → Agent asks delivery preference → Calls <code>deliver_proof_of_insurance</code><br><br>
+                You don't program this sequence — the LLM follows your instructions and triggers actions when the right information is available.
+            </div>
+            <p>Click <strong>Save Changes</strong> after confirming all three actions are connected.</p>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> Your agent now has the ability to verify customers, add vehicles, and deliver proof of insurance — all through pre-configured MCP server integrations.
+            </div>
+            <div class="info-box">
+                <strong>In production:</strong> Your engineering team builds and maintains MCP servers that connect to real policy management systems, SMS gateways, and email services. The conversational AI team (that's you) focuses on the customer experience — the instructions, knowledge, and testing — without needing to write backend code.
+            </div>
         </section>
 
         <!-- MODULE 4 -->
