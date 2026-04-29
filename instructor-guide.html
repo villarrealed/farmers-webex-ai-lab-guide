@@ -411,26 +411,54 @@
 
             <div class="step-indicator">
                 <div class="step-number">1</div>
-                <div class="step-title">Provision a Contact Center Trial</div>
+                <div class="step-title">Request a Contact Center Developer Sandbox</div>
             </div>
             <ol>
-                <li>Go to <a href="https://admin.webex.com" target="_blank">admin.webex.com</a></li>
-                <li>Click <strong>Start a Trial</strong> (or use your partner CCW access to provision)</li>
-                <li>Select <strong>Webex Contact Center</strong> with the <strong>AI Agent add-on</strong> (Collaboration Flex 3.0)</li>
-                <li>You do not need a large agent license count — participants will not use agent desktop</li>
-                <li>Wait for the provisioning email confirming the tenant is ready (typically 15–30 minutes)</li>
-                <li>Sign in to Control Hub with the admin credentials from the provisioning email</li>
+                <li>Sign in to the <a href="https://developer.webex.com" target="_blank">Webex Developer Portal</a> (create a free Webex account if you don't have one)</li>
+                <li>Navigate to <a href="https://developer.webex.com/create/docs/sandbox_cc" target="_blank">Create → Contact Center Sandbox</a></li>
+                <li>Request a new sandbox</li>
+                <li>Wait for the <strong>provisioning email</strong> (contains admin credentials, user accounts, and PSTN numbers)</li>
             </ol>
 
-            <div class="info-box warning">
-                <strong>Do NOT use the Developer Sandbox.</strong> The developer sandbox at developer.webex.com only provisions 1 admin + 2 users — it cannot support 10 participants. You must provision a full trial tenant.
+            <div class="info-box">
+                <strong>What the sandbox includes:</strong> Administrator access to a fully licensed Webex Contact Center org with Webex Calling, 2 pre-configured agent users, a default queue, flow, and PSTN entry point. Sandboxes are valid for <strong>180 days</strong> — contact Developer Support to extend.
             </div>
+
+            <h4>Save Your Provisioning Email</h4>
+            <p>The email contains critical information you'll need:</p>
+            <table>
+                <thead>
+                    <tr><th>Item</th><th>Format</th><th>Use</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Admin username</td><td><code>admin@xxxxxx-xxxx.wbx.ai</code></td><td>Control Hub admin access</td></tr>
+                    <tr><td>Admin password</td><td>In provisioning email</td><td>Initial login</td></tr>
+                    <tr><td>DNS Domain</td><td><code>xxxxxx-xxxx.wbx.ai</code></td><td>User account domain for new participants</td></tr>
+                    <tr><td>Agent 1</td><td><code>user1@xxxxxx-xxxx.wbx.ai</code></td><td>Pre-built test account</td></tr>
+                    <tr><td>Agent 2</td><td><code>user2@xxxxxx-xxxx.wbx.ai</code></td><td>Pre-built test account</td></tr>
+                </tbody>
+            </table>
 
             <div class="step-indicator">
                 <div class="step-number">2</div>
-                <div class="step-title">Create 10 Participant User Accounts</div>
+                <div class="step-title">Sign In to Control Hub as Admin</div>
             </div>
-            <p>Each participant needs their own user account. The key entitlement is <strong>Webex Connect</strong> — this grants access to AI Agent Studio.</p>
+            <ol>
+                <li>Open a fresh <strong>incognito/private</strong> browser window (Chrome: Ctrl+Shift+N)</li>
+                <li>Go to <a href="https://admin.webex.com" target="_blank">admin.webex.com</a></li>
+                <li>Sign in with the <strong>admin credentials</strong> from the provisioning email</li>
+                <li>Confirm you can see Services → Contact Center</li>
+            </ol>
+
+            <div class="instructor-note">
+                Use Chrome or Firefox on desktop. Other browsers may produce unexpected results. Webex Contact Center portals are not designed for mobile devices.
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Add 10 Participant User Accounts</div>
+            </div>
+            <p>The sandbox comes with 2 users. You need to add 10 more for your lab participants. The key entitlement is <strong>Webex Connect</strong> — this grants access to AI Agent Studio.</p>
 
             <h4>Add Users Manually</h4>
             <ol>
@@ -439,7 +467,7 @@
                 <li>Assign these entitlements:
                     <ul>
                         <li>✓ <strong>Webex Connect</strong> — gates AI Agent Studio access</li>
-                        <li>✓ <strong>Contact Center Standard</strong> — provides org-level Contact Center access (Premium not required)</li>
+                        <li>✓ <strong>Contact Center Standard</strong> — provides org-level Contact Center access</li>
                     </ul>
                 </li>
                 <li>Click <strong>Save</strong></li>
@@ -455,12 +483,8 @@
                 <li>Upload the completed CSV</li>
             </ol>
 
-            <div class="info-box warning">
-                <strong>Account activation required:</strong> New users receive an activation email. They must activate their account <em>before</em> the lab. Send invitations at least 24–48 hours in advance and confirm all 10 participants have activated.
-            </div>
-
-            <h4>Naming Convention for Lab Accounts</h4>
-            <p>If creating lab-specific accounts instead of using participants' personal emails:</p>
+            <h4>User Accounts</h4>
+            <p>Use the sandbox domain from your provisioning email:</p>
             <div class="copy-block">
                 <button class="copy-btn">Copy</button>
                 <code>labuser01@&lt;your-sandbox-domain&gt;.wbx.ai
@@ -475,8 +499,12 @@ labuser09@&lt;your-sandbox-domain&gt;.wbx.ai
 labuser10@&lt;your-sandbox-domain&gt;.wbx.ai</code>
             </div>
 
+            <div class="info-box warning">
+                <strong>Account activation:</strong> New users receive an activation email. They must activate their account <em>before</em> the lab. Send invitations at least 24–48 hours in advance and confirm all 10 participants have activated.
+            </div>
+
             <div class="step-indicator">
-                <div class="step-number">3</div>
+                <div class="step-number">4</div>
                 <div class="step-title">Synchronize Users with Contact Center</div>
             </div>
             <ol>
@@ -491,17 +519,17 @@ labuser10@&lt;your-sandbox-domain&gt;.wbx.ai</code>
             </div>
 
             <div class="step-indicator">
-                <div class="step-number">4</div>
+                <div class="step-number">5</div>
                 <div class="step-title">Confirm AI Agent Studio Is Available</div>
             </div>
             <ol>
                 <li>In Control Hub → <strong>Services</strong> → <strong>Contact Center</strong> → <strong>Customer Experience</strong> → <strong>AI Agent</strong></li>
                 <li>Confirm <strong>Webex AI Agent</strong> appears and is clickable</li>
-                <li>If not visible: the AI Agent add-on was not included in the trial provisioning. You will need to re-provision or contact Cisco Support to add the entitlement.</li>
+                <li>If not visible: the AI Agent add-on may not be included in developer sandboxes by default. Contact <a href="https://developer.webex.com/support" target="_blank">Developer Support</a> to request the AI Agent entitlement be added to your sandbox.</li>
             </ol>
 
             <div class="step-indicator">
-                <div class="step-number">5</div>
+                <div class="step-number">6</div>
                 <div class="step-title">Verify the Webex Connect → AI Agent Studio Path</div>
             </div>
             <ol>
@@ -513,14 +541,14 @@ labuser10@&lt;your-sandbox-domain&gt;.wbx.ai</code>
             </ol>
 
             <div class="step-indicator">
-                <div class="step-number">6</div>
+                <div class="step-number">7</div>
                 <div class="step-title">Test with a Participant Account</div>
             </div>
             <p>Do not skip this step. Admin accounts have elevated permissions that mask access issues participants will hit.</p>
             <ol>
-                <li>Open an <strong>incognito/private</strong> browser window</li>
+                <li>Open a <strong>separate incognito/private</strong> browser window</li>
                 <li>Sign in to <a href="https://admin.webex.com" target="_blank">admin.webex.com</a> as one of the participant accounts (e.g., <code>labuser01</code>)</li>
-                <li>Navigate to Services → Contact Center → the AI Agent Studio access path</li>
+                <li>Navigate to Services → Contact Center → AI Agent Studio</li>
                 <li>Verify the participant can:
                     <ul>
                         <li>✓ Open AI Agent Studio</li>
@@ -553,6 +581,14 @@ labuser10@&lt;your-sandbox-domain&gt;.wbx.ai</code>
             <div class="info-box success">
                 <strong>No resource conflicts:</strong> The MCP server is stateless — all 10 participants hit it simultaneously with no contention. Each participant's agent, knowledge base, and actions are independent of each other.
             </div>
+
+            <h3>Sandbox Reference Links</h3>
+            <ul>
+                <li><a href="https://developer.webex.com/create/docs/sandbox_cc" target="_blank">Request a Contact Center Sandbox</a></li>
+                <li><a href="https://app.vidcast.io/share/396869f8-726e-43b8-8a10-b99016c781c3" target="_blank">Vidcast: Provision a Contact Center Developer Sandbox</a></li>
+                <li><a href="https://developer.webex.com/support" target="_blank">Developer Support (sandbox extensions, entitlement issues)</a></li>
+                <li><a href="https://portal-v2.wxcc-us1.cisco.com/ccone-help-new/index.html#!g_getting-started-wrapper.html" target="_blank">Contact Center Administrator Getting Started Guide</a></li>
+            </ul>
         </section>
 
         <section id="setup-checklist">
@@ -560,10 +596,11 @@ labuser10@&lt;your-sandbox-domain&gt;.wbx.ai</code>
             <p>Complete all items below before participants arrive. Allow 30–45 minutes for first-time setup.</p>
 
             <ul class="checklist">
-                <li>Provision WxCC trial with AI Agent add-on (or reuse existing partner demo org)</li>
-                <li>Create 10 participant accounts with Webex Connect + Contact Center entitlements</li>
+                <li>Request a WxCC Developer Sandbox at <code>developer.webex.com/create/docs/sandbox_cc</code></li>
+                <li>Add 10 participant accounts with Webex Connect + Contact Center Standard entitlements</li>
                 <li>Synchronize users in Contact Center tenant settings</li>
-                <li>Test participant login in incognito — confirm they can access AI Agent Studio and create agents</li>
+                <li>Confirm AI Agent Studio is accessible (admin account)</li>
+                <li>Test participant login in incognito — confirm they can create agents and access AI Agent Studio</li>
                 <li>Deploy MCP server to Render.com — confirm <code>/health</code> returns OK</li>
                 <li>Register agentic app on developer.webex.com (name: <code>edvill_Farmers_Insurance_Tools</code>)</li>
                 <li>Provision app in Control Hub — authorize for your org</li>
