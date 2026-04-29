@@ -271,6 +271,156 @@
             .main-content { margin-left: 0; }
             .copy-btn { display: none; }
         }
+
+        /* Credential Card */
+        .credential-card {
+            background: linear-gradient(135deg, var(--cisco-dark-blue), var(--cisco-navy));
+            border-radius: 12px;
+            padding: 24px 32px;
+            color: white;
+            max-width: 480px;
+            margin: 16px 0;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+        }
+
+        .credential-card .seat-badge {
+            display: inline-block;
+            background: var(--cisco-blue);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .credential-card .cred-row {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            gap: 12px;
+        }
+
+        .credential-card .cred-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--cisco-secondary);
+            min-width: 80px;
+        }
+
+        .credential-card .cred-value {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 15px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 14px;
+            border-radius: 6px;
+            flex: 1;
+            user-select: all;
+        }
+
+        .credential-card .cred-copy-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .credential-card .cred-copy-btn:hover {
+            background: var(--cisco-blue);
+        }
+
+        .credential-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 2px solid var(--cisco-yellow);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .credential-warning h3 {
+            color: var(--cisco-yellow);
+            margin-bottom: 8px;
+        }
+
+        /* Nav-bottom credential bar */
+        .nav-credentials {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(7,24,45,0.95), var(--cisco-navy));
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 14px 16px;
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-credentials .nav-cred-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--cisco-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .nav-credentials .nav-cred-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .nav-credentials .nav-cred-label {
+            font-size: 10px;
+            color: var(--cisco-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 32px;
+        }
+
+        .nav-credentials .nav-cred-value {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 11px;
+            color: white;
+            background: rgba(255,255,255,0.08);
+            padding: 5px 8px;
+            border-radius: 4px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .nav-credentials .nav-cred-copy {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .nav-credentials .nav-cred-copy:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-credentials .nav-cred-copy.copied {
+            color: var(--cisco-green);
+        }
+
+        .nav-credentials .nav-cred-copy svg {
+            width: 14px;
+            height: 14px;
+        }
     </style>
 </head>
 <body>
@@ -284,6 +434,7 @@
         <div class="nav-section">
             <div class="nav-section-title">Overview</div>
             <a href="#welcome" class="nav-item">Welcome</a>
+            <a href="#your-credentials" class="nav-item">Your Credentials</a>
             <a href="#use-case" class="nav-item">Use Case</a>
             <a href="#what-youll-build" class="nav-item">What You'll Build</a>
             <a href="#architecture" class="nav-item">Architecture</a>
@@ -327,6 +478,11 @@
             <a href="#complement" class="nav-item level-2">Complements AI Agents</a>
             <a href="#summary" class="nav-item level-2">Summary & Next Steps</a>
         </div>
+
+        <!-- Persistent credential bar at bottom of nav -->
+        <div id="nav-credentials" class="nav-credentials">
+            <!-- Populated by JS based on ?seat= param -->
+        </div>
     </nav>
 
     <div class="main-content">
@@ -349,9 +505,16 @@
             </ul>
             <p><strong>Prerequisites:</strong></p>
             <ul>
-                <li>Access to Webex AI Agent Studio (credentials provided by your instructor)</li>
+                <li>Access to Webex AI Agent Studio (see <a href="#your-credentials">Your Lab Credentials</a> below)</li>
                 <li>A modern web browser (Chrome recommended)</li>
             </ul>
+        </section>
+
+        <section id="your-credentials">
+            <h2>Your Lab Credentials</h2>
+            <div id="credentials-display">
+                <!-- Filled by JavaScript based on ?seat= parameter -->
+            </div>
         </section>
 
         <section id="use-case">
@@ -474,7 +637,7 @@
             </div>
             <ol>
                 <li>Open your browser and navigate to <strong>Control Hub</strong>: <code>https://admin.webex.com</code></li>
-                <li>Sign in with the credentials provided by your instructor</li>
+                <li>Sign in with your <a href="#your-credentials">lab credentials</a> shown at the top of this guide</li>
                 <li>In the left navigation, click <strong>Services</strong> → <strong>Contact Center</strong></li>
                 <li>Under <strong>Quick Links</strong>, find <strong>Contact Center Suite</strong></li>
                 <li>Click <strong>Webex AI Agent Studio</strong> — it opens in a new tab</li>
@@ -1039,6 +1202,92 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Seat-based credential display
+            const urlParams = new URLSearchParams(window.location.search);
+            const seat = parseInt(urlParams.get('seat'));
+            const credDisplay = document.getElementById('credentials-display');
+
+            const labUsers = [
+                { username: 'labuser01@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+                { username: 'labuser02@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+                { username: 'labuser03@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+                { username: 'labuser04@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+                { username: 'labuser05@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+                { username: 'labuser06@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+                { username: 'labuser07@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+                { username: 'labuser08@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+                { username: 'labuser09@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+                { username: 'labuser10@edvill-7xdo.wbx.ai', password: 'C1sco12345!' },
+            ];
+
+            if (credDisplay) {
+                if (seat >= 1 && seat <= 10) {
+                    const user = labUsers[seat - 1];
+                    credDisplay.innerHTML = `
+                        <div class="credential-card">
+                            <div class="seat-badge">Seat ${seat}</div>
+                            <div class="cred-row">
+                                <span class="cred-label">Username</span>
+                                <span class="cred-value">${user.username}</span>
+                                <button class="cred-copy-btn" onclick="navigator.clipboard.writeText('${user.username}').then(() => { this.textContent = '✓'; setTimeout(() => this.textContent = 'Copy', 1500); })">Copy</button>
+                            </div>
+                            <div class="cred-row">
+                                <span class="cred-label">Password</span>
+                                <span class="cred-value">${user.password}</span>
+                                <button class="cred-copy-btn" onclick="navigator.clipboard.writeText('${user.password}').then(() => { this.textContent = '✓'; setTimeout(() => this.textContent = 'Copy', 1500); })">Copy</button>
+                            </div>
+                        </div>
+                        <p style="margin-top: 12px; color: var(--cisco-gray); font-size: 14px;">These credentials are unique to your seat. Use them whenever the guide says "sign in with your lab credentials."</p>
+                    `;
+                } else {
+                    credDisplay.innerHTML = `
+                        <div class="credential-warning">
+                            <h3>⚠️ No Seat Assigned</h3>
+                            <p>Your lab credentials aren't showing because this page wasn't opened with a seat number.</p>
+                            <p style="margin-top: 12px;"><strong>Ask your instructor</strong> for your unique lab link, which looks like:</p>
+                            <code style="display: block; margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.05); border-radius: 6px; font-size: 13px;">participant-guide.html?seat=<em>your-number</em></code>
+                        </div>
+                    `;
+                }
+            }
+
+            // Populate nav-bottom credential bar
+            const navCreds = document.getElementById('nav-credentials');
+            if (navCreds && seat >= 1 && seat <= 10) {
+                const user = labUsers[seat - 1];
+                navCreds.innerHTML = `
+                    <div class="nav-cred-title">Your Credentials — Seat ${seat}</div>
+                    <div class="nav-cred-row">
+                        <span class="nav-cred-label">User</span>
+                        <span class="nav-cred-value" title="${user.username}">${user.username}</span>
+                        <button class="nav-cred-copy" data-copy="${user.username}" title="Copy username">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                    </div>
+                    <div class="nav-cred-row">
+                        <span class="nav-cred-label">Pass</span>
+                        <span class="nav-cred-value">${user.password}</span>
+                        <button class="nav-cred-copy" data-copy="${user.password}" title="Copy password">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                    </div>
+                `;
+                // Attach copy handlers to nav credential buttons
+                navCreds.querySelectorAll('.nav-cred-copy').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const text = this.getAttribute('data-copy');
+                        navigator.clipboard.writeText(text).then(() => {
+                            this.classList.add('copied');
+                            this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                            setTimeout(() => {
+                                this.classList.remove('copied');
+                                this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                            }, 1500);
+                        });
+                    });
+                });
+            }
+
             // Copy button functionality
             document.querySelectorAll('.copy-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
