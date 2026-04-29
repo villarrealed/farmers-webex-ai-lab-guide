@@ -982,8 +982,12 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                 <tbody>
                     <tr><td>policy_number</td><td>String</td><td>Yes</td><td>Policy to generate proof for</td></tr>
                     <tr><td>delivery_method</td><td>String</td><td>Yes</td><td>sms, email, or app</td></tr>
+                    <tr><td>phone_number</td><td>String</td><td>No</td><td>Phone number for SMS delivery</td></tr>
                 </tbody>
             </table>
+            <div class="info-box success">
+                <strong>🎉 Live SMS Integration:</strong> This action is connected to a real Webex Connect flow. When the delivery method is <strong>SMS</strong>, the system sends an actual text message to the phone number provided. During testing, you'll receive a real proof-of-insurance SMS on your own phone!
+            </div>
             <div class="info-box">
                 <strong>Notice the pattern:</strong> Each action has clearly defined inputs. The AI agent's job is to collect this information naturally through conversation — not as a rigid form, but as a flowing dialogue. The agent decides when it has enough info to call each action.
             </div>
@@ -1009,7 +1013,7 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                 <strong>✓ Checkpoint:</strong> Your agent now has the ability to verify customers, add vehicles, and deliver proof of insurance — all through pre-configured MCP server integrations.
             </div>
             <div class="info-box">
-                <strong>In production:</strong> Your engineering team builds and maintains MCP servers that connect to real policy management systems, SMS gateways, and email services. The conversational AI team (that's you) focuses on the customer experience — the instructions, knowledge, and testing — without needing to write backend code.
+                <strong>In production:</strong> Your engineering team builds and maintains MCP servers that connect to real policy management systems, SMS gateways (like Webex Connect), and email services. In this lab, the SMS action is live — powered by a Webex Connect flow that sends real text messages via webhook. The conversational AI team (that's you) focuses on the customer experience — the instructions, knowledge, and testing — without needing to write backend code.
             </div>
         </section>
 
@@ -1033,6 +1037,9 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                 <li>Ensure <strong>Chat</strong> mode is selected</li>
                 <li>Walk through Sarah's scenario using the messages below:</li>
             </ol>
+            <div class="info-box warning">
+                <strong>📱 Use your real phone number!</strong> When the agent asks how you'd like to receive proof of insurance, say <strong>"text it to me"</strong> and provide your actual mobile number. You'll receive a real SMS with the proof of insurance — this is a live integration powered by Webex Connect.
+            </div>
             <p><strong>Happy Path Test:</strong></p>
             <table>
                 <thead>
@@ -1043,8 +1050,9 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                     <tr><td>My policy number is FRM-2024-8847291, last name Martinez</td><td>Agent asks for date of birth to complete verification</td></tr>
                     <tr><td>March 15, 1985</td><td>Agent confirms identity, transitions to collecting vehicle info</td></tr>
                     <tr><td>It's a 2024 Honda CR-V</td><td>Agent asks for primary use</td></tr>
-                    <tr><td>I'll use it for commuting</td><td>Agent asks for delivery preference</td></tr>
-                    <tr><td>Text it to me please</td><td>Agent reads back all info, asks for confirmation</td></tr>
+                    <tr><td>I'll use it for commuting</td><td>Agent confirms details, asks for delivery preference</td></tr>
+                    <tr><td>Text it to me at <em>(your real phone number)</em></td><td>Agent confirms and triggers SMS delivery</td></tr>
+                    <tr><td><em>(Check your phone!)</em></td><td>You should receive a real SMS with proof of insurance within seconds</td></tr>
                     <tr><td>Yes that's all correct</td><td>Agent processes, provides confirmation number, confirms SMS delivery</td></tr>
                 </tbody>
             </table>
