@@ -4,3 +4,13 @@ services:
     env: static
     staticPublishPath: .
     buildCommand: ""
+
+  - type: web
+    name: farmers-insurance-mcp-server
+    runtime: node
+    rootDir: mcp-server
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
