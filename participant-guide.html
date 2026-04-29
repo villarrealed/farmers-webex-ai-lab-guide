@@ -581,36 +581,7 @@
 
         <section id="architecture">
             <h2>Lab Architecture</h2>
-            <div class="info-box">
-                <strong>How the pieces fit together:</strong> The AI Agent is the brain — it manages the conversation. The Knowledge Base gives it facts. MCP Actions let it take real action. And when escalation is needed, AI Assistant ensures the human agent has full context.
-            </div>
-            <div class="diagram"><pre>Customer (Voice or Chat)
-       │
-       ▼
-┌─────────────────────────┐
-│   Webex AI Agent        │  ← You'll build this
-│   "Alex"                │
-└────────┬────────────────┘
-         │
-    ┌────┴─────┐
-    ▼          ▼
-┌────────┐  ┌──────────────┐
-│Knowledge│  │ MCP Actions  │
-│  Base   │  │(Pre-configured)│
-├─────────┤  ├──────────────┤
-│• Policy │  │• Verify      │
-│  FAQ    │  │  Identity    │
-│• Vehicle│  │• Add Vehicle │
-│  Addition│ │• Deliver     │
-│• Proof  │  │  Proof via:  │
-│  of Ins.│  │  SMS/Email/App│
-└─────────┘  └──────────────┘
-         │
-         ▼ (If escalation needed)
-┌─────────────────────────┐
-│   Human Agent           │
-│   + AI Assistant        │  ← Summaries, suggested responses
-└─────────────────────────┘</pre></div>
+            <img src="lab-architecture.png" alt="Lab Architecture Diagram showing Customer connecting via Voice or Chat to the Webex AI Agent Alex, which uses a Knowledge Base (Policy FAQ, Vehicle Addition, Proof of Insurance) and MCP Servers/Actions (Verify Identity, Add Vehicle, Deliver Proof via SMS/Email/App), with escalation path to Human Agent + AI Assistant" style="width: 100%; max-width: 900px; border-radius: 12px; margin: 16px 0; box-shadow: 0 4px 24px rgba(0,0,0,0.1);">
             <p><strong>Key Concepts:</strong></p>
             <ul>
                 <li><strong>Autonomous AI Agent</strong> — Uses large language models (LLMs) for natural, adaptive conversations. Understands varied phrasing without explicit programming for each variation.</li>
