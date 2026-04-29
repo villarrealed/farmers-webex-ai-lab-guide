@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers Insurance - Webex AI Agent Lab Guide</title>
+    <style>
+        :root {
+            --cisco-blue: #3070E7;
+            --cisco-dark-blue: #0F1729;
+            --cisco-navy: #07182D;
+            --cisco-green: #22C55E;
+            --cisco-yellow: #F59E0B;
+            --cisco-orange: #FF9000;
+            --cisco-red: #EF4444;
+            --cisco-teal: #16BDEB;
+            --cisco-gray: #64748B;
+            --cisco-light-gray: #F8FAFC;
+            --cisco-secondary: #94A3B8;
+            --nav-width: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--cisco-light-gray);
+            color: var(--cisco-dark-blue);
+            line-height: 1.6;
+        }
+
+        /* Navigation Sidebar */
+        .nav-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--nav-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--cisco-dark-blue), var(--cisco-navy));
+            overflow-y: auto;
+            z-index: 100;
+            padding-bottom: 40px;
+        }
+
+        .nav-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-logo h2 {
+            color: white;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+
+        .nav-logo .subtitle {
+            color: var(--cisco-secondary);
+            font-size: 13px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .nav-logo .badge {
+            display: inline-block;
+            background: var(--cisco-green);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-section { padding: 16px 0; }
+
+        .nav-section-title {
+            color: var(--cisco-secondary);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 20px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 8px 20px;
+            font-size: 13px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: white;
+            background: rgba(255,255,255,0.05);
+            border-left-color: var(--cisco-blue);
+        }
+
+        .nav-item.level-2 { padding-left: 35px; font-size: 12px; }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--nav-width);
+            padding: 40px;
+            max-width: 1100px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--cisco-blue);
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .page-header h2 {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--cisco-gray);
+        }
+
+        .page-header .meta {
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--cisco-secondary);
+        }
+
+        section {
+            scroll-margin-top: 80px;
+            margin-bottom: 48px;
+        }
+
+        h2 { font-size: 24px; font-weight: 400; margin-bottom: 16px; color: var(--cisco-dark-blue); }
+        h3 { font-size: 20px; font-weight: 500; margin-bottom: 12px; margin-top: 32px; }
+        p { margin-bottom: 12px; color: #334155; }
+        ul, ol { margin-bottom: 16px; padding-left: 24px; }
+        li { margin-bottom: 6px; color: #334155; }
+
+        /* Info Boxes */
+        .info-box {
+            border-left: 4px solid var(--cisco-blue);
+            background: rgba(48,112,231,0.06);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .info-box.success {
+            border-left-color: var(--cisco-green);
+            background: rgba(34,197,94,0.06);
+        }
+
+        .info-box.warning {
+            border-left-color: var(--cisco-orange);
+            background: rgba(255,144,0,0.06);
+        }
+
+        /* Copy Blocks */
+        .copy-block {
+            position: relative;
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .copy-block code {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            display: block;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.7);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+        .copy-btn.copied { background: var(--cisco-green); color: white; border-color: var(--cisco-green); }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th { background: var(--cisco-dark-blue); color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+        td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        tr:hover { background: rgba(48,112,231,0.03); }
+
+        /* Step Indicators */
+        .step-indicator {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin: 24px 0 16px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--cisco-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .step-title { font-size: 18px; font-weight: 500; padding-top: 4px; }
+
+        /* Module Headers */
+        .module-header {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--cisco-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .module-header h2 { margin-bottom: 4px; }
+        .module-header .time { font-size: 14px; color: var(--cisco-blue); font-weight: 500; }
+        .module-header p { margin-top: 8px; font-size: 14px; }
+
+        /* Diagram */
+        .diagram {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+
+        .diagram pre {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            white-space: pre;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .nav-sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 20px; }
+        }
+
+        @media print {
+            .nav-sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .copy-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-sidebar">
+        <div class="nav-logo">
+            <h2>Farmers Insurance</h2>
+            <span class="subtitle">Webex AI Agent Lab</span>
+            <span class="badge">Participant Guide</span>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#welcome" class="nav-item">Welcome</a>
+            <a href="#use-case" class="nav-item">Use Case</a>
+            <a href="#what-youll-build" class="nav-item">What You'll Build</a>
+            <a href="#architecture" class="nav-item">Architecture</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 1 (12 min)</div>
+            <a href="#create-agent" class="nav-item">Create Your AI Agent</a>
+            <a href="#access-studio" class="nav-item level-2">Access AI Agent Studio</a>
+            <a href="#configure-profile" class="nav-item level-2">Configure Agent Profile</a>
+            <a href="#agent-instructions" class="nav-item level-2">Write Instructions</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 2 (12 min)</div>
+            <a href="#knowledge-base" class="nav-item">Build Knowledge Base</a>
+            <a href="#create-kb" class="nav-item level-2">Create Knowledge Base</a>
+            <a href="#add-articles" class="nav-item level-2">Add Policy Content</a>
+            <a href="#link-kb" class="nav-item level-2">Link to Agent</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 3 (10 min)</div>
+            <a href="#configure-actions" class="nav-item">Configure Actions</a>
+            <a href="#connect-actions" class="nav-item level-2">Connect MCP Actions</a>
+            <a href="#review-entities" class="nav-item level-2">Review Input Entities</a>
+            <a href="#action-flow" class="nav-item level-2">Understand the Flow</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 4 (10 min)</div>
+            <a href="#test-validate" class="nav-item">Test & Validate</a>
+            <a href="#chat-preview" class="nav-item level-2">Chat Preview</a>
+            <a href="#voice-preview" class="nav-item level-2">Voice Preview</a>
+            <a href="#iterate" class="nav-item level-2">Iterate & Improve</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 5 (8 min)</div>
+            <a href="#ai-assistant" class="nav-item">AI Assistant Overview</a>
+            <a href="#complement" class="nav-item level-2">Complements AI Agents</a>
+            <a href="#summary" class="nav-item level-2">Summary & Next Steps</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Webex AI Agent Lab</h1>
+            <h2>Farmers Insurance — Policy Servicing Use Case</h2>
+            <div class="meta">Duration: ~52 minutes | Level: Hands-on | Focus: Webex AI Agent Studio</div>
+        </div>
+
+        <!-- OVERVIEW -->
+        <section id="welcome">
+            <h2>Welcome</h2>
+            <p><em>Content placeholder — Welcome section</em></p>
+        </section>
+
+        <section id="use-case">
+            <h2>Use Case: "After-Hours Vehicle Addition"</h2>
+            <p><em>Content placeholder — Use case scenario</em></p>
+        </section>
+
+        <section id="what-youll-build">
+            <h2>What You'll Build</h2>
+            <p><em>Content placeholder — Module overview table</em></p>
+        </section>
+
+        <section id="architecture">
+            <h2>Lab Architecture</h2>
+            <p><em>Content placeholder — Architecture diagram and key concepts</em></p>
+        </section>
+
+        <!-- MODULE 1 -->
+        <section id="create-agent">
+            <div class="module-header">
+                <h2>Module 1: Create Your AI Agent</h2>
+                <span class="time">Estimated time: 12 minutes</span>
+                <p>The agent profile defines personality, communication style, and primary goal.</p>
+            </div>
+        </section>
+
+        <section id="access-studio">
+            <h3>Step 1: Access Webex AI Agent Studio</h3>
+            <p><em>Content placeholder — Access steps</em></p>
+        </section>
+
+        <section id="configure-profile">
+            <h3>Step 2: Create and Configure Your Agent</h3>
+            <p><em>Content placeholder — Agent creation steps</em></p>
+        </section>
+
+        <section id="agent-instructions">
+            <h3>Step 3: Write Agent Instructions</h3>
+            <p><em>Content placeholder — Instructions with copy blocks</em></p>
+        </section>
+
+        <!-- MODULE 2 -->
+        <section id="knowledge-base">
+            <div class="module-header">
+                <h2>Module 2: Build the Knowledge Base</h2>
+                <span class="time">Estimated time: 12 minutes</span>
+                <p>The knowledge base gives your agent accurate, company-specific answers.</p>
+            </div>
+        </section>
+
+        <section id="create-kb">
+            <h3>Step 1: Create a Knowledge Base</h3>
+            <p><em>Content placeholder — KB creation steps</em></p>
+        </section>
+
+        <section id="add-articles">
+            <h3>Step 2: Add Knowledge Articles</h3>
+            <p><em>Content placeholder — Three articles with copy blocks</em></p>
+        </section>
+
+        <section id="link-kb">
+            <h3>Step 3: Link Knowledge Base to Agent</h3>
+            <p><em>Content placeholder — Linking steps</em></p>
+        </section>
+
+        <!-- MODULE 3 -->
+        <section id="configure-actions">
+            <div class="module-header">
+                <h2>Module 3: Configure Actions</h2>
+                <span class="time">Estimated time: 10 minutes</span>
+                <p>Actions let your agent DO things — not just talk about them.</p>
+            </div>
+        </section>
+
+        <section id="connect-actions">
+            <h3>Step 1: Connect Pre-Configured MCP Server Actions</h3>
+            <p><em>Content placeholder — MCP connection steps</em></p>
+        </section>
+
+        <section id="review-entities">
+            <h3>Step 2: Review the Available Actions</h3>
+            <p><em>Content placeholder — Action entity tables</em></p>
+        </section>
+
+        <section id="action-flow">
+            <h3>Step 3: Understand How Actions Connect</h3>
+            <p><em>Content placeholder — Action flow explanation</em></p>
+        </section>
+
+        <!-- MODULE 4 -->
+        <section id="test-validate">
+            <div class="module-header">
+                <h2>Module 4: Test & Validate</h2>
+                <span class="time">Estimated time: 10 minutes</span>
+                <p>Experience your agent as a customer would.</p>
+            </div>
+        </section>
+
+        <section id="chat-preview">
+            <h3>Step 1: Test via Chat Preview</h3>
+            <p><em>Content placeholder — Chat test scenarios</em></p>
+        </section>
+
+        <section id="voice-preview">
+            <h3>Step 2: Test via Voice Preview</h3>
+            <p><em>Content placeholder — Voice test steps</em></p>
+        </section>
+
+        <section id="iterate">
+            <h3>Step 3: Test Edge Cases and Iterate</h3>
+            <p><em>Content placeholder — Edge cases and iteration guide</em></p>
+        </section>
+
+        <!-- MODULE 5 -->
+        <section id="ai-assistant">
+            <div class="module-header">
+                <h2>Module 5: AI Assistant Overview</h2>
+                <span class="time">Estimated time: 8 minutes</span>
+                <p>What happens when AI Agent escalates to a human agent.</p>
+            </div>
+        </section>
+
+        <section id="complement">
+            <h3>How AI Assistant Complements AI Agents</h3>
+            <p><em>Content placeholder — AI Assistant features table</em></p>
+        </section>
+
+        <section id="summary">
+            <h3>Summary & Next Steps</h3>
+            <p><em>Content placeholder — Summary and production next steps</em></p>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Copy button functionality
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const block = this.closest('.copy-block');
+                    const code = block.querySelector('code');
+                    navigator.clipboard.writeText(code.textContent).then(() => {
+                        const original = this.innerHTML;
+                        this.innerHTML = '✓ Copied!';
+                        this.classList.add('copied');
+                        setTimeout(() => {
+                            this.innerHTML = original;
+                            this.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+            });
+
+            // Active nav highlighting on scroll
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.nav-item');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === '#' + current) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
