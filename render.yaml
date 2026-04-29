@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: farmers-webex-ai-lab-guide
+    env: static
+    staticPublishPath: .
+    buildCommand: ""
