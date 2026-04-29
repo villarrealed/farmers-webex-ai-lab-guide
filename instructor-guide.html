@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers Insurance - Webex AI Agent Lab | Instructor Guide</title>
+    <style>
+        :root {
+            --cisco-blue: #3070E7;
+            --cisco-dark-blue: #0F1729;
+            --cisco-navy: #07182D;
+            --cisco-green: #22C55E;
+            --cisco-yellow: #F59E0B;
+            --cisco-orange: #FF9000;
+            --cisco-red: #EF4444;
+            --cisco-teal: #16BDEB;
+            --cisco-gray: #64748B;
+            --cisco-light-gray: #F8FAFC;
+            --cisco-secondary: #94A3B8;
+            --nav-width: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--cisco-light-gray);
+            color: var(--cisco-dark-blue);
+            line-height: 1.6;
+        }
+
+        /* Navigation Sidebar */
+        .nav-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--nav-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--cisco-dark-blue), var(--cisco-navy));
+            overflow-y: auto;
+            z-index: 100;
+            padding-bottom: 40px;
+        }
+
+        .nav-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-logo h2 {
+            color: white;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+
+        .nav-logo .subtitle {
+            color: var(--cisco-secondary);
+            font-size: 13px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .nav-logo .badge {
+            display: inline-block;
+            background: var(--cisco-orange);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-section { padding: 16px 0; }
+
+        .nav-section-title {
+            color: var(--cisco-secondary);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 20px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 8px 20px;
+            font-size: 13px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: white;
+            background: rgba(255,255,255,0.05);
+            border-left-color: var(--cisco-blue);
+        }
+
+        .nav-item.level-2 { padding-left: 35px; font-size: 12px; }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--nav-width);
+            padding: 40px;
+            max-width: 1100px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--cisco-orange);
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .page-header h2 {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--cisco-gray);
+        }
+
+        .page-header .meta {
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--cisco-secondary);
+        }
+
+        section {
+            scroll-margin-top: 80px;
+            margin-bottom: 48px;
+        }
+
+        h2 { font-size: 24px; font-weight: 400; margin-bottom: 16px; color: var(--cisco-dark-blue); }
+        h3 { font-size: 20px; font-weight: 500; margin-bottom: 12px; margin-top: 32px; }
+        h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; margin-top: 20px; }
+        p { margin-bottom: 12px; color: #334155; }
+        ul, ol { margin-bottom: 16px; padding-left: 24px; }
+        li { margin-bottom: 6px; color: #334155; }
+
+        /* Info Boxes */
+        .info-box {
+            border-left: 4px solid var(--cisco-blue);
+            background: rgba(48,112,231,0.06);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .info-box.success {
+            border-left-color: var(--cisco-green);
+            background: rgba(34,197,94,0.06);
+        }
+
+        .info-box.warning {
+            border-left-color: var(--cisco-orange);
+            background: rgba(255,144,0,0.06);
+        }
+
+        /* Copy Blocks */
+        .copy-block {
+            position: relative;
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .copy-block code {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            display: block;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.7);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+        .copy-btn.copied { background: var(--cisco-green); color: white; border-color: var(--cisco-green); }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th { background: var(--cisco-dark-blue); color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+        td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        tr:hover { background: rgba(48,112,231,0.03); }
+
+        /* Step Indicators */
+        .step-indicator {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin: 24px 0 16px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--cisco-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .step-title { font-size: 18px; font-weight: 500; padding-top: 4px; }
+
+        /* Module Headers */
+        .module-header {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--cisco-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .module-header h2 { margin-bottom: 4px; }
+        .module-header .time { font-size: 14px; color: var(--cisco-blue); font-weight: 500; }
+        .module-header p { margin-top: 8px; font-size: 14px; }
+
+        /* Diagram */
+        .diagram {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+
+        .diagram pre {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            white-space: pre;
+        }
+
+        /* Instructor-specific styles */
+        .instructor-note {
+            border-left: 4px solid var(--cisco-orange);
+            background: rgba(255,144,0,0.08);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .instructor-note::before {
+            content: "🎓 INSTRUCTOR NOTE";
+            display: block;
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: var(--cisco-orange);
+            margin-bottom: 8px;
+        }
+
+        .timing-badge {
+            display: inline-block;
+            background: var(--cisco-teal);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .talking-point {
+            background: rgba(22,189,235,0.06);
+            border-left: 4px solid var(--cisco-teal);
+            padding: 12px 16px;
+            border-radius: 0 6px 6px 0;
+            margin: 12px 0;
+            font-style: italic;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        .checklist li {
+            padding: 8px 0 8px 28px;
+            position: relative;
+        }
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            font-size: 16px;
+        }
+
+        .troubleshooting-item {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+        .troubleshooting-item .problem {
+            font-weight: 600;
+            color: var(--cisco-red);
+            margin-bottom: 4px;
+        }
+        .troubleshooting-item .solution {
+            color: #334155;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .nav-sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 20px; }
+        }
+
+        @media print {
+            .nav-sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .copy-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-sidebar">
+        <div class="nav-logo">
+            <h2>Farmers Insurance</h2>
+            <span class="subtitle">Webex AI Agent Lab</span>
+            <span class="badge">Instructor</span>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Pre-Lab Setup</div>
+            <a href="#setup-checklist" class="nav-item">Setup Checklist</a>
+            <a href="#mcp-deployment" class="nav-item">MCP Server Deployment</a>
+            <a href="#developer-portal" class="nav-item">Developer Portal Registration</a>
+            <a href="#control-hub" class="nav-item">Control Hub Provisioning</a>
+            <a href="#verify-studio" class="nav-item">Verify in AI Agent Studio</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Lab Delivery</div>
+            <a href="#module-1" class="nav-item">Module 1: Create Agent</a>
+            <a href="#module-2" class="nav-item">Module 2: Knowledge Base</a>
+            <a href="#module-3" class="nav-item">Module 3: Actions</a>
+            <a href="#module-4" class="nav-item">Module 4: Test & Validate</a>
+            <a href="#module-5" class="nav-item">Module 5: AI Assistant</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Reference</div>
+            <a href="#troubleshooting" class="nav-item">Troubleshooting</a>
+            <a href="#common-questions" class="nav-item">Common Questions</a>
+            <a href="#architecture" class="nav-item">Architecture Details</a>
+            <a href="#lab-reset" class="nav-item">Lab Reset Procedure</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Webex AI Agent Lab</h1>
+            <h2>Instructor Guide — Farmers Insurance</h2>
+            <div class="meta">Estimated delivery time: 55 minutes | Audience: Technical & Business Leads</div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PRE-LAB SETUP -->
+        <!-- ============================================================ -->
+
+        <section id="setup-checklist">
+            <h2>Pre-Lab Setup Checklist</h2>
+            <p>Complete all items below before participants arrive. Allow 30–45 minutes for first-time setup.</p>
+
+            <ul class="checklist">
+                <li>Deploy MCP server to Render.com — confirm <code>/health</code> returns OK</li>
+                <li>Register agentic app on developer.webex.com (name: <code>edvill_Farmers_Insurance_Tools</code>)</li>
+                <li>Provision app in Control Hub — authorize for your org</li>
+                <li>Verify all 3 tools appear in AI Agent Studio (Actions → +Add Action → MCP Server)</li>
+                <li>Create a test agent and run the full happy path to confirm end-to-end flow</li>
+                <li>Prepare lab environment — ensure participants have Webex Connect access with AI Agent Studio entitlement</li>
+                <li>Share participant guide link: <code>https://farmers-webex-ai-lab-guide.onrender.com/participant-guide.html</code></li>
+                <li>Test voice preview with your microphone (browser permissions required)</li>
+            </ul>
+
+            <div class="instructor-note">
+                The MCP server on Render free tier may sleep after 15 minutes of inactivity. Visit the health endpoint 5 minutes before the lab starts to wake it up. Cold start takes ~30 seconds.
+            </div>
+        </section>
+
+        <section id="mcp-deployment">
+            <h2>MCP Server Deployment</h2>
+            <p>The MCP server provides the three backend tools that participants connect to their AI agents. It's a Node.js application deployed as a web service on Render.com.</p>
+
+            <h3>Server Details</h3>
+            <table>
+                <thead>
+                    <tr><th>Property</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Live URL</td><td><code>https://farmers-insurance-mcp-server.onrender.com</code></td></tr>
+                    <tr><td>Health Check</td><td><code>GET /health</code></td></tr>
+                    <tr><td>MCP Endpoint</td><td><code>POST /mcp</code> (Streamable HTTP transport)</td></tr>
+                    <tr><td>Source Code</td><td><code>mcp-server/</code> directory in this repo</td></tr>
+                    <tr><td>Runtime</td><td>Node.js 18+</td></tr>
+                    <tr><td>Auto-Deploy</td><td>Yes — push to <code>main</code> triggers redeploy</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Tools Exposed</h3>
+            <table>
+                <thead>
+                    <tr><th>Tool Name</th><th>Purpose</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>verify_policyholder_identity</code></td><td>Matches last_name + date_of_birth against static records</td></tr>
+                    <tr><td><code>add_vehicle_to_policy</code></td><td>Adds vehicle, returns confirmation number + premium estimate</td></tr>
+                    <tr><td><code>deliver_proof_of_insurance</code></td><td>Confirms delivery via SMS, email, or mobile app</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Static Test Data</h3>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Policy #</th><th>DOB</th><th>Phone</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Sarah Martinez</td><td>FRM-284719</td><td>03/15/1988</td><td>555-0147</td></tr>
+                    <tr><td>James Thompson</td><td>FRM-551203</td><td>07/22/1975</td><td>555-0298</td></tr>
+                    <tr><td>Linda Chen</td><td>FRM-887341</td><td>11/03/1992</td><td>555-0463</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Verify Health</h3>
+            <div class="copy-block">
+                <button class="copy-btn">Copy</button>
+                <code>curl https://farmers-insurance-mcp-server.onrender.com/health</code>
+            </div>
+            <p>Expected response:</p>
+            <div class="copy-block">
+                <button class="copy-btn">Copy</button>
+                <code>{"status":"ok","server":"Farmers Insurance MCP Server","tools":3}</code>
+            </div>
+
+            <div class="info-box">
+                <strong>Redeployment:</strong> If you need to modify the MCP server (e.g., add test data or fix a bug), edit <code>mcp-server/server.js</code>, commit, and push to <code>main</code>. Render will auto-deploy within 2–3 minutes.
+            </div>
+        </section>
+
+        <section id="developer-portal">
+            <h2>Developer Portal Registration</h2>
+            <p>This step registers your MCP server as an "Agentic App" on the Webex platform, making it discoverable by AI Agent Studio.</p>
+
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Navigate to Developer Portal</div>
+            </div>
+            <p>Open <a href="https://developer.webex.com" target="_blank">developer.webex.com</a> → click <strong>Start Building Apps</strong></p>
+            <p>Alternatively: Profile → <strong>My Webex Apps</strong> → <strong>Create a New App</strong></p>
+
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Select "Create an Agentic App"</div>
+            </div>
+            <p>From the Create a New App page, click <strong>Create an Agentic App</strong> to begin registration.</p>
+
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Enter App Details</div>
+            </div>
+            <p>Fill in the following fields with these exact values:</p>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Module</td><td><code>MCP</code></td></tr>
+                    <tr><td>Transport Type</td><td><code>Streamable HTTP</code></td></tr>
+                    <tr><td>Name</td><td><code>edvill_Farmers_Insurance_Tools</code></td></tr>
+                    <tr><td>Description</td><td>Provides policyholder identity verification, vehicle addition, and proof of insurance delivery for Farmers Insurance AI agent demo lab</td></tr>
+                    <tr><td>App URL</td><td><code>https://farmers-insurance-mcp-server.onrender.com/mcp</code></td></tr>
+                    <tr><td>Auth Type</td><td><code>ApiKey</code></td></tr>
+                </tbody>
+            </table>
+
+            <div class="step-indicator">
+                <div class="step-number">4</div>
+                <div class="step-title">Submit Registration</div>
+            </div>
+            <p>Click <strong>Add Agentic App</strong>. You'll be redirected to the app details page showing your App ID and configuration.</p>
+
+            <div class="info-box">
+                <strong>Why ApiKey?</strong> For a lab environment with static demo data, API key authentication is the simplest option — minimal configuration, no OAuth flows to manage. In a production deployment, you'd use <code>OAuth2_clientCredentials</code> for org-level service authentication.
+            </div>
+        </section>
+
+        <section id="control-hub">
+            <h2>Control Hub Provisioning</h2>
+            <p>An administrator must authorize the agentic app for the organization before it appears in AI Agent Studio.</p>
+
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Navigate to Agentic Apps</div>
+            </div>
+            <p>In <strong>Control Hub</strong>, go to <strong>Apps</strong> → <strong>Agentic Apps</strong>. Find <code>edvill_Farmers_Insurance_Tools</code> in the list.</p>
+
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Allow for Organization</div>
+            </div>
+            <p>Select the app → <strong>General tab</strong> → Set to <strong>"Allowed"</strong> for all users (or scope to specific groups if needed).</p>
+
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Configure Authentication</div>
+            </div>
+            <p>In the <strong>Authentication</strong> section, enter the API key value:</p>
+            <div class="copy-block">
+                <button class="copy-btn">Copy</button>
+                <code>farmers-lab-2025</code>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-number">4</div>
+                <div class="step-title">Enable Tools</div>
+            </div>
+            <p>Go to the <strong>Tools tab</strong>. You should see all 3 tools auto-discovered from the MCP server:</p>
+            <ul>
+                <li><code>verify_policyholder_identity</code> — Enable ✓</li>
+                <li><code>add_vehicle_to_policy</code> — Enable ✓</li>
+                <li><code>deliver_proof_of_insurance</code> — Enable ✓</li>
+            </ul>
+            <p>Optionally toggle <strong>"Allow signature change"</strong> for each tool (useful during development if you update tool schemas).</p>
+
+            <div class="instructor-note">
+                Changes to tool definitions on the MCP server (names, descriptions, input schemas) sync automatically to Control Hub and AI Agent Studio. You don't need to re-register — just redeploy the server.
+            </div>
+        </section>
+
+        <section id="verify-studio">
+            <h2>Verify in AI Agent Studio</h2>
+            <p>Final validation that the full chain works: MCP Server → Developer Portal → Control Hub → AI Agent Studio.</p>
+
+            <ol>
+                <li>Open AI Agent Studio (cross-launch from Control Hub → Services → Contact Center → Digital → Webex Connect → App Tray → Webex AI Agent)</li>
+                <li>Create a quick test agent (or use an existing one)</li>
+                <li>Go to <strong>Actions</strong> tab → <strong>+Add Action</strong></li>
+                <li>Select <strong>MCP Server</strong> as the action source</li>
+                <li>Look for <strong>"edvill_Farmers_Insurance_Tools"</strong></li>
+                <li>Confirm all 3 tools appear with correct input entities</li>
+                <li>Connect the tools and test the happy path via chat preview</li>
+            </ol>
+
+            <div class="info-box success">
+                <strong>Happy path test script:</strong> "Hi, I'm Sarah Martinez. My date of birth is March 15, 1988. I'd like to add a 2024 Honda CR-V to my policy. I use it for commuting. Please send proof of insurance via text message."
+            </div>
+
+            <div class="troubleshooting-item">
+                <div class="problem">Tools don't appear when browsing actions?</div>
+                <div class="solution">Go back to Control Hub → Apps → Agentic Apps → verify the app status is "Allowed" and all tools are enabled. If you just completed provisioning, wait 1–2 minutes for sync.</div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- LAB DELIVERY -->
+        <!-- ============================================================ -->
+
+        <section id="module-1">
+            <div class="module-header">
+                <h2>Module 1: Create Your AI Agent <span class="timing-badge">~15 min</span></h2>
+                <p>Participants create a new Autonomous AI agent, name it, and write the system instructions that define its behavior.</p>
+            </div>
+
+            <h3>Key Talking Points</h3>
+            <div class="talking-point">
+                "This is where you give your agent its personality and rules. Think of the system prompt as training a new employee — you're telling it exactly how to handle calls, what to ask for, and what it's allowed to do."
+            </div>
+            <div class="talking-point">
+                "The instructions we provide aren't just prompts — they define the agent's entire behavior boundaries. If you don't tell it to verify identity first, it won't. If you don't tell it to offer delivery options, it'll pick one arbitrarily."
+            </div>
+            <div class="talking-point">
+                "Notice we're writing instructions in natural language, not code. This is the power of LLM-based agents — you describe the behavior you want, and the AI figures out how to execute it."
+            </div>
+
+            <h3>What Participants Do</h3>
+            <ul>
+                <li>Access AI Agent Studio through Control Hub cross-launch</li>
+                <li>Create a new <strong>Autonomous</strong> agent (not Scripted)</li>
+                <li>Configure the agent profile (name, description)</li>
+                <li>Write system instructions using 3 copy blocks provided in the participant guide</li>
+            </ul>
+
+            <div class="instructor-note">
+                Common issue: participants may try to access AI Agent Studio directly via URL instead of cross-launching from Control Hub. If they get "access denied," guide them through: Control Hub → Services → Contact Center → Digital → Webex Connect → App Tray → Webex AI Agent.
+            </div>
+        </section>
+
+        <section id="module-2">
+            <div class="module-header">
+                <h2>Module 2: Build Knowledge Base <span class="timing-badge">~10 min</span></h2>
+                <p>Participants create a knowledge base with pre-written articles and link it to their agent.</p>
+            </div>
+
+            <h3>Key Talking Points</h3>
+            <div class="talking-point">
+                "The knowledge base is your agent's reference material — what it knows about your business without needing to call an API. Think FAQ answers, policy details, and procedures."
+            </div>
+            <div class="talking-point">
+                "In production, you'd connect to a document repository or CMS. For this lab, we pre-wrote three articles to ensure everyone gets consistent results."
+            </div>
+            <div class="talking-point">
+                "Notice the articles are written in a specific format — short paragraphs, clear headers, factual content. The better structured your knowledge base, the better your agent retrieves relevant information."
+            </div>
+
+            <h3>What Participants Do</h3>
+            <ul>
+                <li>Create a new knowledge base in AI Agent Studio</li>
+                <li>Add 3 pre-written articles (copy/paste from participant guide — copy buttons provided)</li>
+                <li>Link the knowledge base to their agent</li>
+            </ul>
+
+            <div class="instructor-note">
+                Make sure participants name their knowledge base clearly (e.g., "Farmers Insurance KB"). If someone gets an error uploading, it's usually a formatting issue — have them re-copy the article text using the copy button (don't manually select text). Also remind them to <strong>link</strong> the KB to their agent after creating it — a common miss.
+            </div>
+        </section>
+
+        <section id="module-3">
+            <div class="module-header">
+                <h2>Module 3: Configure Actions <span class="timing-badge">~10 min</span></h2>
+                <p>Participants connect pre-configured MCP server actions to their agent and review the input entities.</p>
+            </div>
+
+            <h3>Key Talking Points</h3>
+            <div class="talking-point">
+                "Actions are what make an AI agent actually useful. Without them, it can only talk — with actions, it can DO things. Verify identity, update records, send documents."
+            </div>
+            <div class="talking-point">
+                "Notice how the tool definitions came from the MCP server automatically — the agent studio didn't need manual input configuration. The tool name, description, and input parameters all sync from the server definition."
+            </div>
+            <div class="talking-point">
+                "This is the MCP standard at work — Model Context Protocol. It's an open standard that lets AI agents discover and use external tools without custom integrations for each one."
+            </div>
+
+            <h3>What Participants Do</h3>
+            <ul>
+                <li>Navigate to Actions tab → +Add Action → MCP Server</li>
+                <li>Find <strong>"edvill_Farmers_Insurance_Tools"</strong> and connect all 3 tools</li>
+                <li>Review input entities for each tool (entity tables in participant guide)</li>
+                <li>Understand the action flow: agent decides when to call → passes entities → receives result</li>
+            </ul>
+
+            <div class="instructor-note">
+                If tools don't appear when participants click Add Action → MCP Server, this is a <strong>Control Hub provisioning issue on the admin side</strong> — not participant error. Double-check that the app status is "Allowed" and all tools are enabled. Participants cannot fix this themselves.
+            </div>
+        </section>
+
+        <section id="module-4">
+            <div class="module-header">
+                <h2>Module 4: Test & Validate <span class="timing-badge">~15 min</span></h2>
+                <p>Participants test their agent end-to-end using chat and voice preview, including edge cases.</p>
+            </div>
+
+            <h3>Key Talking Points</h3>
+            <div class="talking-point">
+                "This is where it all comes together. The happy path tests the full flow: identify the customer → add their vehicle → deliver proof of insurance. All in one conversation."
+            </div>
+            <div class="talking-point">
+                "Try the edge cases too — what happens when you give a wrong date of birth? A good agent handles failures gracefully, explains what went wrong, and offers alternatives."
+            </div>
+            <div class="talking-point">
+                "If the agent doesn't behave as expected, go back to Module 1 and refine the instructions. This iterative process — test, observe, refine — is exactly how you'd develop a production agent."
+            </div>
+
+            <h3>Happy Path Test Data</h3>
+            <div class="info-box success">
+                <strong>Script for testing:</strong> "I'm Sarah Martinez. My date of birth is March 15, 1988. I just bought a 2024 Honda CR-V and need to add it to my policy. I use it for commuting. Can you send me proof of insurance by text?"
+            </div>
+
+            <h3>What Participants Do</h3>
+            <ul>
+                <li>Run the happy path via <strong>chat preview</strong></li>
+                <li>Test <strong>voice preview</strong> (requires microphone permission)</li>
+                <li>Try edge cases: wrong DOB, invalid policy, missing information</li>
+                <li>Iterate on agent instructions if behavior isn't right</li>
+            </ul>
+
+            <div class="instructor-note">
+                Voice preview requires browser microphone access — remind participants to allow the permission prompt. Some corporate environments or VPNs block WebRTC. If mic doesn't work, have them use chat preview instead (same functionality, just typed). Also: Render free tier cold starts may cause a 30-second delay on the first action call if the server was sleeping.
+            </div>
+        </section>
+
+        <section id="module-5">
+            <div class="module-header">
+                <h2>Module 5: AI Assistant Overview <span class="timing-badge">~5 min</span></h2>
+                <p>Conceptual wrap-up showing how AI Agent + AI Assistant create a complete solution.</p>
+            </div>
+
+            <h3>Key Talking Points</h3>
+            <div class="talking-point">
+                "AI Agent handles the customer-facing side — it talks to customers 24/7. AI Assistant handles the human-agent side — when a call escalates, it gives your team full context, summaries, and suggested responses."
+            </div>
+            <div class="talking-point">
+                "They're complementary. In a full deployment, the AI Agent resolves what it can autonomously, and AI Assistant makes human agents more effective for everything else."
+            </div>
+
+            <h3>What Participants Do</h3>
+            <ul>
+                <li>Review the AI Agent vs AI Assistant comparison table</li>
+                <li>Understand the end-to-end customer journey flow</li>
+                <li>Complete the lab summary and discuss next steps</li>
+            </ul>
+
+            <div class="instructor-note">
+                This is a wrap-up module — keep it brief (5 minutes max). The goal is to leave participants with the bigger picture. If running short on time, you can summarize verbally and skip having them read the detailed comparison. End with: "What questions do you have about deploying this in your environment?"
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- REFERENCE -->
+        <!-- ============================================================ -->
+
+        <section id="troubleshooting">
+            <h2>Troubleshooting</h2>
+
+            <div class="troubleshooting-item">
+                <div class="problem">Tools don't appear in AI Agent Studio when adding actions</div>
+                <div class="solution">Check Control Hub → Apps → Agentic Apps. Ensure the app is set to "Allowed" and all tools are enabled in the Tools tab. Wait 1–2 minutes after provisioning for sync to complete.</div>
+            </div>
+
+            <div class="troubleshooting-item">
+                <div class="problem">MCP server health check fails (503 or timeout)</div>
+                <div class="solution">The Render free tier spins down after 15 minutes of inactivity. Visit <code>https://farmers-insurance-mcp-server.onrender.com/health</code> directly — it will cold start in ~30 seconds. Wait and retry.</div>
+            </div>
+
+            <div class="troubleshooting-item">
+                <div class="problem">Agent doesn't use the actions during testing</div>
+                <div class="solution">Check the system instructions (Module 1) — ensure they explicitly tell the agent to verify identity before adding vehicles. Also verify actions are <em>connected</em> to the agent (not just available in the catalog). Go to Actions tab and confirm all 3 show as connected.</div>
+            </div>
+
+            <div class="troubleshooting-item">
+                <div class="problem">Voice preview says "microphone access denied"</div>
+                <div class="solution">Browser needs mic permission. Click the lock/site-info icon in the address bar → allow microphone. Some corporate VPNs or security policies block WebRTC — try disconnecting VPN, or use chat preview as fallback.</div>
+            </div>
+
+            <div class="troubleshooting-item">
+                <div class="problem">Participant can't access AI Agent Studio</div>
+                <div class="solution">They need a Webex Connect login with AI Agent Studio entitlement. The correct path is: Control Hub → Services → Contact Center → Digital → Webex Connect → App Tray → Webex AI Agent. Direct URL access won't work without proper provisioning.</div>
+            </div>
+
+            <div class="troubleshooting-item">
+                <div class="problem">verify_policyholder_identity keeps returning "unable to verify"</div>
+                <div class="solution">Date of birth format must be exactly MM/DD/YYYY (e.g., <code>03/15/1988</code>, not "March 15 1988"). The agent should convert natural language dates to this format, but if the system instructions aren't clear enough, the agent may pass the wrong format. Refine instructions to explicitly state the format conversion requirement.</div>
+            </div>
+
+            <div class="troubleshooting-item">
+                <div class="problem">First action call is very slow (30+ seconds)</div>
+                <div class="solution">This is Render free tier cold start. The MCP server sleeps after inactivity and takes ~30 seconds to wake up. Hit the health endpoint before the lab starts. In a production deployment, you'd use a paid tier with always-on instances.</div>
+            </div>
+        </section>
+
+        <section id="common-questions">
+            <h2>Common Questions</h2>
+
+            <h4>"Can we use this with our real policy data?"</h4>
+            <p>In production, you'd replace the static data in <code>server.js</code> with API calls to your policy management system. The MCP server architecture is identical — same tool definitions, same transport, same registration process. You just swap the data source behind the tools.</p>
+
+            <h4>"How secure is this?"</h4>
+            <p>For the lab, we use ApiKey auth for simplicity. Production deployments would use OAuth2 with client credentials for org-level service authentication. All traffic is HTTPS. The MCP server can implement any authentication scheme supported by the platform (OAuth2, custom headers, user tokens).</p>
+
+            <h4>"Can the AI agent make mistakes?"</h4>
+            <p>Yes — that's why the lab includes identity verification as the first step. In production, you'd add guardrails: human-in-the-loop approval for high-value transactions, audit logging for all actions taken, rate limiting, and configurable escalation thresholds.</p>
+
+            <h4>"What happens if the MCP server goes down?"</h4>
+            <p>The agent will still respond conversationally (using its instructions and knowledge base) but won't be able to complete transactions. A well-written system prompt tells the agent to gracefully inform the customer and offer to connect them with a human agent during business hours.</p>
+
+            <h4>"How long to deploy something like this in production?"</h4>
+            <p>The AI Agent Studio configuration itself takes hours. The significant effort is building production-grade MCP servers with real system integrations, comprehensive error handling, security review, and compliance approval — that's a development project ranging from weeks to months depending on the number of backend systems involved.</p>
+
+            <h4>"Can we add more tools later?"</h4>
+            <p>Absolutely. Add new tool definitions to the MCP server code, redeploy, and they'll automatically appear in Control Hub and AI Agent Studio. No re-registration needed — the platform discovers new tools from the server dynamically.</p>
+        </section>
+
+        <section id="architecture">
+            <h2>Architecture Details</h2>
+            <p>How the components connect in this lab environment:</p>
+
+            <div class="diagram">
+                <pre>
+┌─────────────────────────────────────────────────────────────────┐
+│                    WEBEX AI AGENT STUDIO                         │
+│                                                                  │
+│  ┌──────────────┐   ┌────────────────┐   ┌──────────────────┐  │
+│  │   System     │   │   Knowledge    │   │   MCP Actions    │  │
+│  │ Instructions │   │     Base       │   │  (3 tools)       │  │
+│  └──────────────┘   └────────────────┘   └────────┬─────────┘  │
+│                                                    │             │
+│  Agent decides WHEN to call tools based on         │             │
+│  conversation context + system instructions        │             │
+└────────────────────────────────────────────────────┼─────────────┘
+                                                     │
+                                                     │ HTTPS POST
+                                                     │ Streamable HTTP
+                                                     ▼
+┌─────────────────────────────────────────────────────────────────┐
+│          MCP SERVER  (Render.com - Node.js)                      │
+│          https://farmers-insurance-mcp-server.onrender.com       │
+│                                                                  │
+│  ┌──────────────────┐ ┌───────────────┐ ┌───────────────────┐  │
+│  │ verify_policy-   │ │ add_vehicle_  │ │ deliver_proof_of_ │  │
+│  │ holder_identity  │ │ to_policy     │ │ insurance         │  │
+│  │                  │ │               │ │                   │  │
+│  │ Matches name +   │ │ Generates     │ │ Confirms delivery │  │
+│  │ DOB against      │ │ confirmation  │ │ via SMS, email,   │  │
+│  │ static records   │ │ number +      │ │ or mobile app     │  │
+│  │                  │ │ premium est.  │ │                   │  │
+│  └──────────────────┘ └───────────────┘ └───────────────────┘  │
+│                                                                  │
+│  Static Data: 3 policyholders (Martinez, Thompson, Chen)         │
+│  No database — deterministic responses for demo consistency      │
+└─────────────────────────────────────────────────────────────────┘
+
+Registration Chain:
+  developer.webex.com  →  Control Hub  →  AI Agent Studio
+  (register app)          (authorize)     (connect tools)
+                </pre>
+            </div>
+
+            <h3>Data Flow for a Single Customer Interaction</h3>
+            <ol>
+                <li>Customer speaks/types to the AI Agent via chat or voice preview</li>
+                <li>Agent uses <strong>system instructions</strong> to determine conversation flow</li>
+                <li>Agent consults <strong>knowledge base</strong> for factual answers (policy info, hours, coverage details)</li>
+                <li>Agent calls <strong>verify_policyholder_identity</strong> with collected name + DOB</li>
+                <li>On success → agent calls <strong>add_vehicle_to_policy</strong> with vehicle details</li>
+                <li>On success → agent calls <strong>deliver_proof_of_insurance</strong> with delivery preference</li>
+                <li>Agent confirms completion to customer with all reference numbers</li>
+            </ol>
+        </section>
+
+        <section id="lab-reset">
+            <h2>Lab Reset Procedure</h2>
+            <p>Steps to prepare the lab for a new cohort of participants:</p>
+
+            <ol>
+                <li><strong>Verify MCP server health:</strong>
+                    <div class="copy-block">
+                        <button class="copy-btn">Copy</button>
+                        <code>curl https://farmers-insurance-mcp-server.onrender.com/health</code>
+                    </div>
+                </li>
+                <li><strong>No data reset needed</strong> — the MCP server is stateless with hardcoded static data. Every call returns deterministic results regardless of previous usage.</li>
+                <li><strong>No participant cleanup needed</strong> — each participant creates their own agent in their own workspace. Previous participants' agents don't interfere.</li>
+                <li><strong>Wake up Render if sleeping:</strong> If the health check returns a 503 or times out, the free tier has spun down. Just visit the health URL — it'll cold start in ~30 seconds.</li>
+                <li><strong>Optional validation:</strong> Create a fresh test agent yourself and run the happy path to confirm the full flow works before participants arrive.</li>
+                <li><strong>Share the participant guide link:</strong>
+                    <div class="copy-block">
+                        <button class="copy-btn">Copy</button>
+                        <code>https://farmers-webex-ai-lab-guide.onrender.com/participant-guide.html</code>
+                    </div>
+                </li>
+            </ol>
+
+            <div class="info-box">
+                <strong>Pro tip:</strong> Open the health endpoint in a browser tab and leave it open during the lab. This keeps the Render service warm and prevents cold-start delays when participants first trigger an action.
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Copy button functionality
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const block = this.closest('.copy-block');
+                    const code = block.querySelector('code');
+                    navigator.clipboard.writeText(code.textContent).then(() => {
+                        const original = this.innerHTML;
+                        this.innerHTML = '✓ Copied!';
+                        this.classList.add('copied');
+                        setTimeout(() => {
+                            this.innerHTML = original;
+                            this.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+            });
+
+            // Active nav highlighting on scroll
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.nav-item');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === '#' + current) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
