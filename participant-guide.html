@@ -996,12 +996,56 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
 
         <section id="complement">
             <h3>How AI Assistant Complements AI Agents</h3>
-            <p><em>Content placeholder — AI Assistant features table</em></p>
+            <div class="info-box">
+                <strong>The handoff scenario:</strong> Sarah's vehicle addition is processed successfully, but she has a complex question about whether her comprehensive coverage deductible should change for a newer vehicle. The AI Agent can't give personalized coverage advice (that's a guardrail we set), so it transfers to a human agent.
+            </div>
+            <p><strong>What the human agent receives via AI Assistant:</strong></p>
+            <table>
+                <thead>
+                    <tr><th>AI Assistant Feature</th><th>What It Provides</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Transfer Summary</strong></td><td>AI-generated summary: "Customer Sarah Martinez (policy FRM-2024-8847291) added a 2024 Honda CR-V. Vehicle addition complete. Customer has questions about comprehensive coverage deductible options for the new vehicle."</td></tr>
+                    <tr><td><strong>Real-Time Transcription</strong></td><td>Live text of the ongoing conversation so the agent can follow along</td></tr>
+                    <tr><td><strong>Suggested Responses</strong></td><td>AI-recommended replies pulled from knowledge base and conversation context</td></tr>
+                    <tr><td><strong>Wrap-Up Summary</strong></td><td>Auto-generated case notes after the call ends — no manual note-taking needed</td></tr>
+                </tbody>
+            </table>
+            <p>The human agent picks up with <strong>full context</strong> — Sarah doesn't repeat a single thing.</p>
+
+            <h4>The Complete Customer Experience</h4>
+            <ol>
+                <li>Sarah calls at 9:47 PM → <strong>AI Agent</strong> answers immediately (no hold time)</li>
+                <li>AI Agent verifies identity, collects vehicle info, processes addition → <strong>Resolved in ~3 minutes</strong></li>
+                <li>Sarah asks about deductible options → AI Agent says <em>"Let me connect you with a specialist"</em></li>
+                <li><strong>AI Assistant</strong> gives the human agent a transfer summary with full context</li>
+                <li>Human agent uses <strong>Suggested Responses</strong> for accurate coverage information</li>
+                <li>After the call, <strong>Wrap-Up Summary</strong> auto-generates case notes</li>
+            </ol>
         </section>
 
         <section id="summary">
             <h3>Summary & Next Steps</h3>
-            <p><em>Content placeholder — Summary and production next steps</em></p>
+            <p><strong>What you built today:</strong></p>
+            <ul>
+                <li>✅ An autonomous AI agent with a defined persona, conversation flow, and guardrails</li>
+                <li>✅ A curated knowledge base with three focused policy articles</li>
+                <li>✅ Connected three MCP server actions for identity verification, vehicle addition, and proof delivery</li>
+                <li>✅ Tested the complete customer journey via chat and voice</li>
+                <li>✅ Understood how AI Assistant bridges the gap when escalation is needed</li>
+            </ul>
+            <p><strong>What comes next in a production deployment:</strong></p>
+            <ul>
+                <li>Connect MCP servers to real policy management APIs</li>
+                <li>Integrate with Webex Contact Center for voice/digital channel routing</li>
+                <li>Configure escalation queues for human agent handoff</li>
+                <li>Set up AI Assistant skills for the human agents</li>
+                <li>Deploy analytics and reporting dashboards</li>
+                <li>Tune the agent continuously based on real conversation data</li>
+            </ul>
+            <div class="info-box success">
+                <strong>Key takeaway:</strong> Webex AI Agent handles routine transactions 24/7. AI Assistant empowers human agents for complex moments. Together, they deliver: no wait times for customers, less repetitive work for agents, and 24/7 service without 24/7 staffing.
+            </div>
         </section>
     </div>
 
