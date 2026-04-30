@@ -520,7 +520,7 @@
         <section id="use-case">
             <h2>Use Case: "After-Hours Vehicle Addition"</h2>
             <div class="info-box">
-                <strong>The Scenario:</strong> It's 9:47 PM on a Saturday night. Sarah Martinez just signed the paperwork on a 2024 Honda CR-V at a dealership. Her two kids are asleep in the back of her trade-in. The finance manager tells her: <em>"We need proof of insurance covering this specific vehicle before we can hand you the keys."</em><br><br>
+                <strong>The Scenario:</strong> It's 9:47 PM on a Saturday night. Sarah Smith just signed the paperwork on a 2024 Honda CR-V at a dealership. Her two kids are asleep in the back of her trade-in. The finance manager tells her: <em>"We need proof of insurance covering this specific vehicle before we can hand you the keys."</em><br><br>
                 Sarah calls Farmers Insurance and hears: <em>"Our offices are currently closed. Business hours are Monday through Friday, 8 AM to 6 PM..."</em><br><br>
                 The dealership closes in <strong>28 minutes</strong>.
             </div>
@@ -635,12 +635,15 @@
                 <strong>Why Autonomous?</strong> Sarah might say "I just bought a car" or "I need to add a vehicle" or "Can you update my insurance?" — an autonomous agent powered by an LLM understands all these variations without programming each one. Scripted agents are better for highly structured flows where exact repeatability is critical.
             </div>
             <p>Fill in the following fields:</p>
+            <div class="info-box warning">
+                <strong>📌 Use your seat number!</strong> Since all 10 participants share the same AI Agent Studio environment, you must include your seat number in the names of agents, knowledge bases, and other resources. This ensures you can easily find yours in shared lists.
+            </div>
             <table>
                 <thead>
                     <tr><th>Field</th><th>Value</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Agent Name</td><td>Farmers Vehicle Addition Agent</td></tr>
+                    <tr><td>Agent Name</td><td>Farmers Agent <span class="seat-num">N</span></td></tr>
                     <tr><td>Description</td><td>Helps policyholders add new vehicles to their existing auto insurance policy 24/7</td></tr>
                     <tr><td>AI Engine</td><td>(Select the default — your instructor will confirm)</td></tr>
                 </tbody>
@@ -740,7 +743,7 @@ Your tone is warm but efficient — you understand that customers contacting you
                     <tr><th>Field</th><th>Value</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Name</td><td>Farmers Auto Policy Knowledge Base</td></tr>
+                    <tr><td>Name</td><td>Farmers KB <span class="seat-num">N</span></td></tr>
                     <tr><td>Description</td><td>Policy information, vehicle addition procedures, coverage details, and FAQs for auto insurance</td></tr>
                 </tbody>
             </table>
@@ -901,7 +904,7 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
             <ol>
                 <li>Navigate back to your agent: click <strong>Agents</strong> in left nav → select <strong>Farmers Vehicle Addition Agent</strong></li>
                 <li>Go to the <strong>Knowledge</strong> tab in agent configuration</li>
-                <li>From the dropdown, select <strong>Farmers Auto Policy Knowledge Base</strong></li>
+                <li>From the dropdown, select <strong>Farmers KB <span class="seat-num">N</span></strong></li>
                 <li>Click <strong>Save Changes</strong></li>
             </ol>
             <div class="info-box success">
@@ -1047,8 +1050,8 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                 </thead>
                 <tbody>
                     <tr><td>Hi, I just bought a new car and need to add it to my insurance right away</td><td>Agent greets warmly, acknowledges urgency, asks for verification</td></tr>
-                    <tr><td>My policy number is FRM-2024-8847291, last name Martinez</td><td>Agent asks for date of birth to complete verification</td></tr>
-                    <tr><td>March 15, 1985</td><td>Agent confirms identity, transitions to collecting vehicle info</td></tr>
+                    <tr><td>My policy number is FRM-10<span class="seat-num">N</span>, last name Smith</td><td>Agent asks for date of birth to complete verification</td></tr>
+                    <tr><td>May 5, 1990</td><td>Agent confirms identity, transitions to collecting vehicle info</td></tr>
                     <tr><td>It's a 2024 Honda CR-V</td><td>Agent asks for primary use</td></tr>
                     <tr><td>I'll use it for commuting</td><td>Agent confirms details, asks for delivery preference</td></tr>
                     <tr><td>Text it to me at <em>(your real phone number)</em></td><td>Agent confirms and triggers SMS delivery</td></tr>
@@ -1135,7 +1138,7 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                     <tr><th>AI Assistant Feature</th><th>What It Provides</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Transfer Summary</strong></td><td>AI-generated summary: "Customer Sarah Martinez (policy FRM-2024-8847291) added a 2024 Honda CR-V. Vehicle addition complete. Customer has questions about comprehensive coverage deductible options for the new vehicle."</td></tr>
+                    <tr><td><strong>Transfer Summary</strong></td><td>AI-generated summary: "Customer Sarah Smith (policy FRM-10<span class="seat-num">N</span>) added a 2024 Honda CR-V. Vehicle addition complete. Customer has questions about comprehensive coverage deductible options for the new vehicle."</td></tr>
                     <tr><td><strong>Real-Time Transcription</strong></td><td>Live text of the ongoing conversation so the agent can follow along</td></tr>
                     <tr><td><strong>Suggested Responses</strong></td><td>AI-recommended replies pulled from knowledge base and conversation context</td></tr>
                     <tr><td><strong>Wrap-Up Summary</strong></td><td>Auto-generated case notes after the call ends — no manual note-taking needed</td></tr>
@@ -1266,6 +1269,12 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                     });
                 });
             }
+
+            // Dynamic seat number injection — replaces all .seat-num elements
+            const seatLabel = (seat >= 1 && seat <= 10) ? String(seat) : 'N';
+            document.querySelectorAll('.seat-num').forEach(el => {
+                el.textContent = seatLabel;
+            });
 
             // Copy button functionality
             document.querySelectorAll('.copy-btn').forEach(btn => {
