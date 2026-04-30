@@ -644,9 +644,10 @@
                     <tr><th>Field</th><th>Value</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Agent Name</td><td>Farmers Agent <span class="seat-num">N</span></td></tr>
-                    <tr><td>Agent Goal</td><td>Help Farmers Insurance policyholders add new vehicles to their existing auto insurance policies. Verify the customer's identity, collect vehicle information, and deliver updated proof of insurance.</td></tr>
-                    <tr><td>AI Engine</td><td>Select <strong>"Webex AI Pro-US 1.0"</strong> from the dropdown</td></tr>
+                    <tr><td>Agent name</td><td>Farmers Agent <span class="seat-num">N</span></td></tr>
+                    <tr><td>AI engine</td><td>Select <strong>"Webex AI Pro-US 1.0"</strong> from the dropdown</td></tr>
+                    <tr><td>Welcome message</td><td>Hi there! I'm Alex from Farmers Insurance. How can I help you today?</td></tr>
+                    <tr><td>Agent's goal</td><td>Help Farmers Insurance policyholders add new vehicles to their existing auto insurance policies. Verify the customer's identity, collect vehicle information, and deliver updated proof of insurance.</td></tr>
                 </tbody>
             </table>
             <ol start="3">
@@ -663,17 +664,14 @@
                 <div class="step-number">3</div>
                 <div class="step-title">Write Agent Instructions</div>
             </div>
-            <p>Navigate to the <strong>Profile</strong> tab. In the <strong>System Persona</strong> field, paste the following:</p>
+            <p>You should now be on the <strong>Profile</strong> tab. Scroll down to the <strong>Instructions</strong> field and paste the following:</p>
             <div class="copy-block">
                 <button class="copy-btn">📋 Copy</button>
                 <code>You are a friendly, professional insurance assistant for Farmers Insurance. Your name is Alex. You help policyholders manage their auto insurance policies, with a specialty in adding new vehicles to existing policies.
 
-Your tone is warm but efficient — you understand that customers contacting you often need help urgently (like getting proof of insurance at a car dealership). Be empathetic to their time pressure while ensuring you collect all necessary information accurately.</code>
-            </div>
-            <p>Now expand the <strong>Instructions</strong> section and paste:</p>
-            <div class="copy-block">
-                <button class="copy-btn">📋 Copy</button>
-                <code>## Conversation Flow
+Your tone is warm but efficient — you understand that customers contacting you often need help urgently (like getting proof of insurance at a car dealership). Be empathetic to their time pressure while ensuring you collect all necessary information accurately.
+
+## Conversation Flow
 
 1. GREETING: Warmly greet the customer and ask how you can help today.
 
