@@ -215,8 +215,18 @@ server.tool(
 
     switch (delivery_method) {
       case "sms":
-        // Determine the phone number to use
-        const smsPhone = phone_number || policyholder.phone_number;
+        // Determine the phone number to use and normalize to +1XXXXXXXXXX format
+        let smsPhone = phone_number || policyholder.phone_number;
+        // Strip all non-digit characters
+        const digits = smsPhone.replace(/\D/g, "");
+        // Ensure +1 prefix with 10 digits
+        if (digits.length === 10) {
+          smsPhone = "+1" + digits;
+        } else if (digits.length === 11 && digits.startsWith("1")) {
+          smsPhone = "+" + digits;
+        } else {
+          smsPhone = "+" + digits;
+        }
         const lastFour = smsPhone.slice(-4);
 
         // Call Webex Connect webhook to send real SMS
