@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — Webex AI Agent Lab</title>
+    <style>
+        :root {
+            --primary: #3070E7;
+            --primary-light: #EBF2FF;
+            --text: #0F1729;
+            --text-muted: #64748B;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border: #E2E8F0;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { margin-bottom: 40px; }
+        header h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+        header p { color: var(--text-muted); font-size: 16px; }
+        header a { color: var(--primary); text-decoration: none; font-weight: 500; }
+        header a:hover { text-decoration: underline; }
+        .toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px 32px; margin-bottom: 40px; }
+        .toc h2 { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .toc ul { list-style: none; columns: 2; column-gap: 32px; }
+        .toc li { margin-bottom: 8px; }
+        .toc a { color: var(--primary); text-decoration: none; font-size: 14px; }
+        .toc a:hover { text-decoration: underline; }
+        .faq-section { margin-bottom: 48px; }
+        .faq-section h2 { font-size: 20px; font-weight: 600; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: inline-block; }
+        .faq-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+        .faq-question { padding: 18px 24px; cursor: pointer; font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+        .faq-question:hover { background: var(--primary-light); }
+        .faq-question::after { content: '+'; font-size: 20px; font-weight: 300; color: var(--primary); transition: transform 0.2s; }
+        .faq-item.open .faq-question::after { content: '−'; }
+        .faq-answer { padding: 0 24px 18px; display: none; font-size: 14px; color: #374151; }
+        .faq-item.open .faq-answer { display: block; }
+        .faq-answer p { margin-bottom: 12px; }
+        .faq-answer ul, .faq-answer ol { margin: 8px 0 12px 20px; }
+        .faq-answer li { margin-bottom: 6px; }
+        .faq-answer code { background: #F1F5F9; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #1E293B; }
+        .faq-answer strong { color: var(--text); }
+        .tip { background: #F0FDF4; border-left: 4px solid var(--success); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 13px; }
+        .warning { background: #FFFBEB; border-left: 4px solid var(--warning); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 13px; }
+        .resource-link { background: var(--primary-light); padding: 16px 20px; border-radius: 8px; margin-top: 40px; font-size: 14px; }
+        .resource-link a { color: var(--primary); font-weight: 600; }
+        @media (max-width: 600px) {
+            .toc ul { columns: 1; }
+            body { padding: 20px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Frequently Asked Questions</h1>
+            <p>Common questions and answers for lab participants</p>
+            <p style="margin-top: 12px;"><a href="index.html">← Back to Lab Home</a> · <a href="participant-guide.html">Participant Guide</a></p>
+        </header>
+
+        <nav class="toc">
+            <h2>Sections</h2>
+            <ul>
+                <li><a href="#getting-started">Getting Started & Login</a></li>
+                <li><a href="#agent-config">Agent Configuration</a></li>
+                <li><a href="#knowledge-base">Knowledge Base</a></li>
+                <li><a href="#actions-mcp">Actions & MCP</a></li>
+                <li><a href="#testing">Testing & Preview</a></li>
+                <li><a href="#voice">Voice Interactions</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+                <li><a href="#sessions-analytics">Sessions & Analytics</a></li>
+                <li><a href="#publishing">Publishing & Deployment</a></li>
+                <li><a href="#general">General Concepts</a></li>
+            </ul>
+        </nav>
+
+        <!-- GETTING STARTED -->
+        <div id="getting-started" class="faq-section">
+            <h2>Getting Started & Login</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I log in to Webex AI Agent Studio?</div>
+                <div class="faq-answer">
+                    <p>Navigate to <strong>Webex Control Hub</strong> and sign in with the lab credentials provided to you (check the credential bar at the bottom of the Participant Guide). From Control Hub, go to <strong>Services → AI Agent Studio</strong> to access the platform.</p>
+                    <div class="tip"><strong>Tip:</strong> Use an incognito/private browser window to avoid conflicts with your personal Webex account.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">I can't find AI Agent Studio in Control Hub. Where is it?</div>
+                <div class="faq-answer">
+                    <p>AI Agent Studio is located under <strong>Services</strong> in the left navigation of Webex Control Hub. If you don't see it:</p>
+                    <ul>
+                        <li>Make sure you're logged in with the <strong>lab credentials</strong> (not your personal account)</li>
+                        <li>Check that the URL shows the correct organization</li>
+                        <li>Try refreshing the page or clearing your browser cache</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Which browser should I use?</div>
+                <div class="faq-answer">
+                    <p>Google Chrome or Microsoft Edge (Chromium-based) are recommended. Safari and Firefox work but may have minor UI differences. Ensure your browser is up to date.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I use my personal Webex account for this lab?</div>
+                <div class="faq-answer">
+                    <p>No. The lab environment is pre-configured with specific permissions and MCP server access. Use only the lab credentials assigned to your seat. Your personal account won't have access to the lab organization's AI Agent Studio.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- AGENT CONFIGURATION -->
+        <div id="agent-config" class="faq-section">
+            <h2>Agent Configuration</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">What's the difference between a Scripted and Autonomous agent?</div>
+                <div class="faq-answer">
+                    <p><strong>Scripted agents</strong> follow a pre-defined conversation flow (like a decision tree). You design every possible path the conversation can take.</p>
+                    <p><strong>Autonomous agents</strong> (what we use in this lab) use AI/LLM to dynamically generate responses based on your instructions, knowledge base, and available actions. They can handle unexpected questions and adapt to natural conversation flow.</p>
+                    <div class="tip"><strong>For this lab:</strong> We use an <strong>Autonomous</strong> agent because it's more flexible and better suited for natural customer interactions like adding a vehicle to a policy.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What goes in the Instructions field?</div>
+                <div class="faq-answer">
+                    <p>Instructions tell the agent <strong>how to behave</strong>. Think of it as the agent's "playbook." Include:</p>
+                    <ul>
+                        <li><strong>Persona</strong> — Who is the agent? (e.g., "You are a helpful Farmers Insurance virtual assistant")</li>
+                        <li><strong>Conversation flow</strong> — Steps the agent should follow (greet → verify identity → collect info → process → confirm)</li>
+                        <li><strong>Guardrails</strong> — What the agent should NOT do (e.g., "Never provide specific coverage pricing")</li>
+                        <li><strong>Tone & style</strong> — How the agent should sound (professional, friendly, concise)</li>
+                        <li><strong>Data formatting rules</strong> — How to handle dates, phone numbers, policy numbers</li>
+                    </ul>
+                    <div class="warning"><strong>Important:</strong> Instructions work alongside your Knowledge Base. If they contradict each other, the Knowledge Base articles typically take priority. Keep them consistent.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Where do I set the Welcome Message?</div>
+                <div class="faq-answer">
+                    <p>The Welcome Message is configured in the <strong>Profile</strong> section of your agent. This is the first message the customer sees when a conversation starts. A good welcome message:</p>
+                    <ul>
+                        <li>Identifies the agent ("Hi, I'm Farmers' virtual assistant")</li>
+                        <li>Sets expectations ("I can help you add a vehicle to your policy")</li>
+                        <li>Invites the customer to begin ("How can I help you today?")</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How long can my Instructions be?</div>
+                <div class="faq-answer">
+                    <p>Instructions can be quite detailed — there's no strict character limit that you'll hit in this lab. However, best practices suggest keeping instructions:</p>
+                    <ul>
+                        <li><strong>Clear and structured</strong> — Use numbered steps and bullet points</li>
+                        <li><strong>Non-redundant</strong> — Don't repeat what's already in your Knowledge Base articles</li>
+                        <li><strong>Prioritized</strong> — Put the most important rules first</li>
+                    </ul>
+                    <p>If your agent isn't following a specific instruction, it may be buried too deep. Move critical rules to the top.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I change the agent's name after creating it?</div>
+                <div class="faq-answer">
+                    <p>Yes. Go to your agent's <strong>Profile</strong> tab and update the name. Remember to publish after making changes for them to take effect.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- KNOWLEDGE BASE -->
+        <div id="knowledge-base" class="faq-section">
+            <h2>Knowledge Base</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">What's the difference between Instructions and Knowledge Base?</div>
+                <div class="faq-answer">
+                    <p><strong>Instructions</strong> = How the agent behaves (conversation flow, tone, rules)</p>
+                    <p><strong>Knowledge Base</strong> = What the agent knows (facts, policies, procedures, data)</p>
+                    <p>Think of it this way: Instructions are like training a new employee on <em>how to do their job</em>. Knowledge Base is the reference manual they consult for <em>specific information</em>.</p>
+                    <div class="tip"><strong>Example:</strong> Instruction says "Always verify identity before making changes." Knowledge article says "Verification requires matching at least one of: policy number, last name, or date of birth."</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I add a Knowledge Base article?</div>
+                <div class="faq-answer">
+                    <ol>
+                        <li>Go to <strong>Knowledge</strong> in your agent's configuration</li>
+                        <li>Click <strong>+ Create an Article</strong></li>
+                        <li>Give it a descriptive <strong>Source Name</strong> (e.g., "Vehicle Addition Process")</li>
+                        <li>Add a <strong>Description</strong> that helps the AI understand when to use this article</li>
+                        <li>Write the article content with clear, factual information</li>
+                        <li>Save and publish</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">My agent is giving wrong information. How do I fix it?</div>
+                <div class="faq-answer">
+                    <p>Wrong information usually comes from one of two places:</p>
+                    <ol>
+                        <li><strong>Knowledge Base article has incorrect content</strong> — Edit the article with the correct information</li>
+                        <li><strong>Instructions contradict the Knowledge Base</strong> — The agent gets confused when Instructions say one thing and an article says another. Make them consistent.</li>
+                    </ol>
+                    <div class="warning"><strong>Key insight:</strong> When there's a conflict between Instructions and Knowledge Base, the Knowledge Base article typically wins. Always check both when debugging incorrect responses.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How many articles should I create?</div>
+                <div class="faq-answer">
+                    <p>For this lab, we use three focused articles. In production, the number depends on your use case. Best practices:</p>
+                    <ul>
+                        <li><strong>Keep articles focused</strong> — One topic per article (don't dump everything into one massive article)</li>
+                        <li><strong>Write clear descriptions</strong> — The AI uses the description to decide when to reference each article</li>
+                        <li><strong>Avoid duplication</strong> — If the same info appears in multiple articles, the agent may give inconsistent answers</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I upload documents (PDF, Word) as knowledge?</div>
+                <div class="faq-answer">
+                    <p>Webex AI Agent Studio supports creating articles directly in the platform. For this lab, we write articles manually to maintain control over exactly what the agent knows. In production environments, you can integrate external knowledge sources depending on your deployment configuration.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIONS & MCP -->
+        <div id="actions-mcp" class="faq-section">
+            <h2>Actions & MCP</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">What is MCP (Model Context Protocol)?</div>
+                <div class="faq-answer">
+                    <p>MCP is a standard protocol that allows AI agents to call external tools and services. In this lab, MCP connects your agent to a server that can:</p>
+                    <ul>
+                        <li><strong>Verify policyholder identity</strong> — Check customer info against records</li>
+                        <li><strong>Add a vehicle to a policy</strong> — Process the actual business transaction</li>
+                        <li><strong>Send proof of insurance</strong> — Deliver confirmation via SMS</li>
+                    </ul>
+                    <p>The agent decides <em>when</em> to call these tools based on the conversation context and your Instructions.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I connect an MCP action to my agent?</div>
+                <div class="faq-answer">
+                    <ol>
+                        <li>Go to <strong>Actions</strong> in your agent's configuration</li>
+                        <li>Browse Available Actions and select the MCP action</li>
+                        <li>Click <strong>Add</strong> to connect it</li>
+                        <li>The action's input entities (parameters it needs) will be displayed — review them to understand what data the agent needs to collect before calling the action</li>
+                        <li>Publish your agent</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What are "input entities" for an action?</div>
+                <div class="faq-answer">
+                    <p>Input entities are the <strong>parameters</strong> that an action requires to execute. For example, the <code>verify_policyholder</code> action needs:</p>
+                    <ul>
+                        <li><code>policy_number</code> — The customer's policy number (e.g., "FRM-101")</li>
+                        <li><code>last_name</code> — Customer's last name</li>
+                        <li><code>date_of_birth</code> — Customer's date of birth</li>
+                    </ul>
+                    <p>The agent will automatically collect these from the conversation before calling the action. The entity descriptions help the AI understand what format to expect and how to ask for each piece of information.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The MCP endpoint URL — what should it be?</div>
+                <div class="faq-answer">
+                    <p>For this lab, the MCP server endpoint is:</p>
+                    <p><code>https://farmers-insurance-mcp-server.onrender.com/mcp</code></p>
+                    <div class="warning"><strong>Common mistake:</strong> Make sure the URL ends in <code>/mcp</code> — not just the domain. The <code>/mcp</code> path is where the JSON-RPC protocol endpoint lives.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">My action isn't firing during the conversation. Why?</div>
+                <div class="faq-answer">
+                    <p>Several possible causes:</p>
+                    <ul>
+                        <li><strong>Agent hasn't collected required entities</strong> — The agent won't call an action until it has all the required parameters. Check if it's still asking for information.</li>
+                        <li><strong>Instructions don't mention when to use the action</strong> — Add explicit guidance like "After verifying identity, use the add_vehicle action to process the request"</li>
+                        <li><strong>Action not connected</strong> — Go to Actions tab and confirm the action shows as connected</li>
+                        <li><strong>Agent not published</strong> — Changes only take effect after publishing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What happens if the MCP server is down?</div>
+                <div class="faq-answer">
+                    <p>If the MCP server is unreachable, the action will fail and the agent will receive an error response. How the agent handles this depends on your Instructions and error handling configuration. Good practice is to include guidance in your Instructions like: "If an action fails, apologize and offer to connect the customer with a human agent."</p>
+                    <div class="tip"><strong>Note:</strong> The lab MCP server runs on Render.com's free tier and may take 30-60 seconds to "wake up" if it hasn't been used recently. If your first test fails, try again after a minute.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TESTING -->
+        <div id="testing" class="faq-section">
+            <h2>Testing & Preview</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I test my agent?</div>
+                <div class="faq-answer">
+                    <p>Webex AI Agent Studio includes a built-in <strong>Preview</strong> panel on the right side of the screen. You can test via:</p>
+                    <ul>
+                        <li><strong>Chat mode</strong> — Type messages as if you were a customer</li>
+                        <li><strong>Voice mode</strong> — Click the microphone and speak naturally</li>
+                    </ul>
+                    <p>The preview uses the <strong>published</strong> version of your agent. After making changes, you must publish before testing to see the updated behavior.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">I made changes but the preview still shows old behavior. Why?</div>
+                <div class="faq-answer">
+                    <p>The most common reason: <strong>you haven't published yet</strong>. The preview always uses the last published version. After making any changes:</p>
+                    <ol>
+                        <li>Click <strong>Publish</strong> in the top-right area</li>
+                        <li>Wait for the publish confirmation</li>
+                        <li>Start a <strong>new</strong> preview session (the old session may still use cached context)</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I start a fresh conversation in the preview?</div>
+                <div class="faq-answer">
+                    <p>Click the <strong>reset/new conversation</strong> button in the preview panel (usually an icon at the top of the chat). This clears all context from the previous conversation and starts from the welcome message.</p>
+                    <div class="tip"><strong>Why this matters:</strong> If you're testing a new scenario but the agent remembers info from a previous test, results will be misleading. Always start fresh between test scenarios.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What test data should I use?</div>
+                <div class="faq-answer">
+                    <p>The lab MCP server has pre-loaded policyholder data. Use this for a successful verification:</p>
+                    <ul>
+                        <li><strong>Policy number:</strong> FRM-101</li>
+                        <li><strong>Last name:</strong> Smith</li>
+                        <li><strong>Date of birth:</strong> May 5, 1990 (any format works: 05/05/1990, May 5th 1990, etc.)</li>
+                    </ul>
+                    <p>For a <strong>failed verification</strong> test, use any data that doesn't match (e.g., last name "Johnson", policy "555-000").</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I receive a real SMS during testing?</div>
+                <div class="faq-answer">
+                    <p>Yes! The <code>send_proof_of_insurance</code> action delivers a real SMS to the phone number the agent collects during the conversation. When the agent asks where to send proof of insurance, provide your real phone number and you should receive an SMS within seconds.</p>
+                    <div class="warning"><strong>Format:</strong> Provide a 10-digit US phone number. The agent handles formatting, but saying it clearly helps: "Send it to 555-123-4567"</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The agent asked for my phone number but I never got an SMS. What happened?</div>
+                <div class="faq-answer">
+                    <p>Common causes:</p>
+                    <ul>
+                        <li><strong>Agent didn't pass the phone number to the action</strong> — Sometimes the agent collects the number but doesn't include it as a parameter when calling the action. Check Instructions to ensure the agent knows to pass the phone number.</li>
+                        <li><strong>Wrong number format</strong> — The system needs a valid 10-digit US number</li>
+                        <li><strong>SMS delivery delay</strong> — Wait 30-60 seconds; carrier delays happen</li>
+                        <li><strong>Action wasn't called</strong> — The agent may have acknowledged the request verbally without actually triggering the send action. Check the session details to verify.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- VOICE -->
+        <div id="voice" class="faq-section">
+            <h2>Voice Interactions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">How does Voice Preview work?</div>
+                <div class="faq-answer">
+                    <p>Voice Preview uses your device's microphone to capture speech, converts it to text (speech-to-text), processes it through the agent, and then speaks the response back (text-to-speech). It simulates what a phone-based customer interaction would sound like.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The agent misunderstood what I said. Why?</div>
+                <div class="faq-answer">
+                    <p>Speech-to-text isn't perfect. Common issues:</p>
+                    <ul>
+                        <li><strong>Names</strong> — "Smith" may be heard as "Smyth" or "Myth"</li>
+                        <li><strong>Numbers</strong> — "FRM-101" may be transcribed as "F R M 101" or "firm 101"</li>
+                        <li><strong>Dates</strong> — "May fifth, nineteen ninety" may become "may 5th 19 90"</li>
+                    </ul>
+                    <p>The lab MCP server has built-in normalization to handle common speech-to-text variations. If verification still fails, try spelling it out clearly or switch to chat mode to confirm the issue is speech recognition vs. agent logic.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Agent responses sound too long in voice mode. How do I fix it?</div>
+                <div class="faq-answer">
+                    <p>Add a note to your Instructions like:</p>
+                    <p><em>"For voice interactions, keep responses concise — no more than 2-3 sentences before pausing for the customer's reply. Avoid lists and bullet points in spoken responses."</em></p>
+                    <p>Text that reads well in chat often sounds overwhelming when spoken aloud. The agent can follow voice-specific brevity rules if you include them in Instructions.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I listen to a recording of my voice test session?</div>
+                <div class="faq-answer">
+                    <p>Yes. Go to <strong>Sessions</strong> in the left navigation, find your voice session, click on it, and look for the <strong>audio player</strong> at the top of the transcript panel. You can play back the full conversation to hear exactly what was said and how the agent responded.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TROUBLESHOOTING -->
+        <div id="troubleshooting" class="faq-section">
+            <h2>Troubleshooting</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">The agent says "I'm unable to verify your identity" even with correct data. Why?</div>
+                <div class="faq-answer">
+                    <p>The verification system uses flexible matching — <strong>any one matching field</strong> (policy number, last name, or date of birth) is enough to succeed. If all three fail, check:</p>
+                    <ul>
+                        <li><strong>Policy number format</strong> — Should be "FRM-101" but voice may produce "firm 101" or "FRM101". The server normalizes these, but extremely garbled input won't match.</li>
+                        <li><strong>Date format</strong> — The server accepts many formats (May 5 1990, 05/05/1990, May fifth nineteen ninety, etc.) but the agent must actually pass the date to the action.</li>
+                        <li><strong>Action parameters</strong> — Check the Sessions view → Actions Performed to see exactly what parameters were sent to the server.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The agent gives an empty or generic response after I provide all the info.</div>
+                <div class="faq-answer">
+                    <p>This usually means the MCP action returned an error or the agent couldn't interpret the response. Common fixes:</p>
+                    <ul>
+                        <li><strong>Check that the MCP server is awake</strong> — On Render.com free tier, the server sleeps after inactivity. Your first request wakes it up (takes 30-60 seconds). Try the conversation again.</li>
+                        <li><strong>Verify the action endpoint URL</strong> — Must be exactly: <code>https://farmers-insurance-mcp-server.onrender.com/mcp</code></li>
+                        <li><strong>Check agent was published</strong> — Unpublished changes aren't reflected in conversations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The agent keeps asking the same question over and over.</div>
+                <div class="faq-answer">
+                    <p>This is usually an Instructions issue. The agent may not recognize that the customer already provided the information. Add to your Instructions:</p>
+                    <p><em>"Track information the customer has already provided. Never ask for the same piece of information twice. If you already have their name, policy number, or date of birth from earlier in the conversation, use it."</em></p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The agent won't stop talking / gives very long responses.</div>
+                <div class="faq-answer">
+                    <p>Add explicit brevity rules to your Instructions:</p>
+                    <ul>
+                        <li><em>"Keep responses under 3 sentences unless providing detailed confirmation"</em></li>
+                        <li><em>"After asking a question, stop and wait for the customer's response"</em></li>
+                        <li><em>"Don't list all the steps ahead — guide the customer one step at a time"</em></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The agent is providing information I didn't put in the Knowledge Base.</div>
+                <div class="faq-answer">
+                    <p>Autonomous agents use a large language model (LLM) that has general knowledge. If you want the agent to <strong>only</strong> use your Knowledge Base for factual answers, add a guardrail to your Instructions:</p>
+                    <p><em>"Only provide information about Farmers Insurance policies that is explicitly stated in your knowledge base. If you don't have specific information, say 'I don't have that information available — let me connect you with a specialist.'"</em></p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">I accidentally deleted something. Can I undo it?</div>
+                <div class="faq-answer">
+                    <p>Check the <strong>History</strong> tab — it shows all published versions. While you can't directly "revert" to a previous version with one click, you can view the details of previous versions to see what the content was before your change, and manually restore it.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SESSIONS & ANALYTICS -->
+        <div id="sessions-analytics" class="faq-section">
+            <h2>Sessions & Analytics</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Where do I find past conversation sessions?</div>
+                <div class="faq-answer">
+                    <p>Click <strong>Sessions</strong> in the left navigation panel. You'll see a list of all conversations with your agent including session ID, start time, channel (chat/voice), and status indicators.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I see what the agent actually did during a conversation?</div>
+                <div class="faq-answer">
+                    <ol>
+                        <li>Go to <strong>Sessions</strong></li>
+                        <li>Click on the session you want to inspect</li>
+                        <li>Click <strong>Decrypt</strong> if prompted</li>
+                        <li>Expand the <strong>Actions Performed</strong> section — this shows every MCP tool call, the parameters sent, and the response received</li>
+                        <li>Expand the <strong>Slot Filling</strong> section to see what entities the agent extracted from the conversation</li>
+                    </ol>
+                    <div class="tip"><strong>Tip:</strong> The Actions Performed section is the most useful for debugging. It shows you exactly what data was sent to the MCP server and what came back.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What do the session filters mean?</div>
+                <div class="faq-answer">
+                    <ul>
+                        <li><strong>Error occurred</strong> — Sessions where an action failed or the agent hit an error</li>
+                        <li><strong>Agent handover</strong> — Sessions where the customer was transferred to a human</li>
+                        <li><strong>Test sessions</strong> — Sessions from the Preview panel (your lab testing)</li>
+                        <li><strong>Downvoted</strong> — Sessions where a user gave negative feedback</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What's on the Analytics tab?</div>
+                <div class="faq-answer">
+                    <p>The Analytics tab shows high-level performance metrics over time:</p>
+                    <ul>
+                        <li><strong>Total Sessions</strong> — Number of conversations handled</li>
+                        <li><strong>Containment Rate</strong> — Percentage resolved without human escalation</li>
+                        <li><strong>Handover Rate</strong> — Percentage escalated to humans</li>
+                        <li><strong>Error Rate</strong> — Percentage that hit errors</li>
+                        <li><strong>Average Duration</strong> — Typical conversation length</li>
+                        <li><strong>User Satisfaction</strong> — Ratings/feedback from end users</li>
+                    </ul>
+                    <p>Use the date range selector to focus on specific periods (e.g., after making a change).</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What's on the History tab?</div>
+                <div class="faq-answer">
+                    <p>The History tab shows every published version of your agent's configuration — a chronological audit trail of all changes. Each entry shows:</p>
+                    <ul>
+                        <li>Version number</li>
+                        <li>Timestamp of the change</li>
+                        <li>Who made the change</li>
+                        <li>What was modified (instructions, knowledge, actions, profile, conversation settings)</li>
+                    </ul>
+                    <p>Click any version to see the detailed diff. This is invaluable for tracking down "it worked yesterday" problems.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PUBLISHING -->
+        <div id="publishing" class="faq-section">
+            <h2>Publishing & Deployment</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">When do I need to publish?</div>
+                <div class="faq-answer">
+                    <p><strong>Every time you make a change.</strong> Changes to Instructions, Knowledge Base articles, Actions, Profile, or Conversation settings only take effect after you publish. Think of it like saving a document — the preview and live agent always use the last published version.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Where is the Publish button?</div>
+                <div class="faq-answer">
+                    <p>The <strong>Publish</strong> button is in the upper-right area of the agent configuration page. After making changes, click Publish and wait for the confirmation before testing.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Is publishing instant?</div>
+                <div class="faq-answer">
+                    <p>Publishing is fast (usually a few seconds). However, if you have an active preview session, start a new one after publishing to ensure you're testing the latest version. Old sessions may still use cached context.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I break anything by publishing?</div>
+                <div class="faq-answer">
+                    <p>In this lab environment, no. You're working in an isolated lab organization — nothing you publish affects real customers or production systems. Experiment freely! If something breaks, check History tab to see what changed and fix it.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- GENERAL CONCEPTS -->
+        <div id="general" class="faq-section">
+            <h2>General Concepts</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">What is Webex AI Agent Studio?</div>
+                <div class="faq-answer">
+                    <p>Webex AI Agent Studio is a platform for building, testing, and deploying AI-powered virtual agents. It provides a no-code/low-code interface for creating agents that can handle customer interactions via chat and voice, powered by large language models (LLMs).</p>
+                    <p>Key capabilities:</p>
+                    <ul>
+                        <li>Natural language understanding and generation</li>
+                        <li>Knowledge base for factual grounding</li>
+                        <li>MCP actions to connect to external systems</li>
+                        <li>Built-in testing (chat and voice preview)</li>
+                        <li>Session analytics and conversation review</li>
+                        <li>Integration with Webex Contact Center for human handoff</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How does the agent decide what to say?</div>
+                <div class="faq-answer">
+                    <p>An autonomous agent uses a large language model (LLM) that considers:</p>
+                    <ol>
+                        <li><strong>Your Instructions</strong> — The rules, persona, and flow you defined</li>
+                        <li><strong>Knowledge Base</strong> — Articles it can reference for factual information</li>
+                        <li><strong>Conversation context</strong> — Everything said so far in this conversation</li>
+                        <li><strong>Available actions</strong> — Tools it knows it can call (and their descriptions)</li>
+                    </ol>
+                    <p>The LLM synthesizes all of this to generate each response. That's why clear, consistent configuration across all four areas is important.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What happens when the agent can't help?</div>
+                <div class="faq-answer">
+                    <p>Depending on your configuration, the agent can:</p>
+                    <ul>
+                        <li><strong>Offer to transfer to a human agent</strong> — Configured via Conversation settings and Instructions</li>
+                        <li><strong>Gracefully decline</strong> — "I'm not able to help with that, but here's how to reach our support team..."</li>
+                        <li><strong>Ask for clarification</strong> — If it's unsure what the customer wants</li>
+                    </ul>
+                    <p>In this lab, we configure the agent to offer human transfer after verification failures or out-of-scope requests.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Where can I learn more about Webex AI Agent Studio?</div>
+                <div class="faq-answer">
+                    <p>The official administration guide covers all features in detail:</p>
+                    <p><a href="https://help.webex.com/en-us/article/ncs9r37/Webex-AI-Agent-Studio-Administration-guide" target="_blank">Webex AI Agent Studio Administration Guide</a></p>
+                    <p>This covers agent types, advanced knowledge base configuration, action schemas, deployment options, and integration with Webex Contact Center.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="resource-link">
+            <strong>Official Documentation:</strong> <a href="https://help.webex.com/en-us/article/ncs9r37/Webex-AI-Agent-Studio-Administration-guide" target="_blank">Webex AI Agent Studio Administration Guide →</a>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach(function(question) {
+            question.addEventListener('click', function() {
+                this.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>
