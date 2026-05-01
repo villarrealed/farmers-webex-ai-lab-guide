@@ -7,6 +7,53 @@ import { z } from "zod";
 // STATIC DATA — Hardcoded policyholders for demo purposes
 // ============================================================
 
+// Flexible date parser — handles MM/DD/YYYY, M/D/YYYY, YYYY-MM-DD,
+// "May 5, 1990", "5 May 1990", "05-05-1990", etc.
+function normalizeDate(input) {
+  if (!input) return null;
+  const str = input.trim();
+
+  // Try MM/DD/YYYY or M/D/YYYY (with / or -)
+  const mdyMatch = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (mdyMatch) {
+    const [, m, d, y] = mdyMatch;
+    return `${m.padStart(2, '0')}/${d.padStart(2, '0')}/${y}`;
+  }
+
+  // Try YYYY-MM-DD
+  const isoMatch = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if (isoMatch) {
+    const [, y, m, d] = isoMatch;
+    return `${m.padStart(2, '0')}/${d.padStart(2, '0')}/${y}`;
+  }
+
+  // Try natural language: "May 5, 1990" or "5 May 1990" etc.
+  const months = {
+    january: '01', february: '02', march: '03', april: '04',
+    may: '05', june: '06', july: '07', august: '08',
+    september: '09', october: '10', november: '11', december: '12'
+  };
+
+  // "Month Day, Year" or "Month Day Year"
+  const nlMatch1 = str.match(/^([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})$/);
+  if (nlMatch1) {
+    const [, monthStr, d, y] = nlMatch1;
+    const m = months[monthStr.toLowerCase()];
+    if (m) return `${m}/${d.padStart(2, '0')}/${y}`;
+  }
+
+  // "Day Month Year"
+  const nlMatch2 = str.match(/^(\d{1,2})\s+([a-zA-Z]+),?\s+(\d{4})$/);
+  if (nlMatch2) {
+    const [, d, monthStr, y] = nlMatch2;
+    const m = months[monthStr.toLowerCase()];
+    if (m) return `${m}/${d.padStart(2, '0')}/${y}`;
+  }
+
+  // Fallback: return as-is (will fail match gracefully)
+  return str;
+}
+
 const POLICYHOLDERS = [
   {
     policy_number: "FRM-101",
@@ -82,10 +129,13 @@ server.tool(
     phone_number: z.string().optional().describe("Phone number on file (optional, e.g., 555-0147)")
   },
   async ({ last_name, date_of_birth, policy_number, phone_number }) => {
+    // Normalize the provided date for flexible matching
+    const normalizedDob = normalizeDate(date_of_birth);
+
     // Find matching policyholder
     const match = POLICYHOLDERS.find(p => {
       const nameMatch = p.last_name.toLowerCase() === last_name.toLowerCase();
-      const dobMatch = p.date_of_birth === date_of_birth;
+      const dobMatch = normalizeDate(p.date_of_birth) === normalizedDob;
 
       if (!nameMatch || !dobMatch) return false;
 
