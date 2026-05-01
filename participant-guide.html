@@ -484,6 +484,7 @@
             <a href="#troubleshooting" class="nav-item">Troubleshooting</a>
             <a href="#view-sessions" class="nav-item level-2">View Agent Sessions</a>
             <a href="#inspect-session" class="nav-item level-2">Inspect Session Details</a>
+            <a href="#session-recording" class="nav-item level-2">Listen to Recording</a>
             <a href="#agent-history" class="nav-item level-2">Agent History & Versions</a>
         </div>
 
@@ -1308,10 +1309,34 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
             </div>
         </section>
 
-        <section id="agent-history">
-            <h3>Step 3: View Agent History & Versions</h3>
+        <section id="session-recording">
+            <h3>Step 3: Listen to the Session Recording</h3>
             <div class="step-indicator">
                 <div class="step-number">3</div>
+                <div class="step-title">Listen to the Session Recording</div>
+            </div>
+            <p>For voice sessions, Webex AI Agent Studio captures an audio recording of the entire conversation. This lets you hear exactly what the customer said and how the agent responded.</p>
+            <ol>
+                <li>From the session detail view, look for the <strong>audio player</strong> at the top of the transcript panel</li>
+                <li>Click <strong>Play</strong> to listen to the full recording</li>
+                <li>As the recording plays, pay attention to:
+                    <ul>
+                        <li><strong>Speech recognition accuracy</strong> — Did the agent correctly understand what the customer said? (e.g., "May fifth" vs. "May 5th")</li>
+                        <li><strong>Response pacing</strong> — Were the agent's spoken responses too long or too fast?</li>
+                        <li><strong>Tone and clarity</strong> — Did the TTS voice sound natural and easy to follow?</li>
+                        <li><strong>Silence gaps</strong> — Were there long pauses while the agent processed MCP actions?</li>
+                    </ul>
+                </li>
+            </ol>
+            <div class="info-box success">
+                <strong>💡 Tip:</strong> Compare the transcript text with what you actually hear. If there's a mismatch, the speech-to-text engine may have misinterpreted the customer — this is a common source of verification failures (e.g., "Smith" heard as "Smyth").
+            </div>
+        </section>
+
+        <section id="agent-history">
+            <h3>Step 4: View Agent History & Versions</h3>
+            <div class="step-indicator">
+                <div class="step-number">4</div>
                 <div class="step-title">View Agent History & Versions</div>
             </div>
             <p>Every time you publish changes to your agent, Webex AI Agent Studio saves a version. You can review what changed and when.</p>
