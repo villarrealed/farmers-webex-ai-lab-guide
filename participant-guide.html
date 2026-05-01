@@ -485,7 +485,8 @@
             <a href="#view-sessions" class="nav-item level-2">View Agent Sessions</a>
             <a href="#inspect-session" class="nav-item level-2">Inspect Session Details</a>
             <a href="#session-recording" class="nav-item level-2">Listen to Recording</a>
-            <a href="#agent-history" class="nav-item level-2">Agent History & Versions</a>
+            <a href="#agent-history" class="nav-item level-2">Agent History</a>
+            <a href="#agent-analytics" class="nav-item level-2">Analytics</a>
         </div>
 
         <!-- Persistent credential bar at bottom of nav -->
@@ -1289,20 +1290,38 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
             </div>
             <p>Click any row in the Sessions list to open the full session detail view.</p>
             <ol>
-                <li>Click a session row to expand it</li>
-                <li>If session data is encrypted, click <strong>Decrypt</strong> to reveal the full transcript</li>
-                <li>Review the three key panels:
+                <li><strong>Click a session row</strong> to select it — this opens the session detail panel on the right side of the screen</li>
+                <li>If session data is encrypted, click <strong>Decrypt</strong> to reveal the full content</li>
+                <li>You'll see several <strong>collapsible sections</strong> — click each section header to expand it, or click <strong>Expand All</strong> (if available) to open everything at once:
                     <table>
                         <thead>
-                            <tr><th>Panel</th><th>What You'll See</th></tr>
+                            <tr><th>Section</th><th>What You'll See</th><th>What to Look For</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td><strong>Transcript</strong></td><td>The complete back-and-forth between customer and agent, including system messages</td></tr>
-                            <tr><td><strong>Actions Performed</strong></td><td>Every MCP tool call the agent made — which tool, what parameters were sent, and the response received</td></tr>
-                            <tr><td><strong>Slot Filling</strong></td><td>The entities/slots the agent extracted from the conversation (policy number, name, DOB, vehicle info, phone number)</td></tr>
+                            <tr>
+                                <td><strong>Transcript</strong></td>
+                                <td>The complete back-and-forth between customer and agent, including system messages</td>
+                                <td>Did the agent understand the customer's intent? Were responses helpful and on-topic?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Actions Performed</strong></td>
+                                <td>Every MCP tool call — which tool, what parameters were sent, and the response received</td>
+                                <td>Did the right action fire? Were the parameters correct? Did the server return an error?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Slot Filling</strong></td>
+                                <td>The entities/slots extracted from the conversation (policy number, name, DOB, vehicle info, phone number)</td>
+                                <td>Did the agent capture the right values? Were any slots missing or incorrectly parsed?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Session Info</strong></td>
+                                <td>Metadata including session ID, channel (chat/voice), duration, start/end time, and status</td>
+                                <td>How long did the interaction take? Did it end normally or with an error?</td>
+                            </tr>
                         </tbody>
                     </table>
                 </li>
+                <li><strong>Click into the Actions Performed section</strong> and expand individual action entries to see the full request/response payload — this is the most useful view for debugging MCP issues</li>
             </ol>
             <div class="info-box warning">
                 <strong>What to look for in Actions Performed:</strong> If an MCP action shows an error response or unexpected data, compare the <em>parameters sent</em> with what your MCP server expects. Common issues include missing fields, wrong formats (e.g., date as "may fifth" instead of "1990-05-05"), or the agent not collecting all required info before calling the action.
@@ -1334,25 +1353,63 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
         </section>
 
         <section id="agent-history">
-            <h3>Step 4: View Agent History & Versions</h3>
+            <h3>Step 4: View Agent History</h3>
             <div class="step-indicator">
                 <div class="step-number">4</div>
-                <div class="step-title">View Agent History & Versions</div>
+                <div class="step-title">View Agent History</div>
             </div>
-            <p>Every time you publish changes to your agent, Webex AI Agent Studio saves a version. You can review what changed and when.</p>
+            <p>Every time you publish changes to your agent, Webex AI Agent Studio saves a version. The <strong>History</strong> tab gives you a complete audit trail of every modification.</p>
             <ol>
-                <li>In your agent's configuration page, click the <strong>History</strong> tab</li>
-                <li>You'll see a list of all published versions with:
-                    <ul>
-                        <li><strong>Version number</strong> — incremented with each publish</li>
-                        <li><strong>Timestamp</strong> — when the version was published</li>
-                        <li><strong>Change summary</strong> — what was modified (instructions, knowledge, actions, etc.)</li>
-                    </ul>
+                <li>In your agent's configuration page, click the <strong>History</strong> tab (next to Sessions)</li>
+                <li>You'll see a chronological list of all changes made to your agent:
+                    <table>
+                        <thead>
+                            <tr><th>Column</th><th>What It Shows</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Version</strong></td><td>Version number — incremented with each publish</td></tr>
+                            <tr><td><strong>Timestamp</strong></td><td>When the change was published</td></tr>
+                            <tr><td><strong>Modified by</strong></td><td>Which user made the change</td></tr>
+                            <tr><td><strong>Change summary</strong></td><td>What was modified — instructions, knowledge articles, actions, profile settings, etc.</td></tr>
+                        </tbody>
+                    </table>
                 </li>
-                <li>Click any version to see the details of what changed</li>
+                <li>Click any version row to expand it and see the <strong>detailed diff</strong> of what changed</li>
+                <li>Use this to trace back issues — if your agent was working and then broke, compare the last working version with the current one to identify which change caused the problem</li>
             </ol>
             <div class="info-box">
-                <strong>Why this matters:</strong> If your agent was working perfectly and then broke after a change, History lets you identify exactly which modification caused the issue. In production, this audit trail is essential for compliance and troubleshooting.
+                <strong>Why this matters:</strong> In production, the History tab is your audit trail. It answers "who changed what and when" — essential for compliance, team collaboration, and troubleshooting regressions.
+            </div>
+        </section>
+
+        <section id="agent-analytics">
+            <h3>Step 5: Explore the Analytics Tab</h3>
+            <div class="step-indicator">
+                <div class="step-number">5</div>
+                <div class="step-title">Explore the Analytics Tab</div>
+            </div>
+            <p>The <strong>Analytics</strong> tab provides high-level metrics about your agent's performance over time — useful for understanding trends and identifying areas for improvement.</p>
+            <ol>
+                <li>Click the <strong>Analytics</strong> tab in your agent's configuration page</li>
+                <li>Review the key metrics dashboards:
+                    <table>
+                        <thead>
+                            <tr><th>Metric</th><th>What It Tells You</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Total Sessions</strong></td><td>How many conversations your agent has handled over the selected time period</td></tr>
+                            <tr><td><strong>Containment Rate</strong></td><td>Percentage of conversations resolved without escalating to a human agent — higher is better</td></tr>
+                            <tr><td><strong>Handover Rate</strong></td><td>Percentage of sessions that required human agent escalation</td></tr>
+                            <tr><td><strong>Error Rate</strong></td><td>Percentage of sessions that encountered errors (action failures, timeouts, etc.)</td></tr>
+                            <tr><td><strong>Average Duration</strong></td><td>How long a typical conversation takes — helps gauge efficiency</td></tr>
+                            <tr><td><strong>User Satisfaction</strong></td><td>Ratings and feedback from end users (thumbs up/down)</td></tr>
+                        </tbody>
+                    </table>
+                </li>
+                <li>Use the <strong>date range selector</strong> to zoom in on specific time periods (e.g., after a change was published)</li>
+            </ol>
+            <div class="info-box success">
+                <strong>💡 Tip:</strong> After making changes to your agent's instructions or knowledge base, check Analytics a day later. A spike in error rate or drop in containment rate tells you the change may have had unintended consequences.
             </div>
         </section>
     </div>
