@@ -444,8 +444,8 @@
             <div class="nav-section-title">Module 1</div>
             <a href="#create-agent" class="nav-item">Create Your AI Agent</a>
             <a href="#access-studio" class="nav-item level-2">Access AI Agent Studio</a>
-            <a href="#configure-profile" class="nav-item level-2">Configure Agent Profile</a>
-            <a href="#agent-instructions" class="nav-item level-2">Write Instructions</a>
+            <a href="#configure-profile" class="nav-item level-2">Create Your AI Agent</a>
+            <a href="#agent-instructions" class="nav-item level-2">Configure Profile & Instructions</a>
         </div>
 
         <div class="nav-section">
@@ -622,20 +622,19 @@
         </section>
 
         <section id="configure-profile">
-            <h3>Step 2: Create and Configure Your Agent</h3>
+            <h3>Step 2: Create Your AI Agent</h3>
             <div class="step-indicator">
                 <div class="step-number">2</div>
-                <div class="step-title">Create and Configure Your Agent</div>
+                <div class="step-title">Create Your AI Agent</div>
             </div>
             <ol>
                 <li>Click <strong>"+ Create Agent"</strong> (upper right)</li>
-                <li>Select <strong>"Start from scratch"</strong> and click <strong>"Next"</strong> (bottom right)</li>
                 <li>Select <strong>"Autonomous"</strong> as the agent type</li>
             </ol>
             <div class="info-box">
                 <strong>Why Autonomous?</strong> Sarah might say "I just bought a car" or "I need to add a vehicle" or "Can you update my insurance?" — an autonomous agent powered by an LLM understands all these variations without programming each one. Scripted agents are better for highly structured flows where exact repeatability is critical.
             </div>
-            <p>Fill in the following fields:</p>
+            <p>Fill in the following required fields:</p>
             <div class="info-box warning">
                 <strong>📌 Use your seat number!</strong> Since all 10 participants share the same AI Agent Studio environment, you must include your seat number in the names of agents, knowledge bases, and other resources. This ensures you can easily find yours in shared lists.
             </div>
@@ -646,7 +645,6 @@
                 <tbody>
                     <tr><td>Agent name</td><td>Farmers Agent <span class="seat-num">N</span></td></tr>
                     <tr><td>AI engine</td><td>Select <strong>"Webex AI Pro-US 1.0"</strong> from the dropdown</td></tr>
-                    <tr><td>Welcome message</td><td>Hi there! I'm Alex from Farmers Insurance. How can I help you today?</td></tr>
                     <tr><td>Agent's goal</td><td>Help Farmers Insurance policyholders add new vehicles to their existing auto insurance policies. Verify the customer's identity, collect vehicle information, and deliver updated proof of insurance.</td></tr>
                 </tbody>
             </table>
@@ -654,17 +652,26 @@
                 <li>Click <strong>Create</strong></li>
             </ol>
             <div class="info-box success">
-                <strong>✓ Checkpoint:</strong> You're now on the agent configuration page with tabs for Profile, Knowledge, Actions, and Conversation.
+                <strong>✓ Checkpoint:</strong> You're now on the AI Agent Configuration page with tabs for Profile, Knowledge, Actions, and Conversation.
             </div>
         </section>
 
         <section id="agent-instructions">
-            <h3>Step 3: Write Agent Instructions</h3>
+            <h3>Step 3: Configure Agent Profile and Instructions</h3>
             <div class="step-indicator">
                 <div class="step-number">3</div>
-                <div class="step-title">Write Agent Instructions</div>
+                <div class="step-title">Configure Agent Profile and Instructions</div>
             </div>
-            <p>You should now be on the <strong>Profile</strong> tab. Scroll down to the <strong>Instructions</strong> field and paste the following:</p>
+            <p>You should now be on the <strong>AI Agent Configuration</strong> page. Select the <strong>Profile</strong> tab and update the following field:</p>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Welcome message</td><td>Hi there! I'm Alex from Farmers Insurance. How can I help you today?</td></tr>
+                </tbody>
+            </table>
+            <p>Scroll down to the <strong>Instructions</strong> field and paste the following:</p>
             <div class="copy-block">
                 <button class="copy-btn">📋 Copy</button>
                 <code>You are a friendly, professional insurance assistant for Farmers Insurance. Your name is Alex. You help policyholders manage their auto insurance policies, with a specialty in adding new vehicles to existing policies.
@@ -706,7 +713,7 @@ Your tone is warm but efficient — you understand that customers contacting you
 - Always confirm information before processing any changes
 - Do not proceed with any policy changes until identity is verified</code>
             </div>
-            <p>Click <strong>Save Changes</strong>.</p>
+            <p>Click <strong>Save</strong>.</p>
             <div class="info-box">
                 <strong>Why such detailed instructions?</strong> These instructions are sent to the LLM with every conversation turn. They directly control the agent's behavior — when to ask for info, when to refuse, when to escalate. Without them, the agent "wings it" and may share inappropriate information or skip verification steps. Think of instructions as the agent's training manual that it reads before every single response.
             </div>
