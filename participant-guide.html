@@ -461,7 +461,7 @@
             <a href="#configure-actions" class="nav-item">Configure Actions</a>
             <a href="#connect-actions" class="nav-item level-2">Connect MCP Actions</a>
             <a href="#review-entities" class="nav-item level-2">Review Input Entities</a>
-            <a href="#action-flow" class="nav-item level-2">Understand the Flow</a>
+            <a href="#action-flow" class="nav-item level-2">Publish Your Agent</a>
         </div>
 
         <div class="nav-section">
@@ -762,10 +762,20 @@ Your tone is warm but efficient — you understand that customers contacting you
                 <div class="step-number">2</div>
                 <div class="step-title">Add Knowledge Articles</div>
             </div>
-            <p>Click <strong>"+ Add Source"</strong> → <strong>Articles</strong>. You'll create three articles by copying and pasting the content provided below.</p>
+            <p>You'll create three knowledge articles. For each one, click <strong>"+ Create an Article"</strong>, then fill in the <strong>Source Name</strong> and <strong>Description</strong> fields, and paste the article content.</p>
 
             <h4>Article 1: Adding a Vehicle to Your Policy</h4>
-            <p>Click "+ New Article", set the title to <code>Adding a Vehicle to Your Policy</code>, then paste this content:</p>
+            <p>Click <strong>"+ Create an Article"</strong> and enter the following:</p>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Source Name</td><td>Adding a Vehicle to Your Policy</td></tr>
+                    <tr><td>Description</td><td>Procedures and requirements for adding a new vehicle to an existing auto policy</td></tr>
+                </tbody>
+            </table>
+            <p>Paste the following content:</p>
             <div class="copy-block">
                 <button class="copy-btn">📋 Copy</button>
                 <code># Adding a Vehicle to Your Farmers Insurance Auto Policy
@@ -802,7 +812,17 @@ The policyholder will receive an updated declaration page within 3 business days
             <p>Click <strong>Save Article</strong>.</p>
 
             <h4>Article 2: Proof of Insurance and Delivery Options</h4>
-            <p>Click "+ New Article", set the title to <code>Proof of Insurance and Delivery Options</code>, then paste:</p>
+            <p>Click <strong>"+ Create an Article"</strong> and enter the following:</p>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Source Name</td><td>Proof of Insurance and Delivery Options</td></tr>
+                    <tr><td>Description</td><td>Delivery methods and FAQs for proof of insurance after policy changes</td></tr>
+                </tbody>
+            </table>
+            <p>Paste the following content:</p>
             <div class="copy-block">
                 <button class="copy-btn">📋 Copy</button>
                 <code># Proof of Insurance - Delivery Options and FAQ
@@ -857,7 +877,17 @@ Our AI-powered service is available 24/7/365. You can add a vehicle and receive 
             <p>Click <strong>Save Article</strong>.</p>
 
             <h4>Article 3: Customer Identity Verification</h4>
-            <p>Click "+ New Article", set the title to <code>Customer Identity Verification</code>, then paste:</p>
+            <p>Click <strong>"+ Create an Article"</strong> and enter the following:</p>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Source Name</td><td>Customer Identity Verification</td></tr>
+                    <tr><td>Description</td><td>Identity verification process and security requirements for policy changes</td></tr>
+                </tbody>
+            </table>
+            <p>Paste the following content:</p>
             <div class="copy-block">
                 <button class="copy-btn">📋 Copy</button>
                 <code># Identity Verification for Policy Changes
@@ -903,7 +933,7 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                 <div class="step-title">Link Knowledge Base to Your Agent</div>
             </div>
             <ol>
-                <li>Navigate back to your agent: click <strong>Agents</strong> in left nav → select <strong>Farmers Vehicle Addition Agent</strong></li>
+                <li>Click the <strong>"X"</strong> at the top right of the page to navigate back to the agent configuration page</li>
                 <li>Go to the <strong>Knowledge</strong> tab in agent configuration</li>
                 <li>From the dropdown, select <strong>Farmers KB <span class="seat-num">N</span></strong></li>
                 <li>Click <strong>Save Changes</strong></li>
@@ -935,8 +965,8 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
             <ol>
                 <li>In your agent configuration, navigate to the <strong>Actions</strong> tab</li>
                 <li>Click <strong>"+ Add Action"</strong></li>
-                <li>Select <strong>"MCP Server"</strong> as the action source</li>
-                <li>Look for <strong>"edvill_Farmers_Insurance_Tools"</strong> — select all three tools and click <strong>Connect</strong></li>
+                <li>From the dropdown, select <strong>"Browse Actions - Select Available"</strong></li>
+                <li>Look for <strong>"edvill_Farmers_Insurance_Tools"</strong> — select all three tools and click <strong>Add</strong></li>
             </ol>
             <div class="info-box">
                 <strong>What are MCP Servers?</strong> Model Context Protocol (MCP) servers are standardized integrations that let your AI agent call external systems. Think of them as pre-built "skills" — someone has already built the connection to Farmers' backend systems (policy database, SMS gateway, email service). You just tell your agent when and how to use them.
@@ -998,23 +1028,28 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
         </section>
 
         <section id="action-flow">
-            <h3>Step 3: Understand How Actions Connect</h3>
+            <h3>Step 3: Publish Your AI Agent</h3>
             <div class="step-indicator">
                 <div class="step-number">3</div>
-                <div class="step-title">Understand How Actions Connect</div>
+                <div class="step-title">Publish Your AI Agent</div>
+            </div>
+            <p>Now that your agent has actions configured, it's time to publish it so you can test it in Module 4.</p>
+            <ol>
+                <li>Click the <strong>"Publish"</strong> button in the upper right corner</li>
+                <li>Enter a brief description of your agent, for example:</li>
+            </ol>
+            <div class="copy-block">
+                <button class="copy-btn">📋 Copy</button>
+                <code>Initial publish: Farmers Insurance agent with identity verification, vehicle addition, and proof of insurance delivery capabilities.</code>
+            </div>
+            <ol start="3">
+                <li>Click <strong>Publish</strong> to confirm</li>
+            </ol>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> Your agent is now published and ready for testing. It has the ability to verify customers, add vehicles, and deliver proof of insurance — all through pre-configured MCP server integrations.
             </div>
             <div class="info-box">
-                <strong>The agent decides when to call each action based on conversation context:</strong><br><br>
-                1. Customer says they want to add a vehicle → Agent begins verification<br>
-                2. Agent has collected name + DOB + policy/phone → Calls <code>verify_policyholder_identity</code><br>
-                3. Verification succeeds → Agent collects vehicle info<br>
-                4. Agent has all vehicle details + confirmation → Calls <code>add_vehicle_to_policy</code><br>
-                5. Addition succeeds → Agent asks delivery preference → Calls <code>deliver_proof_of_insurance</code><br><br>
-                You don't program this sequence — the LLM follows your instructions and triggers actions when the right information is available.
-            </div>
-            <p>Click <strong>Save Changes</strong> after confirming all three actions are connected.</p>
-            <div class="info-box success">
-                <strong>✓ Checkpoint:</strong> Your agent now has the ability to verify customers, add vehicles, and deliver proof of insurance — all through pre-configured MCP server integrations.
+                <strong>How actions work together:</strong> The agent decides when to call each action based on conversation context. When a customer asks to add a vehicle, the agent collects verification info → calls <code>verify_policyholder_identity</code> → collects vehicle details → calls <code>add_vehicle_to_policy</code> → asks delivery preference → calls <code>deliver_proof_of_insurance</code>. You don't program this sequence — the LLM follows your instructions and triggers actions when the right information is available.
             </div>
             <div class="info-box">
                 <strong>In production:</strong> Your engineering team builds and maintains MCP servers that connect to real policy management systems, SMS gateways (like Webex Connect), and email services. In this lab, the SMS action is live — powered by a Webex Connect flow that sends real text messages via webhook. The conversational AI team (that's you) focuses on the customer experience — the instructions, knowledge, and testing — without needing to write backend code.
