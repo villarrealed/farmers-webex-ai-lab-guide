@@ -395,45 +395,6 @@ server.tool(
 const app = express();
 app.use(express.json());
 
-// ============================================================
-// ACCEPT HEADER COMPATIBILITY MIDDLEWARE
-// ============================================================
-// The MCP SDK's StreamableHTTPServerTransport strictly requires
-// Accept: "application/json, text/event-stream" (BOTH must be present).
-// Some MCP clients (including Webex AI Agent Studio) may not send both,
-// causing HTTP 406 "Not Acceptable" errors that surface as empty {} responses.
-// This middleware injects missing Accept values before the SDK sees the request.
-app.use("/mcp", (req, res, next) => {
-  if (req.method === "POST") {
-    const accept = req.headers["accept"] || "";
-    const needsJson = !accept.includes("application/json");
-    const needsSSE = !accept.includes("text/event-stream");
-
-    if (needsJson || needsSSE) {
-      const parts = [accept];
-      if (needsJson) parts.push("application/json");
-      if (needsSSE) parts.push("text/event-stream");
-      const newAccept = parts.filter(Boolean).join(", ");
-      req.headers["accept"] = newAccept;
-
-      // Also fix rawHeaders array — the SDK may inspect this directly
-      if (req.rawHeaders) {
-        const rawIdx = req.rawHeaders.findIndex(
-          (h) => typeof h === "string" && h.toLowerCase() === "accept"
-        );
-        if (rawIdx !== -1 && rawIdx + 1 < req.rawHeaders.length) {
-          req.rawHeaders[rawIdx + 1] = newAccept;
-        } else {
-          req.rawHeaders.push("Accept", newAccept);
-        }
-      }
-
-      console.log(`[MCP] Fixed Accept header: "${accept}" → "${newAccept}"`);
-    }
-  }
-  next();
-});
-
 // Request logging middleware for /mcp (helps diagnose issues in Render logs)
 app.use("/mcp", (req, res, next) => {
   const method = req.method;
@@ -450,6 +411,16 @@ app.use("/mcp", (req, res, next) => {
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ status: "ok", server: "Farmers Insurance MCP Server", tools: 3 });
+});
+
+// Debug endpoint: echo headers as the server sees them (for diagnosing client issues)
+app.all("/mcp-debug", (req, res) => {
+  res.json({
+    method: req.method,
+    headers: req.headers,
+    rawHeaders: req.rawHeaders,
+    body: req.body
+  });
 });
 
 // Root endpoint for basic info
@@ -469,10 +440,38 @@ app.get("/", (req, res) => {
 });
 
 // MCP Streamable HTTP endpoint
+// The SDK's StreamableHTTPServerTransport strictly requires Accept to include
+// BOTH "application/json" AND "text/event-stream". Some MCP clients (including
+// Webex AI Agent Studio) may not send both, causing 406 errors → empty {} responses.
+// We wrap the request object to force the correct Accept header regardless of
+// what the client sends.
 app.post("/mcp", async (req, res) => {
   try {
+    // Force Accept header on a wrapped request object.
+    // Object.create(req) preserves all Express/Node properties via prototype,
+    // but our overrides take precedence for header reads.
+    const correctAccept = "application/json, text/event-stream";
+    const wrappedReq = Object.create(req);
+    wrappedReq.headers = { ...req.headers, accept: correctAccept };
+
+    // Rebuild rawHeaders with the correct Accept value (SDK may read these directly)
+    const newRawHeaders = [];
+    let acceptSet = false;
+    for (let i = 0; i < (req.rawHeaders?.length || 0); i += 2) {
+      if (req.rawHeaders[i].toLowerCase() === "accept") {
+        newRawHeaders.push(req.rawHeaders[i], correctAccept);
+        acceptSet = true;
+      } else {
+        newRawHeaders.push(req.rawHeaders[i], req.rawHeaders[i + 1]);
+      }
+    }
+    if (!acceptSet) {
+      newRawHeaders.push("Accept", correctAccept);
+    }
+    wrappedReq.rawHeaders = newRawHeaders;
+
     const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined // Stateless mode for simplicity
+      sessionIdGenerator: undefined // Stateless mode
     });
 
     res.on("close", () => {
@@ -480,7 +479,7 @@ app.post("/mcp", async (req, res) => {
     });
 
     await server.connect(transport);
-    await transport.handleRequest(req, res, req.body);
+    await transport.handleRequest(wrappedReq, res, req.body);
   } catch (err) {
     console.error("[MCP] Error handling POST /mcp:", err);
     if (!res.headersSent) {
