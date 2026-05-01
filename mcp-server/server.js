@@ -36,10 +36,11 @@ function normalizeDate(input) {
   // Fix split years: "19 90" → "1990", "20 25" → "2025"
   cleaned = cleaned.replace(/\b(19|20)\s+(\d{2})\b/g, '$1$2');
 
-  // Try MM/DD/YYYY or M/D/YYYY (with / or -)
-  const mdyMatch = cleaned.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  // Try MM/DD/YYYY or M/D/YYYY or M/D/YY (with / or -)
+  const mdyMatch = cleaned.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
   if (mdyMatch) {
-    const [, m, d, y] = mdyMatch;
+    let [, m, d, y] = mdyMatch;
+    if (y.length === 2) y = (parseInt(y) > 50 ? '19' : '20') + y;
     return `${m.padStart(2, '0')}/${d.padStart(2, '0')}/${y}`;
   }
 
