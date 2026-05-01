@@ -395,6 +395,58 @@ server.tool(
 const app = express();
 app.use(express.json());
 
+// ============================================================
+// ACCEPT HEADER COMPATIBILITY MIDDLEWARE
+// ============================================================
+// The MCP SDK's StreamableHTTPServerTransport strictly requires
+// Accept: "application/json, text/event-stream" (BOTH must be present).
+// Some MCP clients (including Webex AI Agent Studio) may not send both,
+// causing HTTP 406 "Not Acceptable" errors that surface as empty {} responses.
+// This middleware injects missing Accept values before the SDK sees the request.
+app.use("/mcp", (req, res, next) => {
+  if (req.method === "POST") {
+    const accept = req.headers["accept"] || "";
+    const needsJson = !accept.includes("application/json");
+    const needsSSE = !accept.includes("text/event-stream");
+
+    if (needsJson || needsSSE) {
+      const parts = [accept];
+      if (needsJson) parts.push("application/json");
+      if (needsSSE) parts.push("text/event-stream");
+      const newAccept = parts.filter(Boolean).join(", ");
+      req.headers["accept"] = newAccept;
+
+      // Also fix rawHeaders array — the SDK may inspect this directly
+      if (req.rawHeaders) {
+        const rawIdx = req.rawHeaders.findIndex(
+          (h) => typeof h === "string" && h.toLowerCase() === "accept"
+        );
+        if (rawIdx !== -1 && rawIdx + 1 < req.rawHeaders.length) {
+          req.rawHeaders[rawIdx + 1] = newAccept;
+        } else {
+          req.rawHeaders.push("Accept", newAccept);
+        }
+      }
+
+      console.log(`[MCP] Fixed Accept header: "${accept}" → "${newAccept}"`);
+    }
+  }
+  next();
+});
+
+// Request logging middleware for /mcp (helps diagnose issues in Render logs)
+app.use("/mcp", (req, res, next) => {
+  const method = req.method;
+  const accept = req.headers["accept"] || "(none)";
+  const contentType = req.headers["content-type"] || "(none)";
+  const bodyMethod = req.body?.method || "(no method)";
+  console.log(`[MCP] ${method} /mcp | Accept: ${accept} | Content-Type: ${contentType} | JSON-RPC method: ${bodyMethod}`);
+  if (req.body?.method === "tools/call") {
+    console.log(`[MCP]   Tool: ${req.body?.params?.name} | Args: ${JSON.stringify(req.body?.params?.arguments)}`);
+  }
+  next();
+});
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ status: "ok", server: "Farmers Insurance MCP Server", tools: 3 });
@@ -418,16 +470,27 @@ app.get("/", (req, res) => {
 
 // MCP Streamable HTTP endpoint
 app.post("/mcp", async (req, res) => {
-  const transport = new StreamableHTTPServerTransport({
-    sessionIdGenerator: undefined // Stateless mode for simplicity
-  });
+  try {
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined // Stateless mode for simplicity
+    });
 
-  res.on("close", () => {
-    transport.close();
-  });
+    res.on("close", () => {
+      transport.close();
+    });
 
-  await server.connect(transport);
-  await transport.handleRequest(req, res, req.body);
+    await server.connect(transport);
+    await transport.handleRequest(req, res, req.body);
+  } catch (err) {
+    console.error("[MCP] Error handling POST /mcp:", err);
+    if (!res.headersSent) {
+      res.status(500).json({
+        jsonrpc: "2.0",
+        error: { code: -32603, message: "Internal server error" },
+        id: req.body?.id || null
+      });
+    }
+  }
 });
 
 // Handle GET and DELETE for MCP protocol (session management)
