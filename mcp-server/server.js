@@ -9,6 +9,18 @@ import { z } from "zod";
 
 const POLICYHOLDERS = [
   {
+    policy_number: "FRM-101",
+    first_name: "Sarah",
+    last_name: "Smith",
+    date_of_birth: "05/05/1990",
+    phone_number: "555-0101",
+    email: "sarah.smith@email.com",
+    address: "123 Main Street, Phoenix, AZ 85001",
+    vehicles: [
+      { year: 2022, make: "Toyota", model: "RAV4", primary_use: "commute" }
+    ]
+  },
+  {
     policy_number: "FRM-284719",
     first_name: "Sarah",
     last_name: "Martinez",
