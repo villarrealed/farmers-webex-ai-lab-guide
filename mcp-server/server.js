@@ -8,26 +8,49 @@ import { z } from "zod";
 // ============================================================
 
 // Flexible date parser — handles MM/DD/YYYY, M/D/YYYY, YYYY-MM-DD,
-// "May 5, 1990", "5 May 1990", "05-05-1990", etc.
+// "May 5, 1990", "May fifth, 1990", "5 May 1990", "05-05-1990", etc.
 function normalizeDate(input) {
   if (!input) return null;
   const str = input.trim();
 
+  // Ordinal word-to-number map
+  const wordNums = {
+    first: '1', second: '2', third: '3', fourth: '4', fifth: '5',
+    sixth: '6', seventh: '7', eighth: '8', ninth: '9', tenth: '10',
+    eleventh: '11', twelfth: '12', thirteenth: '13', fourteenth: '14',
+    fifteenth: '15', sixteenth: '16', seventeenth: '17', eighteenth: '18',
+    nineteenth: '19', twentieth: '20', 'twenty-first': '21', 'twenty-second': '22',
+    'twenty-third': '23', 'twenty-fourth': '24', 'twenty-fifth': '25',
+    'twenty-sixth': '26', 'twenty-seventh': '27', 'twenty-eighth': '28',
+    'twenty-ninth': '29', thirtieth: '30', 'thirty-first': '31'
+  };
+
+  // Pre-process: replace ordinal words with numbers, strip "st/nd/rd/th" suffixes
+  let cleaned = str;
+  for (const [word, num] of Object.entries(wordNums)) {
+    const re = new RegExp(`\\b${word}\\b`, 'gi');
+    cleaned = cleaned.replace(re, num);
+  }
+  // Strip ordinal suffixes: "1st" → "1", "2nd" → "2", "3rd" → "3", "5th" → "5"
+  cleaned = cleaned.replace(/(\d+)(st|nd|rd|th)\b/gi, '$1');
+  // Fix split years: "19 90" → "1990", "20 25" → "2025"
+  cleaned = cleaned.replace(/\b(19|20)\s+(\d{2})\b/g, '$1$2');
+
   // Try MM/DD/YYYY or M/D/YYYY (with / or -)
-  const mdyMatch = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  const mdyMatch = cleaned.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (mdyMatch) {
     const [, m, d, y] = mdyMatch;
     return `${m.padStart(2, '0')}/${d.padStart(2, '0')}/${y}`;
   }
 
   // Try YYYY-MM-DD
-  const isoMatch = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  const isoMatch = cleaned.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
   if (isoMatch) {
     const [, y, m, d] = isoMatch;
     return `${m.padStart(2, '0')}/${d.padStart(2, '0')}/${y}`;
   }
 
-  // Try natural language: "May 5, 1990" or "5 May 1990" etc.
+  // Month name map
   const months = {
     january: '01', february: '02', march: '03', april: '04',
     may: '05', june: '06', july: '07', august: '08',
@@ -35,7 +58,7 @@ function normalizeDate(input) {
   };
 
   // "Month Day, Year" or "Month Day Year"
-  const nlMatch1 = str.match(/^([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})$/);
+  const nlMatch1 = cleaned.match(/^([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})$/);
   if (nlMatch1) {
     const [, monthStr, d, y] = nlMatch1;
     const m = months[monthStr.toLowerCase()];
@@ -43,7 +66,7 @@ function normalizeDate(input) {
   }
 
   // "Day Month Year"
-  const nlMatch2 = str.match(/^(\d{1,2})\s+([a-zA-Z]+),?\s+(\d{4})$/);
+  const nlMatch2 = cleaned.match(/^(\d{1,2})\s+([a-zA-Z]+),?\s+(\d{4})$/);
   if (nlMatch2) {
     const [, d, monthStr, y] = nlMatch2;
     const m = months[monthStr.toLowerCase()];
@@ -52,6 +75,14 @@ function normalizeDate(input) {
 
   // Fallback: return as-is (will fail match gracefully)
   return str;
+}
+
+// Normalize policy numbers: "frm101" → "FRM-101", "FRM101" → "FRM-101"
+function normalizePolicyNumber(pn) {
+  if (!pn) return null;
+  const clean = pn.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const match = clean.match(/^(FRM)(\d+)$/);
+  return match ? `${match[1]}-${match[2]}` : pn.toUpperCase();
 }
 
 const POLICYHOLDERS = [
@@ -129,8 +160,9 @@ server.tool(
     phone_number: z.string().optional().describe("Phone number on file (optional, e.g., 555-0147)")
   },
   async ({ last_name, date_of_birth, policy_number, phone_number }) => {
-    // Normalize the provided date for flexible matching
+    // Normalize the provided inputs for flexible matching
     const normalizedDob = normalizeDate(date_of_birth);
+    const normalizedPolicy = policy_number ? normalizePolicyNumber(policy_number) : null;
 
     // Find matching policyholder
     const match = POLICYHOLDERS.find(p => {
@@ -140,7 +172,7 @@ server.tool(
       if (!nameMatch || !dobMatch) return false;
 
       // Additional verification if provided
-      if (policy_number && p.policy_number !== policy_number) return false;
+      if (normalizedPolicy && normalizePolicyNumber(p.policy_number) !== normalizedPolicy) return false;
       if (phone_number && p.phone_number !== phone_number) return false;
 
       return true;
