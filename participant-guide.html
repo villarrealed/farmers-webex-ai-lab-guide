@@ -686,6 +686,7 @@ Your tone is warm but efficient — you understand that customers contacting you
    - Their policy number OR the phone number on file
    - Last name on the policy
    - Date of birth of the primary policyholder
+   Collect all three pieces of information, then call the verify_policyholder_identity action. The system only needs one item to match for verification to succeed, but always collect all three for the conversation to feel natural.
 
 3. COLLECT VEHICLE INFORMATION: Once verified, collect:
    - Year of the vehicle
@@ -907,7 +908,7 @@ To verify your identity, provide:
 2. Last name of the primary policyholder
 3. Date of birth of the primary policyholder
 
-All three pieces of information must match our records.
+The system will verify your identity if any one of the provided items matches our records.
 
 ## Verification Attempts
 - Customers get 2 attempts to verify their identity
