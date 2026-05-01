@@ -470,6 +470,7 @@
             <a href="#chat-preview" class="nav-item level-2">Chat Preview</a>
             <a href="#voice-preview" class="nav-item level-2">Voice Preview</a>
             <a href="#iterate" class="nav-item level-2">Iterate & Improve</a>
+            <a href="#conversation-config" class="nav-item level-2">Conversation Tab</a>
         </div>
 
         <div class="nav-section">
@@ -1135,12 +1136,35 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
         </section>
 
         <section id="iterate">
-            <h3>Step 3: Test Edge Cases and Iterate</h3>
+            <h3>Step 3: Iterate & Improve</h3>
             <div class="step-indicator">
                 <div class="step-number">3</div>
-                <div class="step-title">Test Edge Cases and Iterate</div>
+                <div class="step-title">Iterate & Improve</div>
             </div>
-            <p><strong>Edge Case Test — Failed Verification:</strong></p>
+            <p>This is where the real learning happens. <strong>Make changes to your agent and test again</strong> — see how each modification affects the conversation. Try the experiments below:</p>
+
+            <p><strong>Experiment 1 — Change the Welcome Message:</strong></p>
+            <ol>
+                <li>Go to <strong>Profile</strong> and edit your agent's welcome message</li>
+                <li>Try something more casual: <em>"Hey there! I'm Farmers' virtual assistant. What can I help you with today?"</em></li>
+                <li>Publish and test — notice how the tone of the entire conversation shifts</li>
+            </ol>
+
+            <p><strong>Experiment 2 — Modify the Instructions:</strong></p>
+            <ol>
+                <li>Go to <strong>Instructions</strong> and try adding a new rule, for example: <em>"If the customer mentions they're in a rush, skip the small talk and get straight to business"</em></li>
+                <li>Publish, then test with: <em>"I'm in a hurry — I need to add a car to my policy right now"</em></li>
+                <li>Observe how the agent adapts its behavior to follow your new instruction</li>
+            </ol>
+
+            <p><strong>Experiment 3 — Update a Knowledge Base Article:</strong></p>
+            <ol>
+                <li>Go to <strong>Knowledge</strong> and edit one of your articles — try adding new information like: <em>"Farmers offers a 10% multi-vehicle discount when adding a second or third vehicle"</em></li>
+                <li>Publish, then ask: <em>"Do I get a discount for adding another car?"</em></li>
+                <li>See how the agent now references the updated knowledge in its response</li>
+            </ol>
+
+            <p><strong>Experiment 4 — Test Edge Cases (Failed Verification):</strong></p>
             <table>
                 <thead>
                     <tr><th>You Type</th><th>What to Observe</th></tr>
@@ -1153,21 +1177,74 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                 </tbody>
             </table>
 
-            <p><strong>Iteration Guide — What to fix when something sounds wrong:</strong></p>
+            <p><strong>Quick Reference — What to change when something doesn't work:</strong></p>
             <table>
                 <thead>
                     <tr><th>Issue You Notice</th><th>Where to Fix</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Agent doesn't acknowledge urgency</td><td>Instructions → add urgency awareness to greeting step</td></tr>
-                    <tr><td>Agent asks for info already provided</td><td>Instructions → add "track what the customer already told you"</td></tr>
-                    <tr><td>Wrong info about policy process</td><td>Knowledge Base → update the relevant article</td></tr>
-                    <tr><td>Agent triggers action before confirming</td><td>Instructions → strengthen "always confirm before processing"</td></tr>
-                    <tr><td>Voice responses too long</td><td>Instructions → add voice-specific brevity note</td></tr>
+                    <tr><td>Agent's tone feels wrong</td><td><strong>Profile</strong> → update welcome message; <strong>Instructions</strong> → adjust persona description</td></tr>
+                    <tr><td>Agent doesn't acknowledge urgency</td><td><strong>Instructions</strong> → add urgency awareness to greeting step</td></tr>
+                    <tr><td>Agent asks for info already provided</td><td><strong>Instructions</strong> → add "track what the customer already told you"</td></tr>
+                    <tr><td>Wrong info about policy process</td><td><strong>Knowledge Base</strong> → update the relevant article</td></tr>
+                    <tr><td>Agent triggers action before confirming</td><td><strong>Instructions</strong> → strengthen "always confirm before processing"</td></tr>
+                    <tr><td>Voice responses too long</td><td><strong>Instructions</strong> → add voice-specific brevity note</td></tr>
                 </tbody>
             </table>
+            <div class="info-box success">
+                <strong>The iterate loop is how production agents are built.</strong> No agent is perfect on the first try. Every change you make — to instructions, knowledge, or profile — teaches you how the agent interprets and applies your configuration. Keep experimenting!
+            </div>
+        </section>
+
+        <section id="conversation-config">
+            <h3>Step 4: Explore the Conversation Tab</h3>
+            <div class="step-indicator">
+                <div class="step-number">4</div>
+                <div class="step-title">Explore the Conversation Tab</div>
+            </div>
+            <p>The <strong>Conversation</strong> tab controls how your agent manages the flow of dialogue — from how long it waits for a response to what happens when a conversation ends. These settings directly affect the user experience.</p>
+            <ol>
+                <li>In your agent's configuration, click the <strong>Conversation</strong> tab</li>
+                <li>Explore and experiment with the available settings:</li>
+            </ol>
+            <table>
+                <thead>
+                    <tr><th>Setting</th><th>What It Controls</th><th>Try Changing It</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Session Timeout</strong></td>
+                        <td>How long the agent waits for a customer response before ending the session</td>
+                        <td>Shorten it and test — does the agent end the conversation too quickly?</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Conversation End Message</strong></td>
+                        <td>The message displayed when a session ends or times out</td>
+                        <td>Customize it: <em>"Thanks for choosing Farmers! Is there anything else I can help with?"</em></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Error Handling</strong></td>
+                        <td>What the agent says when it encounters an unexpected error</td>
+                        <td>Make it friendlier: <em>"I hit a snag — let me connect you with someone who can help"</em></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Handover Settings</strong></td>
+                        <td>How and when the agent escalates to a human agent</td>
+                        <td>Adjust the escalation message to include context for the human agent</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Max Turns</strong></td>
+                        <td>Maximum number of exchanges before the agent wraps up or escalates</td>
+                        <td>Lower it to see how the agent behaves when it needs to be more efficient</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ol start="3">
+                <li>After changing any setting, <strong>publish</strong> your agent and test the conversation again</li>
+                <li>Compare the experience before and after — small tweaks to conversation settings can make a big difference in how natural and polished the interaction feels</li>
+            </ol>
             <div class="info-box">
-                <strong>The iterate loop is how production agents are built.</strong> No agent is perfect on the first try. Real teams test dozens of scenarios, refine instructions, expand knowledge, and retest — continuously improving the experience based on real conversation patterns.
+                <strong>Keep testing!</strong> The combination of <strong>Instructions</strong> (what the agent says), <strong>Knowledge</strong> (what the agent knows), <strong>Actions</strong> (what the agent can do), and <strong>Conversation</strong> settings (how the agent manages dialogue) gives you full control over the customer experience. The best agents are built through continuous experimentation.
             </div>
         </section>
 
