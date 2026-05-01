@@ -479,6 +479,15 @@
             <a href="#summary" class="nav-item level-2">Summary & Next Steps</a>
         </div>
 
+        <div class="nav-section">
+            <div class="nav-section-title">Module 6 <span style="font-size:0.7em;color:#888;">(Optional)</span></div>
+            <a href="#troubleshooting" class="nav-item">Troubleshooting</a>
+            <a href="#view-sessions" class="nav-item level-2">View Agent Sessions</a>
+            <a href="#inspect-session" class="nav-item level-2">Inspect Session Details</a>
+            <a href="#troubleshoot-mcp" class="nav-item level-2">Troubleshoot MCP Actions</a>
+            <a href="#agent-history" class="nav-item level-2">Agent History & Versions</a>
+        </div>
+
         <!-- Persistent credential bar at bottom of nav -->
         <div id="nav-credentials" class="nav-credentials">
             <!-- Populated by JS based on ?seat= param -->
@@ -1221,6 +1230,166 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
             </ul>
             <div class="info-box success">
                 <strong>Key takeaway:</strong> Webex AI Agent handles routine transactions 24/7. AI Assistant empowers human agents for complex moments. Together, they deliver: no wait times for customers, less repetitive work for agents, and 24/7 service without 24/7 staffing.
+            </div>
+        </section>
+
+        <!-- MODULE 6 (Optional) -->
+        <section id="troubleshooting">
+            <div class="module-header">
+                <h2>Module 6: Troubleshooting & Session Details <span style="font-size:0.6em;color:#888;">(Optional)</span></h2>
+                <span class="time">Estimated time: 10 minutes</span>
+                <p>How to inspect agent sessions, debug MCP action failures, and track agent configuration changes.</p>
+            </div>
+            <div class="info-box">
+                <strong>When do you need this?</strong> If your agent returned unexpected responses, MCP actions didn't fire, or you want to understand exactly what happened during a conversation — this module shows you the diagnostic tools available in Webex AI Agent Studio and the MCP server.
+            </div>
+        </section>
+
+        <section id="view-sessions">
+            <h3>Step 1: View Agent Sessions</h3>
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">View Agent Sessions</div>
+            </div>
+            <p>Every conversation with your agent is recorded as a <strong>session</strong>. You can review all sessions to spot errors or unexpected behavior.</p>
+            <ol>
+                <li>In Webex AI Agent Studio, click <strong>Sessions</strong> in the left navigation panel</li>
+                <li>You'll see a list of all conversations with your agent, showing:
+                    <ul>
+                        <li><strong>Session ID</strong> — unique identifier for each conversation</li>
+                        <li><strong>Start time</strong> — when the conversation began</li>
+                        <li><strong>Channel</strong> — Chat or Voice</li>
+                        <li><strong>Status indicators</strong> — icons for errors, handovers, etc.</li>
+                    </ul>
+                </li>
+                <li>Use the <strong>filter options</strong> at the top to narrow results:
+                    <table>
+                        <thead>
+                            <tr><th>Filter</th><th>What It Shows</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Error occurred</td><td>Sessions where the agent hit an error (MCP failures, timeouts)</td></tr>
+                            <tr><td>Agent handover</td><td>Sessions where the customer was escalated to a human</td></tr>
+                            <tr><td>Test sessions</td><td>Sessions from the Preview panel (your lab testing)</td></tr>
+                            <tr><td>Downvoted</td><td>Sessions where a user rated the experience negatively</td></tr>
+                        </tbody>
+                    </table>
+                </li>
+            </ol>
+            <div class="info-box success">
+                <strong>💡 Tip:</strong> Start with the <strong>"Error occurred"</strong> filter — it immediately surfaces conversations where something went wrong, so you can investigate the root cause.
+            </div>
+        </section>
+
+        <section id="inspect-session">
+            <h3>Step 2: Inspect Session Details</h3>
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Inspect Session Details</div>
+            </div>
+            <p>Click any row in the Sessions list to open the full session detail view.</p>
+            <ol>
+                <li>Click a session row to expand it</li>
+                <li>If session data is encrypted, click <strong>Decrypt</strong> to reveal the full transcript</li>
+                <li>Review the three key panels:
+                    <table>
+                        <thead>
+                            <tr><th>Panel</th><th>What You'll See</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Transcript</strong></td><td>The complete back-and-forth between customer and agent, including system messages</td></tr>
+                            <tr><td><strong>Actions Performed</strong></td><td>Every MCP tool call the agent made — which tool, what parameters were sent, and the response received</td></tr>
+                            <tr><td><strong>Slot Filling</strong></td><td>The entities/slots the agent extracted from the conversation (policy number, name, DOB, vehicle info, phone number)</td></tr>
+                        </tbody>
+                    </table>
+                </li>
+            </ol>
+            <div class="info-box warning">
+                <strong>What to look for in Actions Performed:</strong> If an MCP action shows an error response or unexpected data, compare the <em>parameters sent</em> with what your MCP server expects. Common issues include missing fields, wrong formats (e.g., date as "may fifth" instead of "1990-05-05"), or the agent not collecting all required info before calling the action.
+            </div>
+        </section>
+
+        <section id="troubleshoot-mcp">
+            <h3>Step 3: Troubleshoot MCP Actions</h3>
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Troubleshoot MCP Actions</div>
+            </div>
+            <p>Your lab MCP server includes a built-in request log that captures every call Webex AI Agent makes to your server.</p>
+            <ol>
+                <li>Open the MCP server log in your browser:
+                    <div class="info-box" style="font-family: monospace; word-break: break-all;">
+                        <a href="https://farmers-insurance-mcp-server.onrender.com/mcp-log" target="_blank">https://farmers-insurance-mcp-server.onrender.com/mcp-log</a>
+                    </div>
+                </li>
+                <li>Each log entry shows:
+                    <ul>
+                        <li><strong>Timestamp</strong> — when the request arrived</li>
+                        <li><strong>Method</strong> — the JSON-RPC method called (e.g., <code>tools/call</code>, <code>tools/list</code>, <code>ping</code>)</li>
+                        <li><strong>Headers</strong> — including the MCP protocol version and client identity</li>
+                        <li><strong>Request body</strong> — the full JSON-RPC payload with tool name and arguments</li>
+                        <li><strong>Response</strong> — exactly what the server returned to the agent</li>
+                    </ul>
+                </li>
+                <li>Use this to diagnose common issues:</li>
+            </ol>
+            <table>
+                <thead>
+                    <tr><th>Symptom</th><th>What to Check in /mcp-log</th><th>Likely Cause</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Agent says it can't verify identity</td>
+                        <td>Look for <code>verify_policyholder</code> call — check the arguments</td>
+                        <td>Name, DOB, or policy number format didn't match. The server uses flexible matching (any one field match works), so check if <em>all</em> fields were wrong.</td>
+                    </tr>
+                    <tr>
+                        <td>Agent says action failed or gives empty response</td>
+                        <td>Look for <code>tools/call</code> — check if the response has <code>"result"</code> or <code>"error"</code></td>
+                        <td>Server may have returned an error. Check the response body for details.</td>
+                    </tr>
+                    <tr>
+                        <td>SMS never arrived</td>
+                        <td>Look for <code>send_proof_of_insurance</code> — check <code>phone_number</code> argument</td>
+                        <td>Phone number format issue (needs 10 digits), or agent didn't pass the phone number parameter at all.</td>
+                    </tr>
+                    <tr>
+                        <td>No log entries at all</td>
+                        <td>Check if <code>tools/list</code> or <code>ping</code> entries exist</td>
+                        <td>MCP endpoint URL may be misconfigured in your agent's action settings. Verify the URL ends in <code>/mcp</code>.</td>
+                    </tr>
+                    <tr>
+                        <td>Agent doesn't offer MCP actions</td>
+                        <td>Look for <code>tools/list</code> call and its response</td>
+                        <td>If <code>tools/list</code> returned an error or the agent never called it, re-check your Action configuration in Module 3.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="info-box success">
+                <strong>💡 Tip:</strong> The log shows the last 50 requests. If you need a fresh view, run a new test conversation and check the log immediately — your calls will be at the top.
+            </div>
+        </section>
+
+        <section id="agent-history">
+            <h3>Step 4: View Agent History & Versions</h3>
+            <div class="step-indicator">
+                <div class="step-number">4</div>
+                <div class="step-title">View Agent History & Versions</div>
+            </div>
+            <p>Every time you publish changes to your agent, Webex AI Agent Studio saves a version. You can review what changed and when.</p>
+            <ol>
+                <li>In your agent's configuration page, click the <strong>History</strong> tab</li>
+                <li>You'll see a list of all published versions with:
+                    <ul>
+                        <li><strong>Version number</strong> — incremented with each publish</li>
+                        <li><strong>Timestamp</strong> — when the version was published</li>
+                        <li><strong>Change summary</strong> — what was modified (instructions, knowledge, actions, etc.)</li>
+                    </ul>
+                </li>
+                <li>Click any version to see the details of what changed</li>
+            </ol>
+            <div class="info-box">
+                <strong>Why this matters:</strong> If your agent was working perfectly and then broke after a change, History lets you identify exactly which modification caused the issue. In production, this audit trail is essential for compliance and troubleshooting.
             </div>
         </section>
     </div>
