@@ -67,6 +67,7 @@
             <h2>Sections</h2>
             <ul>
                 <li><a href="#getting-started">Getting Started & Login</a></li>
+                <li><a href="#lab-accounts">Lab Accounts & Seat Numbers</a></li>
                 <li><a href="#agent-config">Agent Configuration</a></li>
                 <li><a href="#knowledge-base">Knowledge Base</a></li>
                 <li><a href="#actions-mcp">Actions & MCP</a></li>
@@ -114,6 +115,109 @@
                 <div class="faq-question">Can I use my personal Webex account for this lab?</div>
                 <div class="faq-answer">
                     <p>No. The lab environment is pre-configured with specific permissions and MCP server access. Use only the lab credentials assigned to your seat. Your personal account won't have access to the lab organization's AI Agent Studio.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- LAB ACCOUNTS & SEAT NUMBERS -->
+        <div id="lab-accounts" class="faq-section">
+            <h2>Lab Accounts & Seat Numbers</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Why do I need a seat number?</div>
+                <div class="faq-answer">
+                    <p>All 10 lab participants share the <strong>same Webex AI Agent Studio environment</strong>. Your seat number (1–10) is used to keep everyone's work separate. It determines:</p>
+                    <ul>
+                        <li><strong>Your login credentials</strong> — Each seat has a unique username (e.g., <code>labuser03@edvill-7xdo.wbx.ai</code> for Seat 3)</li>
+                        <li><strong>Your agent name</strong> — <code>Farmers Agent 3</code> for Seat 3</li>
+                        <li><strong>Your knowledge base name</strong> — <code>Farmers KB 3</code> for Seat 3</li>
+                        <li><strong>Your test policy number</strong> — <code>FRM-103</code> for Seat 3</li>
+                    </ul>
+                    <div class="warning"><strong>Critical:</strong> If you use the wrong seat number, you may accidentally edit another participant's agent or use credentials that don't match your configuration. Always double-check your assigned seat number before starting.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What are the naming conventions for my seat?</div>
+                <div class="faq-answer">
+                    <p>Replace <strong>N</strong> with your seat number (1–10) in all of the following:</p>
+                    <table style="width:100%; border-collapse:collapse; margin: 12px 0;">
+                        <thead><tr style="border-bottom:2px solid #E2E8F0;"><th style="text-align:left; padding:8px;">Resource</th><th style="text-align:left; padding:8px;">Naming Convention</th><th style="text-align:left; padding:8px;">Example (Seat 5)</th></tr></thead>
+                        <tbody>
+                            <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px;">Login username</td><td style="padding:8px;"><code>labuser0N@edvill-7xdo.wbx.ai</code></td><td style="padding:8px;"><code>labuser05@edvill-7xdo.wbx.ai</code></td></tr>
+                            <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px;">Agent name</td><td style="padding:8px;"><code>Farmers Agent N</code></td><td style="padding:8px;"><code>Farmers Agent 5</code></td></tr>
+                            <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px;">Knowledge base</td><td style="padding:8px;"><code>Farmers KB N</code></td><td style="padding:8px;"><code>Farmers KB 5</code></td></tr>
+                            <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px;">Test policy number</td><td style="padding:8px;"><code>FRM-10N</code></td><td style="padding:8px;"><code>FRM-105</code></td></tr>
+                        </tbody>
+                    </table>
+                    <div class="tip"><strong>Tip:</strong> If you open the Participant Guide from the lab home page with your seat selected, all naming conventions in the guide will automatically show your specific seat number.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">I see other people's agents in the list. Is that normal?</div>
+                <div class="faq-answer">
+                    <p>Yes! Since all participants share one environment, you'll see everyone's agents, knowledge bases, and other resources. This is expected. <strong>Only edit resources that have your seat number</strong> (e.g., "Farmers Agent 3" if you're Seat 3).</p>
+                    <p>If you accidentally open or edit someone else's agent, simply navigate back and find the one with your number.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">I used the wrong seat number when creating my agent. What do I do?</div>
+                <div class="faq-answer">
+                    <p>If you created an agent with the wrong number (e.g., "Farmers Agent 7" but you're Seat 3):</p>
+                    <ol>
+                        <li>You can rename it — go to <strong>Profile</strong> and change the agent name to your correct seat number</li>
+                        <li>Or create a new agent with the correct name and continue from there</li>
+                    </ol>
+                    <p>The important thing is that <strong>you know which agent is yours</strong>. The seat number in the name is just for organization — it doesn't affect functionality.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What if I'm logged in with the wrong lab credentials?</div>
+                <div class="faq-answer">
+                    <p>If you're using another participant's credentials (e.g., logged in as <code>labuser07</code> but you're assigned Seat 3):</p>
+                    <ol>
+                        <li><strong>Sign out</strong> of Webex Control Hub</li>
+                        <li>Clear your browser session or use a <strong>new incognito window</strong></li>
+                        <li>Sign in with your correct credentials (shown on the lab home page when you select your seat)</li>
+                    </ol>
+                    <div class="warning"><strong>Why this matters:</strong> All lab accounts have the same password, so logging in with the wrong username is easy to do and hard to notice. If your test results seem wrong or you can't find your agent, verify your login first.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">My test policy number (FRM-10N) isn't working for verification. Why?</div>
+                <div class="faq-answer">
+                    <p>Each seat has a specific policy number in the MCP server's database. Make sure you're using the one that matches your seat:</p>
+                    <ul>
+                        <li>Seat 1 → <code>FRM-101</code></li>
+                        <li>Seat 2 → <code>FRM-102</code></li>
+                        <li>Seat 3 → <code>FRM-103</code></li>
+                        <li>...and so on up to Seat 10 → <code>FRM-1010</code></li>
+                    </ul>
+                    <p>If you're testing with the wrong policy number (e.g., using FRM-101 when you're Seat 5), the verification may still pass because the server also matches on last name ("Smith") and date of birth ("May 5, 1990") — but using your correct policy number ensures a clean test.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Do all seats share the same password?</div>
+                <div class="faq-answer">
+                    <p>Yes. All 10 lab accounts use the same password: <code>C1sco12345!</code></p>
+                    <p>The only difference between accounts is the <strong>username</strong> (<code>labuser01</code> through <code>labuser10</code>). Make sure you're using the correct username for your seat number.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Where do I find my credentials?</div>
+                <div class="faq-answer">
+                    <p>Three places to find your credentials:</p>
+                    <ol>
+                        <li><strong>Lab home page</strong> — Select your seat number and credentials appear immediately</li>
+                        <li><strong>Participant Guide</strong> — If opened with <code>?seat=N</code>, credentials show in the sidebar and top of the page</li>
+                        <li><strong>Your instructor</strong> — Ask if you're unsure which seat you've been assigned</li>
+                    </ol>
                 </div>
             </div>
         </div>
