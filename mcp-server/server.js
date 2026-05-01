@@ -225,8 +225,9 @@ server.tool(
     primary_use: z.enum(["commute", "pleasure", "business"]).describe("Primary use of the vehicle (required: commute, pleasure, or business)")
   },
   async ({ policy_number, vehicle_year, vehicle_make, vehicle_model, primary_use }) => {
-    // Verify policy exists
-    const policyholder = POLICYHOLDERS.find(p => p.policy_number === policy_number);
+    // Verify policy exists (normalize policy number)
+    const normalizedPolicy = normalizePolicyNumber(policy_number);
+    const policyholder = POLICYHOLDERS.find(p => normalizePolicyNumber(p.policy_number) === normalizedPolicy);
 
     if (!policyholder) {
       return {
@@ -285,11 +286,12 @@ server.tool(
   {
     policy_number: z.string().describe("The policy number for the proof of insurance (required, e.g., FRM-284719)"),
     delivery_method: z.enum(["sms", "email", "app"]).describe("How to deliver the proof of insurance (required: sms, email, or app)"),
-    phone_number: z.string().optional().describe("Phone number to send SMS to (optional, used when delivery_method is sms, e.g., +16025551234)")
+    phone_number: z.string().optional().describe("Phone number to send SMS to (required when delivery_method is sms). Format as +1 followed by 10 digits, e.g., +16025551234. Customer may provide any phone number — it does not have to match the number on file.")
   },
   async ({ policy_number, delivery_method, phone_number }) => {
-    // Find policyholder for personalized response
-    const policyholder = POLICYHOLDERS.find(p => p.policy_number === policy_number);
+    // Find policyholder for personalized response (normalize policy number)
+    const normalizedPolicy = normalizePolicyNumber(policy_number);
+    const policyholder = POLICYHOLDERS.find(p => normalizePolicyNumber(p.policy_number) === normalizedPolicy);
 
     if (!policyholder) {
       return {
@@ -309,17 +311,26 @@ server.tool(
 
     switch (delivery_method) {
       case "sms":
-        // Determine the phone number to use and normalize to +1XXXXXXXXXX format
-        let smsPhone = phone_number || policyholder.phone_number;
-        // Strip all non-digit characters
-        const digits = smsPhone.replace(/\D/g, "");
-        // Ensure +1 prefix with 10 digits
+        // Normalize phone number to +1XXXXXXXXXX format
+        if (!phone_number) {
+          return {
+            content: [{
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                message: "A phone number is required for SMS delivery. Please ask the customer for the phone number they'd like the text sent to."
+              }, null, 2)
+            }]
+          };
+        }
+        const digits = phone_number.replace(/\D/g, "");
+        let smsPhone;
         if (digits.length === 10) {
           smsPhone = "+1" + digits;
         } else if (digits.length === 11 && digits.startsWith("1")) {
           smsPhone = "+" + digits;
         } else {
-          smsPhone = "+" + digits;
+          smsPhone = "+1" + digits.slice(-10);
         }
         const lastFour = smsPhone.slice(-4);
 
