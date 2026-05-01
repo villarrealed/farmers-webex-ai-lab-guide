@@ -203,7 +203,15 @@ server.tool(
           type: "text",
           text: JSON.stringify({
             verified: false,
-            message: "Unable to verify identity. Please check the information provided and try again. If you continue to have issues, please contact your local Farmers agent during business hours."
+            message: "Unable to verify identity. Please check the information provided and try again. If you continue to have issues, please contact your local Farmers agent during business hours.",
+            debug_received: {
+              last_name: last_name,
+              date_of_birth: date_of_birth,
+              date_of_birth_normalized: normalizedDob,
+              policy_number: policy_number || "(not provided)",
+              policy_number_normalized: normalizedPolicy || "(not provided)",
+              phone_number: phone_number || "(not provided)"
+            }
           }, null, 2)
         }]
       };
