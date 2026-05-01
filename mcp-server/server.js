@@ -147,6 +147,23 @@ const POLICYHOLDERS = [
 const app = express();
 app.use(express.json());
 
+// CORS headers — required if Webex AI Agent Studio makes browser-side requests
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization, Mcp-Session-Id");
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+  next();
+});
+
+// ============================================================
+// REQUEST LOG (in-memory, last 50 requests to /mcp)
+// ============================================================
+const REQUEST_LOG = [];
+const MAX_LOG_ENTRIES = 50;
+
 // ============================================================
 // TOOL DEFINITIONS (for tools/list response)
 // ============================================================
@@ -381,18 +398,42 @@ const TOOL_HANDLERS = {
 // JSON-RPC REQUEST HANDLER
 // ============================================================
 
-// Request logging middleware for /mcp
+// Request logging middleware for /mcp — captures to in-memory log
 app.use("/mcp", (req, res, next) => {
   if (req.method === "POST") {
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      method: req.body?.method || "(no method)",
+      headers: { ...req.headers },
+      body: req.body,
+      response: null // will be filled after response
+    };
+
+    // Intercept res.json to capture the response
+    const originalJson = res.json.bind(res);
+    res.json = (data) => {
+      logEntry.response = data;
+      REQUEST_LOG.push(logEntry);
+      if (REQUEST_LOG.length > MAX_LOG_ENTRIES) REQUEST_LOG.shift();
+      return originalJson(data);
+    };
+
     const accept = req.headers["accept"] || "(none)";
     const contentType = req.headers["content-type"] || "(none)";
-    const bodyMethod = req.body?.method || "(no method)";
-    console.log(`[MCP] POST /mcp | Accept: ${accept} | Content-Type: ${contentType} | JSON-RPC method: ${bodyMethod}`);
+    console.log(`[MCP] POST /mcp | Accept: ${accept} | Content-Type: ${contentType} | JSON-RPC method: ${logEntry.method}`);
     if (req.body?.method === "tools/call") {
       console.log(`[MCP]   Tool: ${req.body?.params?.name} | Args: ${JSON.stringify(req.body?.params?.arguments)}`);
     }
   }
   next();
+});
+
+// View request log (for diagnosing Webex communication issues)
+app.get("/mcp-log", (req, res) => {
+  res.json({
+    total_requests: REQUEST_LOG.length,
+    requests: REQUEST_LOG.slice(-20).reverse()
+  });
 });
 
 // Health check
@@ -413,48 +454,60 @@ app.get("/", (req, res) => {
     version: "1.0.0",
     tools: ["verify_policyholder_identity", "add_vehicle_to_policy", "deliver_proof_of_insurance"],
     health: "/health",
-    mcp_endpoint: "/mcp"
+    mcp_endpoint: "/mcp",
+    mcp_log: "/mcp-log"
   });
 });
 
 // MCP JSON-RPC endpoint — returns plain application/json (no SSE)
 app.post("/mcp", async (req, res) => {
-  const { jsonrpc, method, params, id } = req.body || {};
+  const body = req.body || {};
 
-  // Validate JSON-RPC structure
-  if (jsonrpc !== "2.0") {
-    return res.status(400).json({
-      jsonrpc: "2.0",
-      error: { code: -32600, message: "Invalid Request: missing jsonrpc 2.0" },
-      id: id || null
-    });
+  // Handle batch requests (array of JSON-RPC calls)
+  if (Array.isArray(body)) {
+    const results = [];
+    for (const item of body) {
+      const result = await handleJsonRpc(item);
+      if (result) results.push(result);
+    }
+    return res.json(results);
   }
+
+  const result = await handleJsonRpc(body);
+  return res.json(result);
+});
+
+async function handleJsonRpc(body) {
+  const { jsonrpc, method, params, id } = body;
+
+  // Be lenient: don't reject if jsonrpc field is missing
+  // (some clients may omit it)
 
   try {
     switch (method) {
       // ── Initialize ──
       case "initialize":
-        return res.json({
+        return {
           jsonrpc: "2.0",
           result: {
-            protocolVersion: "2025-03-26",
+            protocolVersion: params?.protocolVersion || "2025-03-26",
             capabilities: { tools: { listChanged: false } },
             serverInfo: { name: "Farmers Insurance Tools", version: "1.0.0" }
           },
           id
-        });
+        };
 
       // ── Notifications (no response needed per JSON-RPC spec) ──
       case "notifications/initialized":
-        return res.status(202).json({ jsonrpc: "2.0", result: {}, id });
+        return { jsonrpc: "2.0", result: {}, id };
 
       // ── List Tools ──
       case "tools/list":
-        return res.json({
+        return {
           jsonrpc: "2.0",
           result: { tools: TOOL_SCHEMAS },
           id
-        });
+        };
 
       // ── Call Tool ──
       case "tools/call": {
@@ -463,35 +516,35 @@ app.post("/mcp", async (req, res) => {
         const handler = TOOL_HANDLERS[toolName];
 
         if (!handler) {
-          return res.json({
+          return {
             jsonrpc: "2.0",
             error: { code: -32602, message: `Unknown tool: ${toolName}` },
             id
-          });
+          };
         }
 
         const result = await handler(toolArgs);
         console.log(`[MCP]   Result: ${result.content[0].text.substring(0, 100)}...`);
-        return res.json({ jsonrpc: "2.0", result, id });
+        return { jsonrpc: "2.0", result, id };
       }
 
       // ── Unknown method ──
       default:
-        return res.json({
+        return {
           jsonrpc: "2.0",
           error: { code: -32601, message: `Method not found: ${method}` },
           id: id || null
-        });
+        };
     }
   } catch (err) {
     console.error("[MCP] Error:", err);
-    return res.status(500).json({
+    return {
       jsonrpc: "2.0",
       error: { code: -32603, message: "Internal server error" },
       id: id || null
-    });
+    };
   }
-});
+}
 
 // Handle GET and DELETE for MCP protocol
 app.get("/mcp", (req, res) => {
