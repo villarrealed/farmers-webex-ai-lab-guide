@@ -1,7 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import express from "express";
-import { z } from "zod";
 
 // ============================================================
 // STATIC DATA — Hardcoded policyholders for demo purposes
@@ -139,365 +136,367 @@ const POLICYHOLDERS = [
 ];
 
 // ============================================================
-// MCP SERVER SETUP
+// EXPRESS APP + CUSTOM JSON-RPC HANDLER
 // ============================================================
-
-const server = new McpServer({
-  name: "Farmers Insurance Tools",
-  version: "1.0.0"
-});
-
-// ============================================================
-// TOOL 1: verify_policyholder_identity
-// ============================================================
-
-server.tool(
-  "verify_policyholder_identity",
-  "Verifies a policyholder's identity by matching their last name and date of birth against policy records. Optionally uses policy number or phone number for additional verification. Returns policyholder details and current vehicles on policy if verified.",
-  {
-    last_name: z.string().describe("Policyholder's last name (required)"),
-    date_of_birth: z.string().describe("Policyholder's date of birth in MM/DD/YYYY format (required)"),
-    policy_number: z.string().optional().describe("Policy number (optional, e.g., FRM-284719)"),
-    phone_number: z.string().optional().describe("Phone number on file (optional, e.g., 555-0147)")
-  },
-  async ({ last_name, date_of_birth, policy_number, phone_number }) => {
-    // Normalize the provided inputs for flexible matching
-    const normalizedDob = normalizeDate(date_of_birth);
-    const normalizedPolicy = policy_number ? normalizePolicyNumber(policy_number) : null;
-
-    // Find matching policyholder
-    const match = POLICYHOLDERS.find(p => {
-      const nameMatch = p.last_name.toLowerCase() === last_name.toLowerCase();
-      const dobMatch = normalizeDate(p.date_of_birth) === normalizedDob;
-
-      if (!nameMatch || !dobMatch) return false;
-
-      // Additional verification if provided
-      if (normalizedPolicy && normalizePolicyNumber(p.policy_number) !== normalizedPolicy) return false;
-      if (phone_number && p.phone_number !== phone_number) return false;
-
-      return true;
-    });
-
-    if (match) {
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            verified: true,
-            policy_number: match.policy_number,
-            first_name: match.first_name,
-            last_name: match.last_name,
-            vehicles_on_policy: match.vehicles.map(v => ({
-              year: v.year,
-              make: v.make,
-              model: v.model,
-              primary_use: v.primary_use
-            }))
-          }, null, 2)
-        }]
-      };
-    } else {
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            verified: false,
-            message: "Unable to verify identity. Please check the information provided and try again. If you continue to have issues, please contact your local Farmers agent during business hours.",
-            debug_received: {
-              last_name: last_name,
-              date_of_birth: date_of_birth,
-              date_of_birth_normalized: normalizedDob,
-              policy_number: policy_number || "(not provided)",
-              policy_number_normalized: normalizedPolicy || "(not provided)",
-              phone_number: phone_number || "(not provided)"
-            }
-          }, null, 2)
-        }]
-      };
-    }
-  }
-);
-
-// ============================================================
-// TOOL 2: add_vehicle_to_policy
-// ============================================================
-
-server.tool(
-  "add_vehicle_to_policy",
-  "Adds a new vehicle to an existing Farmers Insurance policy. Requires the policy number, vehicle year, make, model, and primary use. Returns a confirmation number and estimated monthly premium adjustment.",
-  {
-    policy_number: z.string().describe("The policy number to add the vehicle to (required, e.g., FRM-284719)"),
-    vehicle_year: z.number().int().describe("Model year of the vehicle (required, e.g., 2024)"),
-    vehicle_make: z.string().describe("Vehicle manufacturer (required, e.g., Honda)"),
-    vehicle_model: z.string().describe("Vehicle model name (required, e.g., CR-V)"),
-    primary_use: z.enum(["commute", "pleasure", "business"]).describe("Primary use of the vehicle (required: commute, pleasure, or business)")
-  },
-  async ({ policy_number, vehicle_year, vehicle_make, vehicle_model, primary_use }) => {
-    // Verify policy exists (normalize policy number)
-    const normalizedPolicy = normalizePolicyNumber(policy_number);
-    const policyholder = POLICYHOLDERS.find(p => normalizePolicyNumber(p.policy_number) === normalizedPolicy);
-
-    if (!policyholder) {
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            success: false,
-            message: `Policy number ${policy_number} not found. Please verify the policy number and try again.`
-          }, null, 2)
-        }]
-      };
-    }
-
-    // Generate confirmation number
-    const confirmationNumber = "VH-" + Math.floor(100000 + Math.random() * 900000);
-
-    // Calculate a realistic-looking premium based on use type
-    const premiumMap = { commute: 47.50, pleasure: 38.25, business: 62.00 };
-    const premium = premiumMap[primary_use] || 47.50;
-
-    // Today's date for effective date
-    const today = new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    });
-
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({
-          success: true,
-          confirmation_number: confirmationNumber,
-          vehicle: {
-            year: vehicle_year,
-            make: vehicle_make,
-            model: vehicle_model,
-            primary_use: primary_use
-          },
-          estimated_monthly_premium: `$${premium.toFixed(2)}`,
-          effective_date: today,
-          message: `${vehicle_year} ${vehicle_make} ${vehicle_model} has been successfully added to policy ${policy_number}. Coverage is effective immediately.`
-        }, null, 2)
-        }]
-    };
-  }
-);
-
-// ============================================================
-// TOOL 3: deliver_proof_of_insurance
-// ============================================================
-
-server.tool(
-  "deliver_proof_of_insurance",
-  "Delivers proof of insurance (insurance ID card) to the policyholder via their preferred method: SMS text message, email, or through the Farmers mobile app. Returns delivery confirmation details.",
-  {
-    policy_number: z.string().describe("The policy number for the proof of insurance (required, e.g., FRM-284719)"),
-    delivery_method: z.enum(["sms", "email", "app"]).describe("How to deliver the proof of insurance (required: sms, email, or app)"),
-    phone_number: z.string().optional().describe("Phone number to send SMS to (required when delivery_method is sms). Format as +1 followed by 10 digits, e.g., +16025551234. Customer may provide any phone number — it does not have to match the number on file.")
-  },
-  async ({ policy_number, delivery_method, phone_number }) => {
-    // Find policyholder for personalized response (normalize policy number)
-    const normalizedPolicy = normalizePolicyNumber(policy_number);
-    const policyholder = POLICYHOLDERS.find(p => normalizePolicyNumber(p.policy_number) === normalizedPolicy);
-
-    if (!policyholder) {
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            success: false,
-            message: `Policy number ${policy_number} not found. Please verify the policy number and try again.`
-          }, null, 2)
-        }]
-      };
-    }
-
-    // Build delivery confirmation based on method
-    let deliveryConfirmation;
-    let deliveryDetails;
-
-    switch (delivery_method) {
-      case "sms":
-        // Normalize phone number to +1XXXXXXXXXX format
-        if (!phone_number) {
-          return {
-            content: [{
-              type: "text",
-              text: JSON.stringify({
-                success: false,
-                message: "A phone number is required for SMS delivery. Please ask the customer for the phone number they'd like the text sent to."
-              }, null, 2)
-            }]
-          };
-        }
-        const digits = phone_number.replace(/\D/g, "");
-        let smsPhone;
-        if (digits.length === 10) {
-          smsPhone = "+1" + digits;
-        } else if (digits.length === 11 && digits.startsWith("1")) {
-          smsPhone = "+" + digits;
-        } else {
-          smsPhone = "+1" + digits.slice(-10);
-        }
-        const lastFour = smsPhone.slice(-4);
-
-        // Call Webex Connect webhook to send real SMS
-        try {
-          const webhookResponse = await fetch("https://hooks.us.webexconnect.io/events/67H8O1CZV1", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              phone_number: smsPhone,
-              policy_number: policy_number,
-              customer_name: `${policyholder.first_name} ${policyholder.last_name}`
-            })
-          });
-          const webhookResult = await webhookResponse.json();
-          deliveryConfirmation = `SMS sent to phone number ending in ***${lastFour.slice(-2)}`;
-          deliveryDetails = "A text message with your proof of insurance has been sent. Please check your phone.";
-        } catch (error) {
-          deliveryConfirmation = `SMS queued for phone number ending in ***${lastFour.slice(-2)}`;
-          deliveryDetails = "Your proof of insurance text message is being processed. You should receive it shortly.";
-        }
-        break;
-      case "email":
-        const maskedEmail = policyholder.email.charAt(0) + "***@" + policyholder.email.split("@")[1];
-        deliveryConfirmation = `Sent to ${maskedEmail}`;
-        deliveryDetails = "You will receive an email with your insurance ID card attached as a PDF.";
-        break;
-      case "app":
-        deliveryConfirmation = "Available in Farmers mobile app under 'My Documents'";
-        deliveryDetails = "Open the Farmers app and navigate to My Documents > Insurance Cards to view your updated proof of insurance.";
-        break;
-    }
-
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({
-          success: true,
-          delivery_method: delivery_method,
-          delivery_confirmation: deliveryConfirmation,
-          delivery_details: deliveryDetails,
-          message: `Proof of insurance for policy ${policy_number} has been sent via ${delivery_method}. ${deliveryDetails}`
-        }, null, 2)
-      }]
-    };
-  }
-);
-
-// ============================================================
-// EXPRESS APP + STREAMABLE HTTP TRANSPORT
-// ============================================================
+// We bypass the SDK's StreamableHTTPServerTransport entirely because:
+// 1. It always responds with SSE format (text/event-stream)
+// 2. The Webex AI Agent Studio MCP client expects plain JSON responses
+// 3. The SDK has strict Accept header validation that rejects many clients
+// Instead, we handle MCP JSON-RPC protocol directly with plain JSON responses.
 
 const app = express();
 app.use(express.json());
 
-// Request logging middleware for /mcp (helps diagnose issues in Render logs)
+// ============================================================
+// TOOL DEFINITIONS (for tools/list response)
+// ============================================================
+
+const TOOL_SCHEMAS = [
+  {
+    name: "verify_policyholder_identity",
+    description: "Verifies a policyholder's identity by matching their last name and date of birth against policy records. Optionally uses policy number or phone number for additional verification. Returns policyholder details and current vehicles on policy if verified.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        last_name: { type: "string", description: "Policyholder's last name (required)" },
+        date_of_birth: { type: "string", description: "Policyholder's date of birth in MM/DD/YYYY format (required)" },
+        policy_number: { type: "string", description: "Policy number (optional, e.g., FRM-284719)" },
+        phone_number: { type: "string", description: "Phone number on file (optional, e.g., 555-0147)" }
+      },
+      required: ["last_name", "date_of_birth"]
+    }
+  },
+  {
+    name: "add_vehicle_to_policy",
+    description: "Adds a new vehicle to an existing Farmers Insurance policy. Requires the policy number, vehicle year, make, model, and primary use. Returns a confirmation number and estimated monthly premium adjustment.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        policy_number: { type: "string", description: "The policy number to add the vehicle to (required, e.g., FRM-284719)" },
+        vehicle_year: { type: "integer", description: "Model year of the vehicle (required, e.g., 2024)" },
+        vehicle_make: { type: "string", description: "Vehicle manufacturer (required, e.g., Honda)" },
+        vehicle_model: { type: "string", description: "Vehicle model name (required, e.g., CR-V)" },
+        primary_use: { type: "string", enum: ["commute", "pleasure", "business"], description: "Primary use of the vehicle (required: commute, pleasure, or business)" }
+      },
+      required: ["policy_number", "vehicle_year", "vehicle_make", "vehicle_model", "primary_use"]
+    }
+  },
+  {
+    name: "deliver_proof_of_insurance",
+    description: "Delivers proof of insurance (insurance ID card) to the policyholder via their preferred method: SMS text message, email, or through the Farmers mobile app. Returns delivery confirmation details.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        policy_number: { type: "string", description: "The policy number for the proof of insurance (required, e.g., FRM-284719)" },
+        delivery_method: { type: "string", enum: ["sms", "email", "app"], description: "How to deliver the proof of insurance (required: sms, email, or app)" },
+        phone_number: { type: "string", description: "Phone number to send SMS to (required when delivery_method is sms). Format as +1 followed by 10 digits, e.g., +16025551234. Customer may provide any phone number — it does not have to match the number on file." }
+      },
+      required: ["policy_number", "delivery_method"]
+    }
+  }
+];
+
+// ============================================================
+// TOOL HANDLERS (called by tools/call)
+// ============================================================
+
+async function handleVerifyPolicyholder({ last_name, date_of_birth, policy_number, phone_number }) {
+  const normalizedDob = normalizeDate(date_of_birth);
+  const normalizedPolicy = policy_number ? normalizePolicyNumber(policy_number) : null;
+
+  const match = POLICYHOLDERS.find(p => {
+    const nameMatch = p.last_name.toLowerCase() === last_name.toLowerCase();
+    const dobMatch = normalizeDate(p.date_of_birth) === normalizedDob;
+    if (!nameMatch || !dobMatch) return false;
+    if (normalizedPolicy && normalizePolicyNumber(p.policy_number) !== normalizedPolicy) return false;
+    if (phone_number && p.phone_number !== phone_number) return false;
+    return true;
+  });
+
+  if (match) {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          verified: true,
+          policy_number: match.policy_number,
+          first_name: match.first_name,
+          last_name: match.last_name,
+          vehicles_on_policy: match.vehicles.map(v => ({
+            year: v.year, make: v.make, model: v.model, primary_use: v.primary_use
+          }))
+        }, null, 2)
+      }]
+    };
+  } else {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          verified: false,
+          message: "Unable to verify identity. Please check the information provided and try again.",
+          debug_received: {
+            last_name, date_of_birth,
+            date_of_birth_normalized: normalizedDob,
+            policy_number: policy_number || "(not provided)",
+            policy_number_normalized: normalizedPolicy || "(not provided)",
+            phone_number: phone_number || "(not provided)"
+          }
+        }, null, 2)
+      }]
+    };
+  }
+}
+
+async function handleAddVehicle({ policy_number, vehicle_year, vehicle_make, vehicle_model, primary_use }) {
+  const normalizedPolicy = normalizePolicyNumber(policy_number);
+  const policyholder = POLICYHOLDERS.find(p => normalizePolicyNumber(p.policy_number) === normalizedPolicy);
+
+  if (!policyholder) {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          success: false,
+          message: `Policy number ${policy_number} not found. Please verify the policy number and try again.`
+        }, null, 2)
+      }]
+    };
+  }
+
+  const confirmationNumber = "VH-" + Math.floor(100000 + Math.random() * 900000);
+  const premiumMap = { commute: 47.50, pleasure: 38.25, business: 62.00 };
+  const premium = premiumMap[primary_use] || 47.50;
+  const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit" });
+
+  return {
+    content: [{
+      type: "text",
+      text: JSON.stringify({
+        success: true,
+        confirmation_number: confirmationNumber,
+        vehicle: { year: vehicle_year, make: vehicle_make, model: vehicle_model, primary_use },
+        estimated_monthly_premium: `$${premium.toFixed(2)}`,
+        effective_date: today,
+        message: `${vehicle_year} ${vehicle_make} ${vehicle_model} has been successfully added to policy ${policy_number}. Coverage is effective immediately.`
+      }, null, 2)
+    }]
+  };
+}
+
+async function handleDeliverProof({ policy_number, delivery_method, phone_number }) {
+  const normalizedPolicy = normalizePolicyNumber(policy_number);
+  const policyholder = POLICYHOLDERS.find(p => normalizePolicyNumber(p.policy_number) === normalizedPolicy);
+
+  if (!policyholder) {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          success: false,
+          message: `Policy number ${policy_number} not found. Please verify the policy number and try again.`
+        }, null, 2)
+      }]
+    };
+  }
+
+  let deliveryConfirmation;
+  let deliveryDetails;
+
+  switch (delivery_method) {
+    case "sms":
+      if (!phone_number) {
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify({
+              success: false,
+              message: "A phone number is required for SMS delivery. Please ask the customer for the phone number they'd like the text sent to."
+            }, null, 2)
+          }]
+        };
+      }
+      const digits = phone_number.replace(/\D/g, "");
+      let smsPhone;
+      if (digits.length === 10) {
+        smsPhone = "+1" + digits;
+      } else if (digits.length === 11 && digits.startsWith("1")) {
+        smsPhone = "+" + digits;
+      } else {
+        smsPhone = "+1" + digits.slice(-10);
+      }
+      const lastFour = smsPhone.slice(-4);
+
+      try {
+        await fetch("https://hooks.us.webexconnect.io/events/67H8O1CZV1", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone_number: smsPhone,
+            policy_number: policy_number,
+            customer_name: `${policyholder.first_name} ${policyholder.last_name}`
+          })
+        });
+        deliveryConfirmation = `SMS sent to phone number ending in ***${lastFour.slice(-2)}`;
+        deliveryDetails = "A text message with your proof of insurance has been sent. Please check your phone.";
+      } catch (error) {
+        deliveryConfirmation = `SMS queued for phone number ending in ***${lastFour.slice(-2)}`;
+        deliveryDetails = "Your proof of insurance text message is being processed. You should receive it shortly.";
+      }
+      break;
+    case "email":
+      const maskedEmail = policyholder.email.charAt(0) + "***@" + policyholder.email.split("@")[1];
+      deliveryConfirmation = `Sent to ${maskedEmail}`;
+      deliveryDetails = "You will receive an email with your insurance ID card attached as a PDF.";
+      break;
+    case "app":
+      deliveryConfirmation = "Available in Farmers mobile app under 'My Documents'";
+      deliveryDetails = "Open the Farmers app and navigate to My Documents > Insurance Cards to view your updated proof of insurance.";
+      break;
+  }
+
+  return {
+    content: [{
+      type: "text",
+      text: JSON.stringify({
+        success: true,
+        delivery_method: delivery_method,
+        delivery_confirmation: deliveryConfirmation,
+        delivery_details: deliveryDetails,
+        message: `Proof of insurance for policy ${policy_number} has been sent via ${delivery_method}. ${deliveryDetails}`
+      }, null, 2)
+    }]
+  };
+}
+
+const TOOL_HANDLERS = {
+  verify_policyholder_identity: handleVerifyPolicyholder,
+  add_vehicle_to_policy: handleAddVehicle,
+  deliver_proof_of_insurance: handleDeliverProof
+};
+
+// ============================================================
+// JSON-RPC REQUEST HANDLER
+// ============================================================
+
+// Request logging middleware for /mcp
 app.use("/mcp", (req, res, next) => {
-  const method = req.method;
-  const accept = req.headers["accept"] || "(none)";
-  const contentType = req.headers["content-type"] || "(none)";
-  const bodyMethod = req.body?.method || "(no method)";
-  console.log(`[MCP] ${method} /mcp | Accept: ${accept} | Content-Type: ${contentType} | JSON-RPC method: ${bodyMethod}`);
-  if (req.body?.method === "tools/call") {
-    console.log(`[MCP]   Tool: ${req.body?.params?.name} | Args: ${JSON.stringify(req.body?.params?.arguments)}`);
+  if (req.method === "POST") {
+    const accept = req.headers["accept"] || "(none)";
+    const contentType = req.headers["content-type"] || "(none)";
+    const bodyMethod = req.body?.method || "(no method)";
+    console.log(`[MCP] POST /mcp | Accept: ${accept} | Content-Type: ${contentType} | JSON-RPC method: ${bodyMethod}`);
+    if (req.body?.method === "tools/call") {
+      console.log(`[MCP]   Tool: ${req.body?.params?.name} | Args: ${JSON.stringify(req.body?.params?.arguments)}`);
+    }
   }
   next();
 });
 
-// Health check endpoint
+// Health check
 app.get("/health", (req, res) => {
   res.json({ status: "ok", server: "Farmers Insurance MCP Server", tools: 3 });
 });
 
-// Debug endpoint: echo headers as the server sees them (for diagnosing client issues)
+// Debug endpoint
 app.all("/mcp-debug", (req, res) => {
-  res.json({
-    method: req.method,
-    headers: req.headers,
-    rawHeaders: req.rawHeaders,
-    body: req.body
-  });
+  res.json({ method: req.method, headers: req.headers, body: req.body });
 });
 
-// Root endpoint for basic info
+// Root info
 app.get("/", (req, res) => {
   res.json({
     name: "Farmers Insurance MCP Server",
     description: "MCP server providing insurance tools for the Webex AI Agent Lab",
     version: "1.0.0",
-    tools: [
-      "verify_policyholder_identity",
-      "add_vehicle_to_policy",
-      "deliver_proof_of_insurance"
-    ],
+    tools: ["verify_policyholder_identity", "add_vehicle_to_policy", "deliver_proof_of_insurance"],
     health: "/health",
     mcp_endpoint: "/mcp"
   });
 });
 
-// MCP Streamable HTTP endpoint
-// The SDK's StreamableHTTPServerTransport strictly requires Accept to include
-// BOTH "application/json" AND "text/event-stream". Some MCP clients (including
-// Webex AI Agent Studio) may not send both, causing 406 errors → empty {} responses.
-// We wrap the request object to force the correct Accept header regardless of
-// what the client sends.
+// MCP JSON-RPC endpoint — returns plain application/json (no SSE)
 app.post("/mcp", async (req, res) => {
+  const { jsonrpc, method, params, id } = req.body || {};
+
+  // Validate JSON-RPC structure
+  if (jsonrpc !== "2.0") {
+    return res.status(400).json({
+      jsonrpc: "2.0",
+      error: { code: -32600, message: "Invalid Request: missing jsonrpc 2.0" },
+      id: id || null
+    });
+  }
+
   try {
-    // Force Accept header on a wrapped request object.
-    // Object.create(req) preserves all Express/Node properties via prototype,
-    // but our overrides take precedence for header reads.
-    const correctAccept = "application/json, text/event-stream";
-    const wrappedReq = Object.create(req);
-    wrappedReq.headers = { ...req.headers, accept: correctAccept };
+    switch (method) {
+      // ── Initialize ──
+      case "initialize":
+        return res.json({
+          jsonrpc: "2.0",
+          result: {
+            protocolVersion: "2025-03-26",
+            capabilities: { tools: { listChanged: false } },
+            serverInfo: { name: "Farmers Insurance Tools", version: "1.0.0" }
+          },
+          id
+        });
 
-    // Rebuild rawHeaders with the correct Accept value (SDK may read these directly)
-    const newRawHeaders = [];
-    let acceptSet = false;
-    for (let i = 0; i < (req.rawHeaders?.length || 0); i += 2) {
-      if (req.rawHeaders[i].toLowerCase() === "accept") {
-        newRawHeaders.push(req.rawHeaders[i], correctAccept);
-        acceptSet = true;
-      } else {
-        newRawHeaders.push(req.rawHeaders[i], req.rawHeaders[i + 1]);
+      // ── Notifications (no response needed per JSON-RPC spec) ──
+      case "notifications/initialized":
+        return res.status(202).json({ jsonrpc: "2.0", result: {}, id });
+
+      // ── List Tools ──
+      case "tools/list":
+        return res.json({
+          jsonrpc: "2.0",
+          result: { tools: TOOL_SCHEMAS },
+          id
+        });
+
+      // ── Call Tool ──
+      case "tools/call": {
+        const toolName = params?.name;
+        const toolArgs = params?.arguments || {};
+        const handler = TOOL_HANDLERS[toolName];
+
+        if (!handler) {
+          return res.json({
+            jsonrpc: "2.0",
+            error: { code: -32602, message: `Unknown tool: ${toolName}` },
+            id
+          });
+        }
+
+        const result = await handler(toolArgs);
+        console.log(`[MCP]   Result: ${result.content[0].text.substring(0, 100)}...`);
+        return res.json({ jsonrpc: "2.0", result, id });
       }
+
+      // ── Unknown method ──
+      default:
+        return res.json({
+          jsonrpc: "2.0",
+          error: { code: -32601, message: `Method not found: ${method}` },
+          id: id || null
+        });
     }
-    if (!acceptSet) {
-      newRawHeaders.push("Accept", correctAccept);
-    }
-    wrappedReq.rawHeaders = newRawHeaders;
-
-    const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined // Stateless mode
-    });
-
-    res.on("close", () => {
-      transport.close();
-    });
-
-    await server.connect(transport);
-    await transport.handleRequest(wrappedReq, res, req.body);
   } catch (err) {
-    console.error("[MCP] Error handling POST /mcp:", err);
-    if (!res.headersSent) {
-      res.status(500).json({
-        jsonrpc: "2.0",
-        error: { code: -32603, message: "Internal server error" },
-        id: req.body?.id || null
-      });
-    }
+    console.error("[MCP] Error:", err);
+    return res.status(500).json({
+      jsonrpc: "2.0",
+      error: { code: -32603, message: "Internal server error" },
+      id: id || null
+    });
   }
 });
 
-// Handle GET and DELETE for MCP protocol (session management)
-app.get("/mcp", async (req, res) => {
+// Handle GET and DELETE for MCP protocol
+app.get("/mcp", (req, res) => {
   res.status(405).json({ error: "Method not allowed. Use POST for MCP requests." });
 });
 
-app.delete("/mcp", async (req, res) => {
+app.delete("/mcp", (req, res) => {
   res.status(405).json({ error: "Session management not supported in stateless mode." });
 });
 
