@@ -501,6 +501,10 @@ async function handleJsonRpc(body) {
       case "notifications/initialized":
         return { jsonrpc: "2.0", result: {}, id };
 
+      // ── Ping (keepalive — Webex sends these frequently) ──
+      case "ping":
+        return { jsonrpc: "2.0", result: {}, id };
+
       // ── List Tools ──
       case "tools/list":
         return {
@@ -530,11 +534,10 @@ async function handleJsonRpc(body) {
 
       // ── Unknown method ──
       default:
-        return {
-          jsonrpc: "2.0",
-          error: { code: -32601, message: `Method not found: ${method}` },
-          id: id || null
-        };
+        // For any unrecognized method, return empty result instead of error
+        // (Webex client may send methods we don't implement yet)
+        console.log(`[MCP] Unhandled method: ${method} — returning empty result`);
+        return { jsonrpc: "2.0", result: {}, id: id || null };
     }
   } catch (err) {
     console.error("[MCP] Error:", err);
