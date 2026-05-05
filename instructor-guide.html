@@ -611,7 +611,7 @@ labuser10@edvill-2xio.wbx.ai</code>
             </ul>
 
             <div class="instructor-note">
-                The MCP server on Render free tier may sleep after 15 minutes of inactivity. Visit the health endpoint 5 minutes before the lab starts to wake it up. Cold start takes ~30 seconds.
+                The MCP server runs on Render's paid Starter plan (always-on, no cold starts). If the health endpoint returns a non-200, check the Render dashboard for service status.
             </div>
         </section>
 
@@ -625,7 +625,7 @@ labuser10@edvill-2xio.wbx.ai</code>
                     <tr><th>Property</th><th>Value</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Live URL</td><td><code>https://farmers-insurance-mcp-server.onrender.com</code></td></tr>
+                    <tr><td>Live URL</td><td><code>https://node-services-hub.onrender.com/farmers</code></td></tr>
                     <tr><td>Health Check</td><td><code>GET /health</code></td></tr>
                     <tr><td>MCP Endpoint</td><td><code>POST /mcp</code> (Streamable HTTP transport)</td></tr>
                     <tr><td>Source Code</td><td><code>mcp-server/</code> directory in this repo</td></tr>
@@ -661,7 +661,7 @@ labuser10@edvill-2xio.wbx.ai</code>
             <h3>Verify Health</h3>
             <div class="copy-block">
                 <button class="copy-btn">Copy</button>
-                <code>curl https://farmers-insurance-mcp-server.onrender.com/health</code>
+                <code>curl https://node-services-hub.onrender.com/farmers/health</code>
             </div>
             <p>Expected response:</p>
             <div class="copy-block">
@@ -705,7 +705,7 @@ labuser10@edvill-2xio.wbx.ai</code>
                     <tr><td>Transport Type</td><td><code>Streamable HTTP</code></td></tr>
                     <tr><td>Name</td><td><code>edvill_Farmers_Insurance_Tools</code></td></tr>
                     <tr><td>Description</td><td>Provides policyholder identity verification, vehicle addition, and proof of insurance delivery for Farmers Insurance AI agent demo lab</td></tr>
-                    <tr><td>App URL</td><td><code>https://farmers-insurance-mcp-server.onrender.com/mcp</code></td></tr>
+                    <tr><td>App URL</td><td><code>https://node-services-hub.onrender.com/farmers/mcp</code></td></tr>
                     <tr><td>Auth Type</td><td><code>ApiKey</code></td></tr>
                 </tbody>
             </table>
@@ -912,7 +912,7 @@ labuser10@edvill-2xio.wbx.ai</code>
             </ul>
 
             <div class="instructor-note">
-                Voice preview requires browser microphone access — remind participants to allow the permission prompt. Some corporate environments or VPNs block WebRTC. If mic doesn't work, have them use chat preview instead (same functionality, just typed). Also: Render free tier cold starts may cause a 30-second delay on the first action call if the server was sleeping.
+                Voice preview requires browser microphone access — remind participants to allow the permission prompt. Some corporate environments or VPNs block WebRTC. If mic doesn't work, have them use chat preview instead (same functionality, just typed).
             </div>
         </section>
 
@@ -956,7 +956,7 @@ labuser10@edvill-2xio.wbx.ai</code>
 
             <div class="troubleshooting-item">
                 <div class="problem">MCP server health check fails (503 or timeout)</div>
-                <div class="solution">The Render free tier spins down after 15 minutes of inactivity. Visit <code>https://farmers-insurance-mcp-server.onrender.com/health</code> directly — it will cold start in ~30 seconds. Wait and retry.</div>
+                <div class="solution">Check the MCP server is reachable: <code>curl https://node-services-hub.onrender.com/farmers/health</code> should return <code>{"ok":true}</code>. If it doesn't, check the Render dashboard for the <code>node-services-hub</code> service.</div>
             </div>
 
             <div class="troubleshooting-item">
@@ -981,7 +981,7 @@ labuser10@edvill-2xio.wbx.ai</code>
 
             <div class="troubleshooting-item">
                 <div class="problem">First action call is very slow (30+ seconds)</div>
-                <div class="solution">This is Render free tier cold start. The MCP server sleeps after inactivity and takes ~30 seconds to wake up. Hit the health endpoint before the lab starts. In a production deployment, you'd use a paid tier with always-on instances.</div>
+                <div class="solution">Unexpected — the MCP server runs on a paid Render Starter plan and should respond immediately. Check the Render dashboard for <code>node-services-hub</code> service health, or test directly: <code>curl https://node-services-hub.onrender.com/farmers/health</code>.</div>
             </div>
         </section>
 
@@ -1030,7 +1030,7 @@ labuser10@edvill-2xio.wbx.ai</code>
                                                      ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │          MCP SERVER  (Render.com - Node.js)                      │
-│          https://farmers-insurance-mcp-server.onrender.com       │
+│          https://node-services-hub.onrender.com/farmers       │
 │                                                                  │
 │  ┌──────────────────┐ ┌───────────────┐ ┌───────────────────┐  │
 │  │ verify_policy-   │ │ add_vehicle_  │ │ deliver_proof_of_ │  │
@@ -1072,12 +1072,12 @@ Registration Chain:
                 <li><strong>Verify MCP server health:</strong>
                     <div class="copy-block">
                         <button class="copy-btn">Copy</button>
-                        <code>curl https://farmers-insurance-mcp-server.onrender.com/health</code>
+                        <code>curl https://node-services-hub.onrender.com/farmers/health</code>
                     </div>
                 </li>
                 <li><strong>No data reset needed</strong> — the MCP server is stateless with hardcoded static data. Every call returns deterministic results regardless of previous usage.</li>
                 <li><strong>No participant cleanup needed</strong> — each participant creates their own agent in their own workspace. Previous participants' agents don't interfere.</li>
-                <li><strong>Wake up Render if sleeping:</strong> If the health check returns a 503 or times out, the free tier has spun down. Just visit the health URL — it'll cold start in ~30 seconds.</li>
+                <li><strong>Verify Render service is healthy:</strong> If the health check returns non-200, log into Render and check the <code>node-services-hub</code> service. The paid Starter plan should not spin down — investigate logs for crashes.</li>
                 <li><strong>Optional validation:</strong> Create a fresh test agent yourself and run the happy path to confirm the full flow works before participants arrive.</li>
                 <li><strong>Share the participant guide link:</strong>
                     <div class="copy-block">

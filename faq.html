@@ -390,7 +390,7 @@
                 <div class="faq-question">The MCP endpoint URL — what should it be?</div>
                 <div class="faq-answer">
                     <p>For this lab, the MCP server endpoint is:</p>
-                    <p><code>https://farmers-insurance-mcp-server.onrender.com/mcp</code></p>
+                    <p><code>https://node-services-hub.onrender.com/farmers/mcp</code></p>
                     <div class="warning"><strong>Common mistake:</strong> Make sure the URL ends in <code>/mcp</code> — not just the domain. The <code>/mcp</code> path is where the JSON-RPC protocol endpoint lives.</div>
                 </div>
             </div>
@@ -412,7 +412,7 @@
                 <div class="faq-question">What happens if the MCP server is down?</div>
                 <div class="faq-answer">
                     <p>If the MCP server is unreachable, the action will fail and the agent will receive an error response. How the agent handles this depends on your Instructions and error handling configuration. Good practice is to include guidance in your Instructions like: "If an action fails, apologize and offer to connect the customer with a human agent."</p>
-                    <div class="tip"><strong>Note:</strong> The lab MCP server runs on Render.com's free tier and may take 30-60 seconds to "wake up" if it hasn't been used recently. If your first test fails, try again after a minute.</div>
+                    <div class="tip"><strong>Note:</strong> The lab MCP server runs on Render's paid Starter plan, which means it's always available with no cold-start delay. If your first test fails, the issue is likely with your action configuration, not the server.</div>
                 </div>
             </div>
         </div>
@@ -551,8 +551,8 @@
                 <div class="faq-answer">
                     <p>This usually means the MCP action returned an error or the agent couldn't interpret the response. Common fixes:</p>
                     <ul>
-                        <li><strong>Check that the MCP server is awake</strong> — On Render.com free tier, the server sleeps after inactivity. Your first request wakes it up (takes 30-60 seconds). Try the conversation again.</li>
-                        <li><strong>Verify the action endpoint URL</strong> — Must be exactly: <code>https://farmers-insurance-mcp-server.onrender.com/mcp</code></li>
+                        <li><strong>Verify the MCP server is reachable</strong> — Run <code>curl https://node-services-hub.onrender.com/farmers/health</code> (should return <code>{"ok":true}</code>). If it fails, the consolidated hub may be down — check the Render dashboard.</li>
+                        <li><strong>Verify the action endpoint URL</strong> — Must be exactly: <code>https://node-services-hub.onrender.com/farmers/mcp</code></li>
                         <li><strong>Check agent was published</strong> — Unpublished changes aren't reflected in conversations</li>
                     </ul>
                 </div>
