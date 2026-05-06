@@ -1464,7 +1464,6 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                             <div class="cred-row">
                                 <span class="cred-label">Password</span>
                                 <span class="cred-value">${user.password}</span>
-                                <button class="cred-copy-btn" onclick="navigator.clipboard.writeText('${user.password}').then(() => { this.textContent = '✓'; setTimeout(() => this.textContent = 'Copy', 1500); })">Copy</button>
                             </div>
                         </div>
                         <p style="margin-top: 12px; color: var(--cisco-gray); font-size: 14px;">These credentials are unique to your seat. Use them whenever the guide says "sign in with your lab credentials."</p>
@@ -1497,9 +1496,6 @@ If asked for this information, hang up and call Farmers directly at 1-800-FARMER
                     <div class="nav-cred-row">
                         <span class="nav-cred-label">Pass</span>
                         <span class="nav-cred-value">${user.password}</span>
-                        <button class="nav-cred-copy" data-copy="${user.password}" title="Copy password">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        </button>
                     </div>
                 `;
                 // Attach copy handlers to nav credential buttons
