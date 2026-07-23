@@ -570,6 +570,7 @@
             <div class="nav-section-title">Module 5 <span style="font-size:0.7em;color:#888;">(Optional)</span></div>
             <a href="#tune-explore" class="nav-item">Tune &amp; Explore</a>
             <a href="#modify-retention" class="nav-item level-2">Modify Retention Script</a>
+            <a href="#spanish-language" class="nav-item level-2">Test in Spanish</a>
             <a href="#review-transfer-log" class="nav-item level-2">Review Transfer Log</a>
             <a href="#analytics" class="nav-item level-2">Analytics</a>
         </div>
@@ -1275,6 +1276,55 @@ Then end the conversation. Do not continue chatting after confirming the transfe
             <p>Re-test with 555-0003 and notice how the conversation changes.</p>
             <div class="info-box">
                 <strong>This is the core skill of managing AI agents in production</strong> — the instructions ARE the product. A small wording change in the qualifying question can dramatically affect how many customers agree to speak with a retention specialist.
+            </div>
+        </section>
+
+        <section id="spanish-language">
+            <h3>Change the Language to Spanish</h3>
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Test in Spanish — Same Instructions, Different Language</div>
+            </div>
+            <div class="info-box">
+                <strong>What you're about to discover:</strong> Webex AI agents are multilingual by configuration — not by rewriting your instructions. You can switch the agent's language to Spanish and your English routing logic works exactly the same. The AI understands English instructions internally and responds to callers in Spanish.
+            </div>
+            <p>Follow these steps to switch your agent to Spanish:</p>
+            <ol>
+                <li>Go to the <strong>Profile</strong> tab of your agent configuration</li>
+                <li>Find the <strong>Language</strong> dropdown and change it from <strong>English (en-US)</strong> to <strong>Spanish (es)</strong></li>
+                <li>Update the <strong>Welcome message</strong> field with the Spanish greeting below — your instructions can stay exactly as they are in English</li>
+            </ol>
+            <p>Replace your welcome message with this Spanish greeting:</p>
+            <div class="copy-block">
+                <button class="copy-btn">📋 Copy</button>
+                <code>Gracias por llamar a Farmers Insurance. Soy Alex. ¿Me puede dar el número de teléfono asociado a su póliza?</code>
+            </div>
+            <ol start="4">
+                <li>Click <strong>Save</strong>, then click <strong>Publish</strong></li>
+                <li>Open a new <strong>Preview</strong> session</li>
+            </ol>
+            <div class="info-box warning">
+                <strong>Leave your instructions in English.</strong> Do not translate the routing instructions to Spanish. The LLM reads English instructions fluently regardless of the configured language — translating them is unnecessary and may introduce inconsistencies.
+            </div>
+            <h4>Test It — Scenario 3 in Spanish</h4>
+            <p>Use the retention scenario to test the full conversation in Spanish. The agent should now respond entirely in Spanish while still executing the same two-question retention logic:</p>
+            <table>
+                <thead>
+                    <tr><th>You type</th><th>What to expect</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>555-0003</td><td>Agent greets in Spanish and asks for the phone number confirmation</td></tr>
+                    <tr><td>Quiero cancelar mi póliza</td><td>Agent responds empathetically in Spanish, asks the first qualifying question</td></tr>
+                    <tr><td>No, no estoy vendiendo mi carro</td><td>Agent asks the second qualifying question in Spanish</td></tr>
+                    <tr><td>Sí, quiero cancelar en los próximos 30 días</td><td>Agent routes to Retention Team — same destination as English, simulate_transfer still fires</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box success">
+                <strong>✓ What this proves:</strong> The routing outcome is identical — simulate_transfer is called with the same intent and destination regardless of the language the caller uses. The AI's decision-making is driven by your English instructions; the language setting only changes how it communicates with the caller.
+            </div>
+            <p>Try the other test numbers as well — each persona's routing path works the same in Spanish. You can also mix languages: type in English and the agent will respond in Spanish, because the language setting controls the <em>agent's</em> output, not the <em>caller's</em> input.</p>
+            <div class="info-box">
+                <strong>Want to restore English?</strong> Go back to Profile → Language → English (en-US), restore the original English welcome message, Save, and Publish.
             </div>
         </section>
 
