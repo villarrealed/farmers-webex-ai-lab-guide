@@ -14,3 +14,13 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+
+  - type: web
+    name: farmers-radd-sim-server
+    runtime: node
+    rootDir: ivr-lab/radd-server
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production

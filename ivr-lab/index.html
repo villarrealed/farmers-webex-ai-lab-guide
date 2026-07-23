@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers Insurance - Webex AI Lab Guide</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 60px 40px; background: #F8FAFC; color: #0F1729; }
+        h1 { font-size: 32px; font-weight: 300; margin-bottom: 8px; }
+        .subtitle { color: #64748B; margin-bottom: 32px; font-size: 16px; }
+        a { color: #3070E7; text-decoration: none; font-weight: 500; }
+        a:hover { text-decoration: underline; }
+
+        .info-banner {
+            background: #EBF2FF;
+            border: 1px solid #BFDBFE;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            max-width: 900px;
+            color: #1E3A8A;
+            font-size: 14px;
+        }
+
+        .seat-selector { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px 32px; margin-bottom: 36px; max-width: 700px; }
+        .seat-selector h2 { font-size: 18px; font-weight: 600; margin: 0 0 8px; }
+        .seat-selector p { color: #64748B; font-size: 14px; margin-bottom: 16px; }
+        .seat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .seat-btn { background: #F1F5F9; border: 2px solid #E2E8F0; border-radius: 8px; padding: 14px 8px; text-align: center; cursor: pointer; font-size: 15px; font-weight: 600; color: #334155; transition: all 0.15s ease; }
+        .seat-btn:hover { border-color: #3070E7; background: #EBF2FF; color: #3070E7; }
+        .seat-btn.selected { border-color: #3070E7; background: #3070E7; color: white; }
+
+        .links { display: flex; gap: 24px; margin-top: 32px; flex-wrap: wrap; }
+        .link-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; flex: 1; min-width: 200px; max-width: 300px; }
+        .link-card h3 { margin: 0 0 8px; font-size: 16px; }
+        .link-card p { font-size: 14px; margin-bottom: 12px; color: #64748B; }
+        .link-card .link-disabled { color: #94A3B8; pointer-events: none; }
+
+        .credential-preview { margin-top: 16px; padding: 12px 16px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; font-size: 13px; display: none; }
+        .credential-preview strong { color: #166534; }
+        .credential-preview code { background: #DCFCE7; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>Farmers Insurance — Webex AI Agent Lab: IVR Intent Engine</h1>
+    <p class="subtitle">Hands-on lab for building an AI-powered IVR routing engine with Webex AI Agent Studio</p>
+
+    <div class="info-banner">
+        This is Lab 2 — IVR Routing. Looking for Lab 1 (Policy Servicing)? <a href="../index.html">Click here →</a>
+    </div>
+
+    <div class="seat-selector">
+        <h2>Select Your Seat Number</h2>
+        <p>Choose your assigned participant number (1–10). This will pre-load your credentials in the Participant Guide.</p>
+        <div class="seat-grid">
+            <div class="seat-btn" data-seat="1">Seat 1</div>
+            <div class="seat-btn" data-seat="2">Seat 2</div>
+            <div class="seat-btn" data-seat="3">Seat 3</div>
+            <div class="seat-btn" data-seat="4">Seat 4</div>
+            <div class="seat-btn" data-seat="5">Seat 5</div>
+            <div class="seat-btn" data-seat="6">Seat 6</div>
+            <div class="seat-btn" data-seat="7">Seat 7</div>
+            <div class="seat-btn" data-seat="8">Seat 8</div>
+            <div class="seat-btn" data-seat="9">Seat 9</div>
+            <div class="seat-btn" data-seat="10">Seat 10</div>
+        </div>
+        <div class="credential-preview" id="cred-preview">
+            <strong>Your credentials:</strong> <code id="cred-user"></code> / <code id="cred-pass"></code>
+        </div>
+    </div>
+
+    <div class="links">
+        <div class="link-card">
+            <h3>Participant Guide</h3>
+            <p>Step-by-step lab instructions</p>
+            <a id="participant-link" class="link-disabled" href="#">Select a seat above →</a>
+        </div>
+        <div class="link-card">
+            <h3>Instructor Guide</h3>
+            <p>Facilitation notes, timing, and troubleshooting</p>
+            <a href="instructor-guide.html">Open Guide →</a>
+        </div>
+        <div class="link-card">
+            <h3>FAQ</h3>
+            <p>Common questions and troubleshooting</p>
+            <a href="faq.html">Open FAQ →</a>
+        </div>
+        <div class="link-card">
+            <h3>Transfer Log</h3>
+            <p>View live transfer decisions from your test sessions</p>
+            <a href="https://farmers-radd-sim-server.onrender.com/transfer-log" target="_blank" rel="noopener noreferrer">Open Log →</a>
+        </div>
+        <div class="link-card">
+            <h3>RADD API Status</h3>
+            <p>Check simulation server health</p>
+            <a href="https://farmers-radd-sim-server.onrender.com/health" target="_blank" rel="noopener noreferrer">Check Health →</a>
+        </div>
+    </div>
+
+    <script>
+        var selectedSeat = null;
+        var labUsers = [
+            { username: 'labuser01@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            { username: 'labuser02@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            { username: 'labuser03@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            { username: 'labuser04@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            { username: 'labuser05@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            { username: 'labuser06@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            { username: 'labuser07@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            { username: 'labuser08@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            { username: 'labuser09@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            { username: 'labuser10@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+        ];
+
+        document.querySelectorAll('.seat-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.seat-btn').forEach(function(b) { b.classList.remove('selected'); });
+                btn.classList.add('selected');
+                selectedSeat = parseInt(btn.getAttribute('data-seat'));
+
+                var link = document.getElementById('participant-link');
+                link.href = 'participant-guide.html?seat=' + selectedSeat;
+                link.textContent = 'Open Guide (Seat ' + selectedSeat + ') →';
+                link.classList.remove('link-disabled');
+
+                var cred = labUsers[selectedSeat - 1];
+                document.getElementById('cred-user').textContent = cred.username;
+                document.getElementById('cred-pass').textContent = cred.password;
+                document.getElementById('cred-preview').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers Insurance - Webex AI Agent Lab Guide - IVR Intent Engine</title>
+    <style>
+        :root {
+            --cisco-blue: #3070E7;
+            --cisco-dark-blue: #0F1729;
+            --cisco-navy: #07182D;
+            --cisco-green: #22C55E;
+            --cisco-yellow: #F59E0B;
+            --cisco-orange: #FF9000;
+            --cisco-red: #EF4444;
+            --cisco-teal: #16BDEB;
+            --cisco-gray: #64748B;
+            --cisco-light-gray: #F8FAFC;
+            --cisco-secondary: #94A3B8;
+            --nav-width: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--cisco-light-gray);
+            color: var(--cisco-dark-blue);
+            line-height: 1.6;
+        }
+
+        /* Navigation Sidebar */
+        .nav-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--nav-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--cisco-dark-blue), var(--cisco-navy));
+            overflow-y: auto;
+            z-index: 100;
+            padding-bottom: 40px;
+        }
+
+        .nav-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-logo h2 {
+            color: white;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+
+        .nav-logo .subtitle {
+            color: var(--cisco-secondary);
+            font-size: 13px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .nav-logo .badge {
+            display: inline-block;
+            background: var(--cisco-green);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-section { padding: 16px 0; }
+
+        .nav-section-title {
+            color: var(--cisco-secondary);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 20px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 8px 20px;
+            font-size: 13px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: white;
+            background: rgba(255,255,255,0.05);
+            border-left-color: var(--cisco-blue);
+        }
+
+        .nav-item.level-2 { padding-left: 35px; font-size: 12px; }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--nav-width);
+            padding: 40px;
+            max-width: 1100px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--cisco-blue);
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .page-header h2 {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--cisco-gray);
+        }
+
+        .page-header .meta {
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--cisco-secondary);
+        }
+
+        section {
+            scroll-margin-top: 80px;
+            margin-bottom: 48px;
+        }
+
+        h2 { font-size: 24px; font-weight: 400; margin-bottom: 16px; color: var(--cisco-dark-blue); }
+        h3 { font-size: 20px; font-weight: 500; margin-bottom: 12px; margin-top: 32px; }
+        p { margin-bottom: 12px; color: #334155; }
+        ul, ol { margin-bottom: 16px; padding-left: 24px; }
+        li { margin-bottom: 6px; color: #334155; }
+
+        /* Info Boxes */
+        .info-box {
+            border-left: 4px solid var(--cisco-blue);
+            background: rgba(48,112,231,0.06);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .info-box.success {
+            border-left-color: var(--cisco-green);
+            background: rgba(34,197,94,0.06);
+        }
+
+        .info-box.warning {
+            border-left-color: var(--cisco-orange);
+            background: rgba(255,144,0,0.06);
+        }
+
+        /* Copy Blocks */
+        .copy-block {
+            position: relative;
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .copy-block code {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            display: block;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.7);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+        .copy-btn.copied { background: var(--cisco-green); color: white; border-color: var(--cisco-green); }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th { background: var(--cisco-dark-blue); color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+        td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        tr:hover { background: rgba(48,112,231,0.03); }
+
+        /* Step Indicators */
+        .step-indicator {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin: 24px 0 16px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--cisco-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .step-title { font-size: 18px; font-weight: 500; padding-top: 4px; }
+
+        /* Module Headers */
+        .module-header {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--cisco-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .module-header h2 { margin-bottom: 4px; }
+        .module-header .time { font-size: 14px; color: var(--cisco-blue); font-weight: 500; }
+        .module-header p { margin-top: 8px; font-size: 14px; }
+
+        /* Diagram */
+        .diagram {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+
+        .diagram pre {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            white-space: pre;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .nav-sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 20px; }
+        }
+
+        @media print {
+            .nav-sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .copy-btn { display: none; }
+        }
+
+        /* Credential Card */
+        .credential-card {
+            background: linear-gradient(135deg, var(--cisco-dark-blue), var(--cisco-navy));
+            border-radius: 12px;
+            padding: 24px 32px;
+            color: white;
+            max-width: 480px;
+            margin: 16px 0;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+        }
+
+        .credential-card .seat-badge {
+            display: inline-block;
+            background: var(--cisco-blue);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .credential-card .cred-row {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            gap: 12px;
+        }
+
+        .credential-card .cred-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--cisco-secondary);
+            min-width: 80px;
+        }
+
+        .credential-card .cred-value {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 15px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 14px;
+            border-radius: 6px;
+            flex: 1;
+            user-select: all;
+        }
+
+        .credential-card .cred-copy-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .credential-card .cred-copy-btn:hover {
+            background: var(--cisco-blue);
+        }
+
+        .credential-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 2px solid var(--cisco-yellow);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .credential-warning h3 {
+            color: var(--cisco-yellow);
+            margin-bottom: 8px;
+        }
+
+        /* Nav-bottom credential bar */
+        .nav-credentials {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(7,24,45,0.95), var(--cisco-navy));
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 14px 16px;
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-credentials .nav-cred-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--cisco-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .nav-credentials .nav-cred-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .nav-credentials .nav-cred-label {
+            font-size: 10px;
+            color: var(--cisco-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 32px;
+        }
+
+        .nav-credentials .nav-cred-value {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 11px;
+            color: white;
+            background: rgba(255,255,255,0.08);
+            padding: 5px 8px;
+            border-radius: 4px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .nav-credentials .nav-cred-copy {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .nav-credentials .nav-cred-copy:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-credentials .nav-cred-copy.copied {
+            color: var(--cisco-green);
+        }
+
+        .nav-credentials .nav-cred-copy svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Scenario Key — wide dark card */
+        .scenario-card {
+            background: linear-gradient(135deg, var(--cisco-dark-blue), var(--cisco-navy));
+            border-radius: 12px;
+            padding: 28px 32px;
+            color: white;
+            max-width: 100%;
+            margin: 16px 0;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .scenario-card h3 {
+            color: white;
+            margin-top: 0;
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .scenario-card .scenario-subtitle {
+            color: var(--cisco-secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .scenario-card table { margin: 0; }
+        .scenario-card th {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .scenario-card td {
+            color: rgba(255,255,255,0.9);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+        }
+        .scenario-card tr:hover { background: rgba(255,255,255,0.04); }
+        .scenario-card .phone-cell {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-weight: 600;
+            color: var(--cisco-teal);
+        }
+
+        /* Scenario floating pill (created via JS, styles inline) */
+
+        /* Context card — used at the top of each test scenario */
+        .context-card {
+            background: linear-gradient(135deg, var(--cisco-dark-blue), var(--cisco-navy));
+            border-radius: 10px;
+            padding: 16px 22px;
+            color: white;
+            margin: 16px 0;
+            font-size: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 28px;
+        }
+
+        .context-card strong {
+            color: var(--cisco-teal);
+        }
+
+        /* Optional badge on Module 5 header */
+        .optional-badge {
+            display: inline-block;
+            background: var(--cisco-secondary);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 2px 10px;
+            border-radius: 10px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* Checklist styling */
+        .checklist { list-style: none; padding-left: 4px; }
+        .checklist li {
+            padding-left: 28px;
+            position: relative;
+        }
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--cisco-blue);
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-sidebar">
+        <div class="nav-logo">
+            <h2>Farmers Insurance</h2>
+            <span class="subtitle">Webex AI Agent Lab — IVR</span>
+            <span class="badge">Participant Guide</span>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#welcome" class="nav-item">Welcome</a>
+            <a href="#your-credentials" class="nav-item">Your Credentials</a>
+            <a href="#scenario-key" class="nav-item">Scenario Key</a>
+            <a href="#use-case" class="nav-item">Use Case</a>
+            <a href="#architecture" class="nav-item">Architecture</a>
+            <a href="#what-youll-build" class="nav-item">What You'll Build</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 1</div>
+            <a href="#build-agent" class="nav-item">Build Your IVR Agent</a>
+            <a href="#access-studio" class="nav-item level-2">Access AI Agent Studio</a>
+            <a href="#create-agent-step" class="nav-item level-2">Create Your Agent</a>
+            <a href="#configure-instructions" class="nav-item level-2">Configure Instructions</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 2</div>
+            <a href="#connect-actions" class="nav-item">Connect RADD Actions</a>
+            <a href="#add-lookup-action" class="nav-item level-2">Add Lookup Action</a>
+            <a href="#add-transfer-action" class="nav-item level-2">Add Transfer Action</a>
+            <a href="#publish-agent" class="nav-item level-2">Publish Agent</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 3</div>
+            <a href="#test-scenarios-12" class="nav-item">Test Scenarios 1 &amp; 2</a>
+            <a href="#scenario-1" class="nav-item level-2">Scenario 1: Service Call</a>
+            <a href="#scenario-2" class="nav-item level-2">Scenario 2: Open Claim</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 4</div>
+            <a href="#test-scenarios-35" class="nav-item">Test Scenarios 3–5</a>
+            <a href="#scenario-3" class="nav-item level-2">Scenario 3: Cancel/Retention</a>
+            <a href="#scenario-4" class="nav-item level-2">Scenario 4: Payment</a>
+            <a href="#scenario-5" class="nav-item level-2">Scenario 5: Unknown Caller</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module 5 <span style="font-size:0.7em;color:#888;">(Optional)</span></div>
+            <a href="#tune-explore" class="nav-item">Tune &amp; Explore</a>
+            <a href="#modify-retention" class="nav-item level-2">Modify Retention Script</a>
+            <a href="#review-transfer-log" class="nav-item level-2">Review Transfer Log</a>
+            <a href="#analytics" class="nav-item level-2">Analytics</a>
+        </div>
+
+        <!-- Persistent credential bar at bottom of nav -->
+        <div id="nav-credentials" class="nav-credentials">
+            <!-- Populated by JS based on ?seat= param -->
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Webex AI Agent Lab — IVR Intent Engine</h1>
+            <h2>Farmers Insurance — Voice Advantage Routing Use Case</h2>
+            <div class="meta">Duration: Approximately 2.5 hours | Level: Intermediate | Focus: Webex AI Agent Studio</div>
+        </div>
+
+        <!-- OVERVIEW -->
+        <section id="welcome">
+            <h2>Welcome</h2>
+            <p>Welcome to the Farmers Insurance Voice Advantage IVR Lab. In this session you'll build the AI brain behind a production-style insurance IVR — the system that answers every call, understands what the caller needs, and routes them intelligently.</p>
+            <p>This lab is based on a real Farmers Insurance IVR design document (Phase 2). You'll simulate what actually happens when a policyholder calls a Farmers agency number: the system looks up their account, checks for open claims and retention risk, detects their intent through natural conversation, and routes them accordingly.</p>
+            <p><strong>By the end of this lab, you will have:</strong></p>
+            <ul>
+                <li>Built an autonomous AI agent that handles inbound calls from five different caller types</li>
+                <li>Connected a simulated RADD (Real-time Agent Data Display) lookup API</li>
+                <li>Configured intelligent routing for service, claims, cancellation, payment, and retention scenarios</li>
+                <li>Tested all five caller scenarios end-to-end using AI Agent Studio's preview</li>
+            </ul>
+            <p><strong>Prerequisites:</strong></p>
+            <ul>
+                <li>Access to Webex AI Agent Studio (see <a href="#your-credentials">Your Lab Credentials</a> below)</li>
+                <li>A modern web browser (Chrome recommended)</li>
+                <li>This lab builds on the same Webex AI Agent Studio environment used in Lab 1 — no new software required</li>
+            </ul>
+        </section>
+
+        <section id="your-credentials">
+            <h2>Your Lab Credentials</h2>
+            <div id="credentials-display">
+                <!-- Filled by JavaScript based on ?seat= parameter -->
+            </div>
+        </section>
+
+        <section id="scenario-key">
+            <div class="scenario-card">
+                <h3>📞 Scenario Phone Numbers — Keep This Open</h3>
+                <span class="scenario-subtitle">Type these numbers when the agent asks for your phone number during testing.</span>
+                <table>
+                    <thead>
+                        <tr><th>Phone Number</th><th>Caller Name</th><th>What to Expect</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="phone-cell">555-0001</td><td>Michael Torres</td><td>Standard service call — no special flags</td></tr>
+                        <tr><td class="phone-cell">555-0002</td><td>Jennifer Walsh</td><td>Active open claim on file</td></tr>
+                        <tr><td class="phone-cell">555-0003</td><td>Robert Kim</td><td>Retention risk — will try to cancel</td></tr>
+                        <tr><td class="phone-cell">555-0004</td><td>Amanda Foster</td><td>Wants to make a payment</td></tr>
+                        <tr><td class="phone-cell">555-0099</td><td>(Unknown Caller)</td><td>No account found in system</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="info-box warning">
+                <strong>Keep this table visible while testing.</strong> You'll use these numbers throughout Modules 3–4 to simulate different caller types.
+            </div>
+        </section>
+
+        <section id="use-case">
+            <h2>Use Case</h2>
+            <p>The Farmers Voice Advantage IVR handles every inbound call to participating Farmers Insurance agency phone numbers. When a customer calls their agent's number, they don't reach a voicemail or a simple hold queue — they reach an intelligent system that knows who they are before they say a word.</p>
+            <p><strong>Here's what happens in the real flow:</strong></p>
+            <ol>
+                <li>The caller's number is looked up in RADD (Real-time Agent Data Display) — a Farmers data API that returns the caller's profile</li>
+                <li>If an open claim exists, the IVR asks about it first</li>
+                <li>The AI detects what the caller needs through natural conversation — no "press 1 for service" menus</li>
+                <li>The routing decision is made using both the detected intent AND the caller's data (retention flags, payment eligibility, etc.)</li>
+            </ol>
+            <p>The most business-critical path is the cancellation/retention flow. When a customer with high retention risk says "cancel my policy," the real IVR doesn't just transfer them — it first asks two qualifying questions designed to surface customers who can be saved. This is where AI adds value that DTMF menus cannot: natural qualifying conversation before routing.</p>
+            <div class="info-box">
+                <strong>What's Simulated in This Lab:</strong><br><br>
+                <strong>The RADD API</strong> — a pre-built simulation server returns realistic caller profiles when you enter one of the five test phone numbers.<br>
+                <strong>Transfers</strong> — the <code>simulate_transfer</code> action logs what would happen in a real deployment (which queue, which team, what CTI data would be passed).<br>
+                <strong>Everything else</strong> — the AI Agent Studio, the NLP, the conversation — is real Webex infrastructure.
+            </div>
+        </section>
+
+        <section id="architecture">
+            <h2>Architecture</h2>
+            <div class="diagram">
+<pre>  ┌─────────────────────────────────────────────────────────────────┐
+  │                   CALLER ENTERS PHONE NUMBER                    │
+  └─────────────────────────────┬───────────────────────────────────┘
+                                │
+  ┌─────────────────────────────▼───────────────────────────────────┐
+  │              WEBEX AI AGENT STUDIO (Alex)                       │
+  │                                                                 │
+  │  1. lookup_caller_by_phone ──────► RADD Sim Server              │
+  │     ◄── Returns: pni, policy_id, flags                          │
+  │                                                                 │
+  │  2. Check open_claim flag ──────► Ask about open claim?         │
+  │                                                                 │
+  │  3. Natural Language Intent Detection                           │
+  │     "How can I help you today?"                                 │
+  │     Detects: SERVICE | SALES | CLAIMS | CANCEL | PAYMENT        │
+  │                                                                 │
+  │  4. Route based on intent + customer flags                      │
+  │     • retention_flag + ret_eligible ──► Retention conversation  │
+  │     • vap_ay_elig ──────────────────► Payment options           │
+  │     • open_claim ───────────────────► Claims team               │
+  │                                                                 │
+  │  5. simulate_transfer ──────────► Transfer Log                  │
+  │     Records: intent, destination, CTI data                      │
+  └─────────────────────────────────────────────────────────────────┘
+
+  External Systems Simulated:
+  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+  │  RADD Sim API    │  │  Transfer Log    │  │  5 Caller        │
+  │  /mcp endpoint   │  │  /transfer-log   │  │  Personas        │
+  └──────────────────┘  └──────────────────┘  └──────────────────┘</pre>
+            </div>
+        </section>
+
+        <section id="what-youll-build">
+            <h2>What You'll Build</h2>
+            <table>
+                <thead>
+                    <tr><th>Module</th><th>What You'll Do</th><th>Why It Matters</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1. Build Agent</td><td>Create agent + paste routing instructions</td><td>Defines the IVR brain — when to ask questions, when to transfer</td></tr>
+                    <tr><td>2. Connect Actions</td><td>Wire RADD lookup + transfer simulation</td><td>Gives the agent real data and the ability to "act" on routing decisions</td></tr>
+                    <tr><td>3. Test Scenarios 1–2</td><td>Service call and open claim paths</td><td>Validates the happy path and claim detection</td></tr>
+                    <tr><td>4. Test Scenarios 3–5</td><td>Retention, payment, unknown caller</td><td>Tests the highest-value and edge-case paths</td></tr>
+                    <tr><td>5. Tune (Optional)</td><td>Modify the retention script</td><td>Explores how instruction changes affect AI behavior</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- MODULE 1 -->
+        <section id="build-agent">
+            <div class="module-header">
+                <h2>Module 1: Build Your IVR Agent</h2>
+                <span class="time">Estimated time: 30 minutes</span>
+                <p>You'll create an AI agent and configure it with the full IVR routing logic — the instructions that tell it exactly how to handle each caller type.</p>
+            </div>
+        </section>
+
+        <section id="access-studio">
+            <h3>Step 1: Access AI Agent Studio</h3>
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Access AI Agent Studio</div>
+            </div>
+            <ol>
+                <li>Open <strong>Control Hub</strong> in a new tab/window: <a href="https://admin.webex.com" target="_blank" rel="noopener noreferrer"><code>https://admin.webex.com</code></a> &nbsp;<span style="font-size:0.9em;color:#666;">(Tip: <strong>right-click</strong> the link and choose <em>"Open Link in Incognito Window"</em> on Chrome/Edge or <em>"Open Link in Private Window"</em> on Safari/Firefox to keep the lab session separate from your normal Webex login.)</span></li>
+                <li>Sign in with your <a href="#your-credentials">lab credentials</a> shown at the top of this guide</li>
+                <li>In the left navigation, scroll to the <strong>Services</strong> section and click <strong>Contact Center</strong> (orange arrow below).
+                    <br><img src="images/module1-step1-contact-center-sidebar.png" alt="Webex Control Hub left navigation with an orange arrow pointing to the Contact Center menu item near the bottom of the Services section" style="width: 100%; max-width: 900px; border-radius: 12px; margin: 12px 0; box-shadow: 0 4px 24px rgba(0,0,0,0.1);">
+                </li>
+                <li>On the <strong>Contact Center Overview</strong> page, look at the <strong>Quick Links</strong> panel on the right side. Under the <strong>Contact Center Suite</strong> heading, click <strong>Webex AI Agent</strong> (orange arrow below) — it opens in a new tab.
+                    <br><img src="images/module1-step1-webex-ai-agent-link.png" alt="Contact Center Overview page with an orange arrow pointing to the Webex AI Agent link in the Quick Links panel under the Contact Center Suite heading" style="width: 100%; max-width: 900px; border-radius: 12px; margin: 12px 0; box-shadow: 0 4px 24px rgba(0,0,0,0.1);">
+                </li>
+            </ol>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> You should see the AI Agent Studio home page with a dashboard and a "+ Create Agent" button.
+            </div>
+            <div class="info-box warning">
+                <strong>Alternative access:</strong> If your environment uses Webex Connect, access AI Agent Studio from the App Tray menu in the left navigation pane.
+            </div>
+        </section>
+
+        <section id="create-agent-step">
+            <h3>Step 2: Create Your Agent</h3>
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Create Your Agent</div>
+            </div>
+            <ol>
+                <li>Click <strong>"+ Create Agent"</strong> (upper right)</li>
+                <li>Select <strong>"Autonomous"</strong> as the agent type</li>
+            </ol>
+            <div class="info-box">
+                <strong>Why Autonomous?</strong> A caller might say "I want to cancel" or "I'm thinking about dropping my policy" or "this is too expensive, I can't keep it." An autonomous agent understands all these without you programming each variation. The IVR routing instructions you'll add in the next step handle the logic — the LLM handles the language.
+            </div>
+            <p>Fill in the following required fields:</p>
+            <div class="info-box warning">
+                <strong>📌 Use your seat number!</strong> Since all participants share the same AI Agent Studio environment, you must include your seat number in the names of agents and other resources. This ensures you can easily find yours in shared lists.
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Agent name</td><td>Farmers IVR <span class="seat-num">N</span></td></tr>
+                    <tr><td>AI engine</td><td>Webex AI Pro-US 1.0</td></tr>
+                    <tr><td>Agent's goal</td><td>Handle inbound calls for Farmers Insurance. Look up each caller by phone number, detect their intent naturally, and route them to the right team. For customers at risk of canceling, engage in a qualifying retention conversation before transferring.</td></tr>
+                </tbody>
+            </table>
+            <ol start="3">
+                <li>Click <strong>Create</strong></li>
+            </ol>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> You're now on the AI Agent Configuration page with tabs for Profile, Knowledge, Actions, and Conversation.
+            </div>
+        </section>
+
+        <section id="configure-instructions">
+            <h3>Step 3: Configure Agent Instructions</h3>
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Configure Agent Instructions</div>
+            </div>
+            <p>You should now be on the <strong>AI Agent Configuration</strong> page. Select the <strong>Profile</strong> tab and update the following field:</p>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Welcome message</td><td>Thank you for calling Farmers Insurance. This is Alex. What's the phone number associated with your policy?</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>Why does the greeting ask for a phone number right away?</strong> This greeting immediately asks for the phone number — which the agent will use to look up the caller's account. In a real deployment, the phone number would be captured automatically from the incoming call (ANI). In preview mode, the caller types it.
+            </div>
+            <p>Scroll down to the <strong>Instructions</strong> field. Before you paste the text below, take a moment to read through it.</p>
+            <div class="info-box warning">
+                <strong>📌 This is the heart of the IVR.</strong> Take 2 minutes to read through it before pasting — understanding the structure will help you predict what the agent will do in each test scenario.
+            </div>
+            <div class="copy-block">
+                <button class="copy-btn">📋 Copy</button>
+                <code>You are Alex, a voice assistant for Farmers Insurance. You handle inbound calls for Farmers Insurance agency phone lines, helping policyholders understand their options and connecting them with the right team.
+
+## Step 1: Greet and Collect Phone Number
+
+You have already greeted the caller with your welcome message. Now ask: "Could I also confirm your phone number for me?" — wait for their response. Once you have a phone number, immediately call the lookup_caller_by_phone action.
+
+Do not proceed until you have called lookup_caller_by_phone.
+
+## Step 2: Process the Lookup Result
+
+If found = false:
+Say: "I wasn't able to find an account with that number. Could you try a different number you may have on file?"
+If they provide another number, try the lookup again. If still not found after a second attempt, say: "Let me connect you with a team member who can help locate your account." Then call simulate_transfer with intent "unknown_caller", destination "Agency Transfer".
+
+If found = true:
+Acknowledge with: "Got it, I have your account here. How can I help you today?"
+
+## Step 3: Check for Open Claims Before Asking Intent
+
+Before proceeding to intent detection, check the open_claim field from the lookup result.
+
+If open_claim = true:
+Do NOT ask "how can I help you" yet. Instead say:
+"I can see there's an open claim on your account — claim number [claim_number if available]. Are you calling about that claim today?"
+
+- If YES (they confirm they're calling about the claim): Say "I'll get you to our claims team right away." Call simulate_transfer with intent "claims_open", destination "Claims Team", policy_id from lookup. Then say "You're all set — connecting you now. Thank you for calling Farmers Insurance." End the conversation.
+- If NO or no clear answer: Say "No problem, let me know what I can help you with." Then continue to Step 4.
+
+If open_claim = false: Continue to Step 4 immediately.
+
+## Step 4: Detect Intent
+
+Ask: "What can I help you with today?" — then listen carefully.
+
+Recognize these intents:
+- SERVICE → policy questions, coverage changes, documents, billing questions, general account help
+- SALES → new policies, adding coverage types, quotes, bundling
+- CLAIMS → filing a new claim or asking about an existing one
+- CANCEL → canceling the policy or removing a vehicle from the policy
+- PAYMENT → making a payment, discussing a bill, updating payment method
+
+If the intent is unclear, ask one clarifying question: "Are you looking to make a payment, ask about your coverage, or something else?"
+
+## Step 5: Route Based on Intent + Customer Data
+
+### SERVICE
+Say: "I'll connect you with our service team."
+Call simulate_transfer:
+  intent: "service"
+  destination: "Service Team"
+  policy_id: [from lookup]
+Then say: "Connecting you now — thank you for calling Farmers Insurance."
+
+### SALES
+Say: "Great, let me get you with someone who can help with that."
+Call simulate_transfer:
+  intent: "sales"
+  destination: "Sales Team"
+  policy_id: [from lookup]
+Then confirm and close.
+
+### CLAIMS (new claim or status check, not open claim)
+Say: "I'll get you to our claims team."
+Call simulate_transfer:
+  intent: "claims"
+  destination: "Claims IVR"
+  policy_id: [from lookup]
+Then confirm and close.
+
+### PAYMENT
+Check the vap_ay_elig field from the lookup:
+
+If vap_ay_elig = true:
+  Say: "I can help with that. Would you like to use our secure automated payment system, or would you prefer to speak with someone directly?"
+  - If automated: Call simulate_transfer with intent "payment_automated", destination "Automated Payment System", policy_id from lookup
+  - If agent: Call simulate_transfer with intent "payment_agent", destination "Agency Transfer", policy_id from lookup
+
+If vap_ay_elig = false:
+  Say: "Let me connect you with someone to help with your payment."
+  Call simulate_transfer with intent "payment", destination "Agency Transfer", policy_id from lookup
+
+Then confirm and close.
+
+### CANCEL
+This is the most important path. Read carefully.
+
+First, check retention_flag and ret_eligible from the lookup.
+
+CASE A — retention_flag = true AND ret_eligible = true:
+This customer is a retention risk. Do NOT immediately transfer. Follow this script:
+
+1. Respond empathetically: "I'm sorry to hear you're considering canceling — I want to make sure we explore all your options before doing that."
+
+2. Ask the first qualifying question: "May I ask — are you canceling because you're selling the vehicle or home that's on this policy?"
+
+   If YES (selling the asset):
+     Say: "I completely understand. Let me connect you with someone to help process that."
+     Call simulate_transfer with:
+       intent: "cancel_asset_sale"
+       destination: "Agency Transfer"
+       transfer_reason: "Customer_Cancel"
+       policy_id: [from lookup]
+     Then confirm and close.
+
+   If NO:
+     Ask the second qualifying question: "Are you looking to cancel within the next 30 days?"
+
+     If YES:
+       Say: "Before we do that, I'd love for you to speak with one of our specialists — they may be able to offer options you haven't seen yet. Let me connect you."
+       Call simulate_transfer with:
+         intent: "cancel_retention"
+         destination: "Retention Team"
+         transfer_reason: "Retention_Risk"
+         policy_id: [from lookup]
+       Then confirm and close.
+
+     If NO (or unsure / "maybe" / "eventually"):
+       Say: "Understood. Let me connect you with a specialist who can walk you through your options."
+       Call simulate_transfer with:
+         intent: "cancel_retention"
+         destination: "Retention Team"
+         transfer_reason: "Retention_Risk"
+         policy_id: [from lookup]
+       Then confirm and close.
+
+CASE B — retention_flag = false OR ret_eligible = false:
+  Say: "I understand. Let me connect you with someone to help with that."
+  Call simulate_transfer with:
+    intent: "cancel"
+    destination: "Agency Transfer"
+    transfer_reason: "Customer_Cancel"
+    policy_id: [from lookup]
+  Then confirm and close.
+
+## Step 6: Human Agent Request
+
+If a caller asks to speak to a person, a human, or an agent at any point, honor it immediately:
+Say: "Of course — let me connect you right now."
+Call simulate_transfer with intent "human_request", destination "Agency Transfer", policy_id from lookup (if available).
+Then confirm and close.
+
+## Closing Script
+
+After every simulate_transfer call, confirm with:
+"You're all set — I'm connecting you now to [destination]. Thank you for calling Farmers Insurance. Have a great day."
+
+Then end the conversation. Do not continue chatting after confirming the transfer.
+
+## Rules
+
+- ALWAYS call lookup_caller_by_phone before helping with anything. Never skip this step.
+- ALWAYS call simulate_transfer before ending any conversation that involves routing. Never skip this.
+- Do NOT reveal internal flags to the caller. Never say things like "your retention_flag is true" or "the system shows you're at risk."
+- Do NOT make up policy details beyond what lookup_caller_by_phone returns.
+- Stay warm and professional at all times. If a caller is frustrated or emotional (especially during cancellation), acknowledge their feelings before proceeding.
+- Keep responses concise — this is a voice IVR simulation. Avoid long paragraphs.</code>
+            </div>
+            <div class="info-box">
+                <strong>What just happened?</strong> These instructions give your agent a complete decision tree: collect phone → look up account → check open claims → detect intent → apply routing rules → simulate transfer. The agent interprets customer language naturally; the instructions tell it what to DO with what it hears.
+            </div>
+            <p><strong>Understanding the Routing Logic</strong></p>
+            <table>
+                <thead>
+                    <tr><th>Scenario</th><th>Key Data Field</th><th>Routing Outcome</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Caller has open claim</td><td><code>open_claim = true</code></td><td>Ask about claim first before anything else</td></tr>
+                    <tr><td>Caller wants to cancel (high risk)</td><td><code>retention_flag</code> + <code>ret_eligible = true</code></td><td>Two qualifying questions before transfer</td></tr>
+                    <tr><td>Caller wants to pay (auto-pay eligible)</td><td><code>vap_ay_elig = true</code></td><td>Offer automated system option</td></tr>
+                    <tr><td>Unknown caller</td><td><code>found = false</code></td><td>Ask for alternate number, then transfer</td></tr>
+                    <tr><td>Any caller wants human</td><td>(any)</td><td>Immediate transfer, no questions</td></tr>
+                </tbody>
+            </table>
+            <p>Click <strong>Save</strong>.</p>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> Your agent now has a complete IVR routing brain. It knows how to look up callers, detect intent, handle retention conversations, and simulate routing decisions.
+            </div>
+        </section>
+
+        <!-- MODULE 2 -->
+        <section id="connect-actions">
+            <div class="module-header">
+                <h2>Module 2: Connect RADD Actions</h2>
+                <span class="time">Estimated time: 15 minutes</span>
+                <p>Wire up the two actions that give your agent access to caller data and transfer simulation.</p>
+            </div>
+        </section>
+
+        <section id="add-lookup-action">
+            <h3>Step 1: Add the Lookup Action</h3>
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Add the Lookup Action</div>
+            </div>
+            <p>Navigate to the <strong>Actions</strong> tab in your agent configuration.</p>
+            <div class="info-box">
+                <strong>What is this action?</strong> <code>lookup_caller_by_phone</code> calls a simulation server that mimics Farmers' RADD API — the system that looks up caller data by phone number in real deployments. When a caller types 555-0003 during preview, the action returns Robert Kim's full profile including his retention flags.
+            </div>
+            <p>Click <strong>+ Add Action → MCP Server</strong>. Fill in:</p>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>MCP Server URL</td><td>https://farmers-radd-sim-server.onrender.com/mcp</td></tr>
+                    <tr><td>Action to add</td><td>lookup_caller_by_phone</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box warning">
+                <strong>Note:</strong> The server URL above is pre-configured for this lab. If your instructor has provided a different URL, use that instead.
+            </div>
+            <p>After adding, verify you can see the action with its input field: <code>phone_number</code>. Click <strong>Save</strong>.</p>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> The lookup action is connected. When your agent asks for a phone number and the caller provides one, the agent will call this action and receive the caller's full profile.
+            </div>
+        </section>
+
+        <section id="add-transfer-action">
+            <h3>Step 2: Add the Transfer Action</h3>
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Add the Transfer Action</div>
+            </div>
+            <p>Click <strong>+ Add Action → MCP Server</strong> (same server URL). Add:</p>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Action to add</td><td>simulate_transfer</td></tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>What is this action?</strong> <code>simulate_transfer</code> represents the IVR's routing decision. In a real Farmers deployment, this is where the call would be sent to a specific queue (like <code>SOFDSV_C_RETADVANTAGE_VA-2</code> for retention). In our lab, it logs the transfer decision so you can verify the agent routed correctly. Check the transfer log at <code>https://farmers-radd-sim-server.onrender.com/transfer-log</code> after each test.
+            </div>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> You now have both actions. Your agent can look up callers AND record transfer decisions.
+            </div>
+        </section>
+
+        <section id="publish-agent">
+            <h3>Step 3: Publish Your Agent</h3>
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Publish Your Agent</div>
+            </div>
+            <ol>
+                <li>Click <strong>Publish</strong> in the top-right corner of the agent configuration</li>
+                <li>Confirm the publish</li>
+            </ol>
+            <div class="info-box success">
+                <strong>✓ Checkpoint:</strong> Your agent is live. Time to test it.
+            </div>
+            <div class="info-box">
+                <strong>Quick reminder</strong> — use the Preview button (the chat bubble icon) to open the preview panel. All testing in this lab uses the chat/voice preview — no phone call or Contact Center flow is needed.
+            </div>
+        </section>
+
+        <!-- MODULE 3 -->
+        <section id="test-scenarios-12">
+            <div class="module-header">
+                <h2>Module 3: Test Scenarios 1 &amp; 2</h2>
+                <span class="time">Estimated time: 20 minutes</span>
+                <p>Test the two most common call types: a standard service call and a caller with an open claim.</p>
+            </div>
+            <div class="info-box warning">
+                <strong>Reference the <a href="#scenario-key">Scenario Key</a> above for phone numbers.</strong>
+            </div>
+        </section>
+
+        <section id="scenario-1">
+            <h3>Scenario 1: Standard Service Call</h3>
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Scenario 1: Michael Torres — Service Call (555-0001)</div>
+            </div>
+            <div class="context-card">
+                <span><strong>Caller:</strong> Michael Torres</span>
+                <span><strong>Phone:</strong> 555-0001</span>
+                <span><strong>Policy:</strong> POL-88801</span>
+                <span><strong>Flags:</strong> None</span>
+                <span><strong>Expected outcome:</strong> Service Team transfer</span>
+            </div>
+            <p>Open the Preview panel. Follow this conversation script:</p>
+            <ol>
+                <li>Agent: "Thank you for calling Farmers Insurance. This is Alex. What's the phone number associated with your policy?"</li>
+                <li>You type: <code>555-0001</code></li>
+                <li>Agent should call <code>lookup_caller_by_phone</code> and greet Michael Torres</li>
+                <li>You type: "I have a question about my billing"</li>
+                <li>Expected: Agent recognizes SERVICE intent → calls <code>simulate_transfer</code> → confirms transfer to Service Team</li>
+            </ol>
+            <p><strong>What to verify:</strong></p>
+            <ul class="checklist">
+                <li>Agent asked for phone number (not skipped)</li>
+                <li>Agent greeted you by name ("Michael Torres" or "Michael")</li>
+                <li>Agent detected billing question as SERVICE intent</li>
+                <li>Agent called simulate_transfer (you'll see the tool call in the preview)</li>
+                <li>Agent confirmed the transfer to Service Team before ending</li>
+            </ul>
+            <p><strong>Troubleshooting</strong></p>
+            <table>
+                <thead>
+                    <tr><th>Problem</th><th>Likely Cause</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Agent didn't ask for phone number</td><td>Instructions not saved</td><td>Go back to Profile tab, verify instructions are saved, republish</td></tr>
+                    <tr><td>Agent didn't greet by name</td><td>lookup action not working</td><td>Check Action tab — verify MCP URL is correct</td></tr>
+                    <tr><td>Agent transferred to wrong team</td><td>Instructions misread</td><td>Try rephrasing your request ("I need help with my bill")</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="scenario-2">
+            <h3>Scenario 2: Open Claim Caller</h3>
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Scenario 2: Jennifer Walsh — Open Claim (555-0002)</div>
+            </div>
+            <div class="context-card">
+                <span><strong>Caller:</strong> Jennifer Walsh</span>
+                <span><strong>Phone:</strong> 555-0002</span>
+                <span><strong>Policy:</strong> POL-88802</span>
+                <span><strong>Flags:</strong> open_claim = true</span>
+                <span><strong>Claim:</strong> CLM-2024-441892</span>
+                <span><strong>Expected:</strong> Agent asks about claim BEFORE asking intent</span>
+            </div>
+            <p>This scenario tests whether the agent correctly detects the <code>open_claim</code> flag and asks about it before proceeding to intent detection.</p>
+            <p><strong>Part A — Caller IS calling about the claim:</strong></p>
+            <ol>
+                <li>Type: <code>555-0002</code></li>
+                <li>Agent greets Jennifer, THEN (before asking how to help) should mention the open claim</li>
+                <li>You type: "Yes, I'm calling about my claim"</li>
+                <li>Expected: Direct transfer to Claims Team</li>
+            </ol>
+            <p><strong>Part B — Caller is NOT calling about the claim</strong> (start a new preview session):</p>
+            <ol>
+                <li>Type: <code>555-0002</code></li>
+                <li>When agent mentions the open claim, type: "No, I actually have a billing question"</li>
+                <li>Expected: Agent acknowledges, then asks "how can I help?" and routes to Service Team</li>
+            </ol>
+            <p><strong>What to verify:</strong></p>
+            <ul class="checklist">
+                <li>Agent mentioned the open claim BEFORE asking "how can I help"</li>
+                <li>Part A correctly routed to Claims Team</li>
+                <li>Part B correctly asked for intent after you declined the claims path</li>
+            </ul>
+        </section>
+
+        <!-- MODULE 4 -->
+        <section id="test-scenarios-35">
+            <div class="module-header">
+                <h2>Module 4: Test Scenarios 3–5</h2>
+                <span class="time">Estimated time: 25 minutes</span>
+                <p>The three most important scenarios: the retention/cancel path (highest business value), payment routing, and the unknown caller edge case.</p>
+            </div>
+        </section>
+
+        <section id="scenario-3">
+            <h3>Scenario 3: Retention-Risk Cancellation</h3>
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div class="step-title">Scenario 3: Robert Kim — Retention Risk (555-0003)</div>
+            </div>
+            <div class="context-card">
+                <span><strong>Caller:</strong> Robert Kim</span>
+                <span><strong>Phone:</strong> 555-0003</span>
+                <span><strong>Policy:</strong> POL-88803</span>
+                <span><strong>Flags:</strong> retention_flag = true, ret_eligible = true</span>
+                <span><strong>Expected:</strong> Two qualifying questions before Retention Team transfer</span>
+            </div>
+            <div class="info-box">
+                <strong>This is the most important path in the IVR.</strong> Robert is flagged as a retention risk — if transferred directly, the agency loses the opportunity to save the policy. The agent's instructions require it to ask two qualifying questions that mirror the logic in the real Farmers Voice Advantage IVR design.
+            </div>
+            <p><strong>Test Part A — Caller is NOT selling their asset, wants to cancel soon:</strong></p>
+            <ol>
+                <li>Type: <code>555-0003</code></li>
+                <li>Type: "I want to cancel my policy"</li>
+                <li>Agent should respond empathetically AND ask: "are you canceling because you're selling the vehicle or home?"</li>
+                <li>Type: "No, I just can't afford it right now"</li>
+                <li>Agent should ask: "Are you looking to cancel within the next 30 days?"</li>
+                <li>Type: "Yes, within the next two weeks"</li>
+                <li>Expected: Transfer to Retention Team with transfer_reason "Retention_Risk"</li>
+            </ol>
+            <p><strong>Test Part B — Caller IS selling their asset</strong> (new preview session):</p>
+            <ol>
+                <li>Type: <code>555-0003</code>, then "I need to cancel"</li>
+                <li>When agent asks about selling: "Yes, I sold my car last week"</li>
+                <li>Expected: Agent acknowledges and transfers to Agency Transfer (not Retention Team — this is correct, a sold asset is a legitimate cancel)</li>
+            </ol>
+            <p><strong>What to verify:</strong></p>
+            <ul class="checklist">
+                <li>Agent did NOT immediately transfer on "I want to cancel"</li>
+                <li>Agent asked both qualifying questions in Part A before transferring</li>
+                <li>Part A routed to Retention Team (not Agency Transfer)</li>
+                <li>Part B routed to Agency Transfer (not Retention Team)</li>
+                <li>simulate_transfer was called with transfer_reason "Retention_Risk" in Part A</li>
+            </ul>
+            <div class="info-box success">
+                <strong>Why this matters:</strong> In the real Farmers IVR, these two questions identify customers who can be saved versus those who have a legitimate reason to cancel (selling an asset). Routing them to the Retention Team without qualification would overwhelm the team with callers who can't be helped. The qualifying questions make the retention effort efficient.
+            </div>
+        </section>
+
+        <section id="scenario-4">
+            <h3>Scenario 4: Payment-Eligible Caller</h3>
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div class="step-title">Scenario 4: Amanda Foster — Payment (555-0004)</div>
+            </div>
+            <div class="context-card">
+                <span><strong>Caller:</strong> Amanda Foster</span>
+                <span><strong>Phone:</strong> 555-0004</span>
+                <span><strong>Policy:</strong> POL-88804</span>
+                <span><strong>Flags:</strong> vap_ay_elig = true</span>
+                <span><strong>Expected:</strong> Agent offers automated payment option</span>
+            </div>
+            <p><strong>Test:</strong></p>
+            <ol>
+                <li>Type: <code>555-0004</code></li>
+                <li>Type: "I need to make a payment"</li>
+                <li>Expected: Agent recognizes vap_ay_elig = true and OFFERS the automated system option before transferring</li>
+                <li>Test both paths:
+                    <ul>
+                        <li>Say "yes" to automated → transfer to Automated Payment System</li>
+                        <li>Say "no, I want to talk to someone" → transfer to Agency Transfer</li>
+                    </ul>
+                </li>
+            </ol>
+            <p><strong>What to verify:</strong></p>
+            <ul class="checklist">
+                <li>Agent offered automated system (didn't just transfer immediately)</li>
+                <li>Both choices resulted in correct destinations</li>
+            </ul>
+        </section>
+
+        <section id="scenario-5">
+            <h3>Scenario 5: Unknown Caller</h3>
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div class="step-title">Scenario 5: Unknown Caller (555-0099)</div>
+            </div>
+            <div class="context-card">
+                <span><strong>Phone:</strong> 555-0099</span>
+                <span><strong>Result:</strong> Not found</span>
+                <span><strong>Expected:</strong> Agent asks for alternate number, then transfers to Agency Transfer after 2 attempts</span>
+            </div>
+            <p><strong>Test:</strong></p>
+            <ol>
+                <li>Type: <code>555-0099</code></li>
+                <li>Agent should say it couldn't find an account</li>
+                <li>Type another fake number: <code>555-9999</code></li>
+                <li>Agent should try again, fail again, then offer to connect to an agent</li>
+            </ol>
+            <p><strong>What to verify:</strong></p>
+            <ul class="checklist">
+                <li>Agent gave a second chance before giving up</li>
+                <li>Agent didn't just say "goodbye" — it transferred to Agency Transfer</li>
+            </ul>
+        </section>
+
+        <!-- MODULE 5 (Optional) -->
+        <section id="tune-explore">
+            <div class="module-header">
+                <h2>Module 5: Tune &amp; Explore <span class="optional-badge">Optional</span></h2>
+                <span class="time">Optional — 20 minutes</span>
+                <p>Experiment with how instruction changes affect AI behavior, and explore the transfer log.</p>
+            </div>
+        </section>
+
+        <section id="modify-retention">
+            <h3>Modify the Retention Script</h3>
+            <p>Try changing one thing in your agent's instructions: modify the retention qualifying questions to be softer or more direct. For example:</p>
+            <p><strong>Replace:</strong> "Are you looking to cancel within the next 30 days?"</p>
+            <p><strong>With:</strong> "Is there anything we could do differently that might change your mind about canceling?"</p>
+            <p>Re-test with 555-0003 and notice how the conversation changes.</p>
+            <div class="info-box">
+                <strong>This is the core skill of managing AI agents in production</strong> — the instructions ARE the product. A small wording change in the qualifying question can dramatically affect how many customers agree to speak with a retention specialist.
+            </div>
+        </section>
+
+        <section id="review-transfer-log">
+            <h3>Review the Transfer Log</h3>
+            <p>After all your testing, review what the transfer log captured:</p>
+            <div class="copy-block">
+                <button class="copy-btn">📋 Copy</button>
+                <code>https://farmers-radd-sim-server.onrender.com/transfer-log</code>
+            </div>
+            <p>The log shows every <code>simulate_transfer</code> call made during your tests — the intent, destination, policy_id, and transfer_reason. This is what an operations team would monitor to validate routing accuracy.</p>
+            <p><strong>What to look for:</strong> Are all your test scenarios represented? Are the intents and destinations what you expected? Did the Retention Team only receive calls with transfer_reason = "Retention_Risk"?</p>
+        </section>
+
+        <section id="analytics">
+            <h3>Analytics</h3>
+            <p>Navigate to the <strong>Analytics</strong> tab in AI Agent Studio. After a few test sessions, you'll see conversation metrics. Discuss with your instructor: how would you use these metrics to identify routing errors in a production IVR?</p>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Seat-based credential display
+            const urlParams = new URLSearchParams(window.location.search);
+            const seat = parseInt(urlParams.get('seat'));
+            const credDisplay = document.getElementById('credentials-display');
+
+            const labUsers = [
+                { username: 'labuser01@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+                { username: 'labuser02@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+                { username: 'labuser03@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+                { username: 'labuser04@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+                { username: 'labuser05@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+                { username: 'labuser06@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+                { username: 'labuser07@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+                { username: 'labuser08@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+                { username: 'labuser09@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+                { username: 'labuser10@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
+            ];
+
+            if (credDisplay) {
+                if (seat >= 1 && seat <= 10) {
+                    const user = labUsers[seat - 1];
+                    credDisplay.innerHTML = `
+                        <div class="credential-card">
+                            <div class="seat-badge">Seat ${seat}</div>
+                            <div class="cred-row">
+                                <span class="cred-label">Username</span>
+                                <span class="cred-value">${user.username}</span>
+                                <button class="cred-copy-btn" onclick="navigator.clipboard.writeText('${user.username}').then(() => { this.textContent = '✓'; setTimeout(() => this.textContent = 'Copy', 1500); })">Copy</button>
+                            </div>
+                            <div class="cred-row">
+                                <span class="cred-label">Password</span>
+                                <span class="cred-value">${user.password}</span>
+                            </div>
+                        </div>
+                        <p style="margin-top: 12px; color: var(--cisco-gray); font-size: 14px;">These credentials are unique to your seat. Use them whenever the guide says "sign in with your lab credentials."</p>
+                    `;
+                } else {
+                    credDisplay.innerHTML = `
+                        <div class="credential-warning">
+                            <h3>⚠️ No Seat Assigned</h3>
+                            <p>Your lab credentials aren't showing because this page wasn't opened with a seat number.</p>
+                            <p style="margin-top: 12px;"><strong>Ask your instructor</strong> for your unique lab link, which looks like:</p>
+                            <code style="display: block; margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.05); border-radius: 6px; font-size: 13px;">participant-guide.html?seat=<em>your-number</em></code>
+                        </div>
+                    `;
+                }
+            }
+
+            // Populate nav-bottom credential bar
+            const navCreds = document.getElementById('nav-credentials');
+            if (navCreds && seat >= 1 && seat <= 10) {
+                const user = labUsers[seat - 1];
+                navCreds.innerHTML = `
+                    <div class="nav-cred-title">Your Credentials — Seat ${seat}</div>
+                    <div class="nav-cred-row">
+                        <span class="nav-cred-label">User</span>
+                        <span class="nav-cred-value" title="${user.username}">${user.username}</span>
+                        <button class="nav-cred-copy" data-copy="${user.username}" title="Copy username">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                    </div>
+                    <div class="nav-cred-row">
+                        <span class="nav-cred-label">Pass</span>
+                        <span class="nav-cred-value">${user.password}</span>
+                    </div>
+                `;
+                // Attach copy handlers to nav credential buttons
+                navCreds.querySelectorAll('.nav-cred-copy').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const text = this.getAttribute('data-copy');
+                        navigator.clipboard.writeText(text).then(() => {
+                            this.classList.add('copied');
+                            this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                            setTimeout(() => {
+                                this.classList.remove('copied');
+                                this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                            }, 1500);
+                        });
+                    });
+                });
+            }
+
+            // Dynamic seat number injection — replaces all .seat-num elements
+            const seatLabel = (seat >= 1 && seat <= 10) ? String(seat) : 'N';
+            document.querySelectorAll('.seat-num').forEach(el => {
+                el.textContent = seatLabel;
+            });
+
+            // Copy button functionality
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const block = this.closest('.copy-block');
+                    const code = block.querySelector('code');
+                    navigator.clipboard.writeText(code.textContent).then(() => {
+                        const original = this.innerHTML;
+                        this.innerHTML = '✓ Copied!';
+                        this.classList.add('copied');
+                        setTimeout(() => {
+                            this.innerHTML = original;
+                            this.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+            });
+
+            // Active nav highlighting on scroll
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.nav-item');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === '#' + current) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+
+            // Add floating scenario key pill
+            const pill = document.createElement('a');
+            pill.href = '#scenario-key';
+            pill.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#0F1729;color:white;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:200;border:1px solid rgba(255,255,255,0.1);';
+            pill.textContent = '📞 Scenarios';
+            document.body.appendChild(pill);
+        });
+    </script>
+</body>
+</html>

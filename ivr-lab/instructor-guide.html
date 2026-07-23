@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers Insurance - Webex AI Agent Lab | Instructor Guide</title>
+    <style>
+        :root {
+            --cisco-blue: #3070E7;
+            --cisco-dark-blue: #0F1729;
+            --cisco-navy: #07182D;
+            --cisco-green: #22C55E;
+            --cisco-yellow: #F59E0B;
+            --cisco-orange: #FF9000;
+            --cisco-red: #EF4444;
+            --cisco-teal: #16BDEB;
+            --cisco-gray: #64748B;
+            --cisco-light-gray: #F8FAFC;
+            --cisco-secondary: #94A3B8;
+            --nav-width: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--cisco-light-gray);
+            color: var(--cisco-dark-blue);
+            line-height: 1.6;
+        }
+
+        .nav-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--nav-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--cisco-dark-blue), var(--cisco-navy));
+            overflow-y: auto;
+            z-index: 100;
+            padding-bottom: 40px;
+        }
+
+        .nav-logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-logo h2 {
+            color: white;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+
+        .nav-logo .subtitle {
+            color: var(--cisco-secondary);
+            font-size: 13px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .nav-logo .badge {
+            display: inline-block;
+            background: var(--cisco-orange);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-section { padding: 16px 0; }
+
+        .nav-section-title {
+            color: var(--cisco-secondary);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 20px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 8px 20px;
+            font-size: 13px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: white;
+            background: rgba(255,255,255,0.05);
+            border-left-color: var(--cisco-blue);
+        }
+
+        .main-content {
+            margin-left: var(--nav-width);
+            padding: 40px;
+            max-width: 1100px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--cisco-orange);
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .page-header h2 {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--cisco-gray);
+        }
+
+        .page-header .meta {
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--cisco-secondary);
+        }
+
+        section {
+            scroll-margin-top: 80px;
+            margin-bottom: 48px;
+        }
+
+        h2 { font-size: 24px; font-weight: 400; margin-bottom: 16px; color: var(--cisco-dark-blue); }
+        h3 { font-size: 20px; font-weight: 500; margin-bottom: 12px; margin-top: 28px; }
+        h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; margin-top: 20px; }
+        p { margin-bottom: 12px; color: #334155; }
+        ul, ol { margin-bottom: 16px; padding-left: 24px; }
+        li { margin-bottom: 6px; color: #334155; }
+
+        .info-box {
+            border-left: 4px solid var(--cisco-blue);
+            background: rgba(48,112,231,0.06);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .info-box.warning {
+            border-left-color: var(--cisco-orange);
+            background: rgba(255,144,0,0.06);
+        }
+
+        .talking-point {
+            background: rgba(22,189,235,0.06);
+            border-left: 4px solid var(--cisco-teal);
+            padding: 12px 16px;
+            border-radius: 0 6px 6px 0;
+            margin: 12px 0;
+            font-style: italic;
+        }
+
+        .instructor-note {
+            border-left: 4px solid var(--cisco-orange);
+            background: rgba(255,144,0,0.08);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .instructor-note::before {
+            content: "🎓 INSTRUCTOR NOTE";
+            display: block;
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: var(--cisco-orange);
+            margin-bottom: 8px;
+        }
+
+        .timing-badge {
+            display: inline-block;
+            background: var(--cisco-teal);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .module-header {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--cisco-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th { background: var(--cisco-dark-blue); color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+        td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; font-size: 14px; vertical-align: top; }
+        tr:hover { background: rgba(48,112,231,0.03); }
+
+        @media (max-width: 900px) {
+            .nav-sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-sidebar">
+        <div class="nav-logo">
+            <h2>Farmers Insurance</h2>
+            <span class="subtitle">Voice Advantage Routing Lab</span>
+            <span class="badge">Instructor Guide</span>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#overview" class="nav-item">Lab Overview</a>
+            <a href="#setup" class="nav-item">Environment Setup</a>
+            <a href="#scenario-ref" class="nav-item">Scenario Reference</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Timing</div>
+            <a href="#run-of-show" class="nav-item">Run of Show</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Module Notes</div>
+            <a href="#m1-notes" class="nav-item">M1 Notes</a>
+            <a href="#m2-notes" class="nav-item">M2 Notes</a>
+            <a href="#m3-notes" class="nav-item">M3 Notes</a>
+            <a href="#m4-notes" class="nav-item">M4 Notes</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Troubleshooting</div>
+            <a href="#troubleshooting" class="nav-item">Common Issues</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Instructor Guide — IVR Intent Engine Lab</h1>
+            <h2>Farmers Insurance — Voice Advantage Routing Use Case</h2>
+            <div class="meta">Audience: Lab instructors and facilitators | Format: Hands-on workshop</div>
+        </div>
+
+        <section id="overview">
+            <h2>Lab Overview</h2>
+            <p><strong>Duration:</strong> ~2.5 hours (can compress to 90 min by skipping Module 5 and having participants do only scenarios 1 and 3)</p>
+            <p><strong>Class size:</strong> Up to 10 participants (one AI Agent Studio org, 10 lab user accounts)</p>
+            <p><strong>Difficulty:</strong> Intermediate — participants should have completed Lab 1 (policy servicing) or have basic familiarity with Webex AI Agent Studio</p>
+
+            <h3>What makes this lab different from Lab 1</h3>
+            <p>Lab 1 teaches the core Webex AI Agent Studio mechanics (create agent, knowledge base, MCP actions, test). This lab applies those skills to a realistic IVR routing use case — the emphasis is on instruction design, data-driven routing, and the retention conversation pattern.</p>
+
+            <h3>Key concepts introduced</h3>
+            <ul>
+                <li><strong>Data-driven routing:</strong> agent behavior changes based on flags returned by an API call</li>
+                <li><strong>Retention conversation design:</strong> qualifying questions before transfer (not available in DTMF IVR)</li>
+                <li><strong>Transfer simulation:</strong> the <code>simulate_transfer</code> action gives visibility into routing decisions</li>
+                <li><strong>Edge case handling:</strong> unknown callers, human requests, open claims</li>
+            </ul>
+        </section>
+
+        <section id="setup">
+            <h2>Environment Setup</h2>
+            <h3>Pre-lab checklist</h3>
+            <ol>
+                <li>Verify RADD sim server is running: GET <code>https://farmers-radd-sim-server.onrender.com/health</code> → should return <code>{ "status": "ok" }</code></li>
+                <li>Verify MCP endpoint responds: POST to <code>https://farmers-radd-sim-server.onrender.com/mcp</code> with <code>tools/list</code></li>
+                <li>Clear transfer log before each session (it's in-memory — just restart the server, or it auto-clears after 50 entries)</li>
+                <li>Confirm all 10 lab user accounts can log into Control Hub</li>
+                <li>Have the scenario reference table visible on a projector</li>
+            </ol>
+
+            <h3>Server URLs</h3>
+            <ul>
+                <li><strong>MCP endpoint:</strong> <code>https://farmers-radd-sim-server.onrender.com/mcp</code></li>
+                <li><strong>Transfer log:</strong> <code>https://farmers-radd-sim-server.onrender.com/transfer-log</code></li>
+                <li><strong>Health:</strong> <code>https://farmers-radd-sim-server.onrender.com/health</code></li>
+            </ul>
+        </section>
+
+        <section id="scenario-ref">
+            <h2>Scenario Reference</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Phone</th>
+                        <th>Name</th>
+                        <th>Flags</th>
+                        <th>Expected Agent Behavior</th>
+                        <th>Key Learning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>555-0001</td>
+                        <td>Michael Torres</td>
+                        <td>None</td>
+                        <td>Lookup → greet by name → detect service intent → transfer Service Team</td>
+                        <td>Basic flow works end-to-end</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>555-0002</td>
+                        <td>Jennifer Walsh</td>
+                        <td><code>open_claim=true</code></td>
+                        <td>Lookup → mention open claim BEFORE asking intent → route to Claims Team or bypass</td>
+                        <td>Open claim detection and proactive inquiry</td>
+                    </tr>
+                    <tr>
+                        <td>3a</td>
+                        <td>555-0003</td>
+                        <td>Robert Kim</td>
+                        <td><code>retention_flag + ret_eligible=true</code>, NOT selling asset, cancel soon</td>
+                        <td>Two qualifying questions → Retention Team with <code>Retention_Risk</code> reason</td>
+                        <td>Retention conversation path</td>
+                    </tr>
+                    <tr>
+                        <td>3b</td>
+                        <td>555-0003</td>
+                        <td>Robert Kim</td>
+                        <td>Same, IS selling asset</td>
+                        <td>One question answered YES → Agency Transfer with <code>Customer_Cancel</code></td>
+                        <td>Asset sale bypass</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>555-0004</td>
+                        <td>Amanda Foster</td>
+                        <td><code>vap_ay_elig=true</code></td>
+                        <td>Detect payment intent → offer automated option → branch on response</td>
+                        <td>Payment eligibility routing</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>555-0099</td>
+                        <td>Unknown</td>
+                        <td><code>found=false</code></td>
+                        <td>Second chance ask → Agency Transfer after 2 failures</td>
+                        <td>Unknown caller handling</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="run-of-show">
+            <h2>Run of Show</h2>
+            <table>
+                <thead>
+                    <tr><th>Time</th><th>Activity</th><th>Instructor Action</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>0:00</td><td>Welcome + context</td><td>Show the IVR flow diagram (from the PDF) on projector. "This is a real Farmers IVR design. Today you're building the AI brain that sits inside it."</td></tr>
+                    <tr><td>0:10</td><td>Demo end-state</td><td>Optional: show a pre-built agent working with scenario 3 (retention call) to set expectations</td></tr>
+                    <tr><td>0:15</td><td>Module 1 begins</td><td>Participants create agent and paste instructions. Walk the room — the most common issue is forgetting to save after pasting instructions.</td></tr>
+                    <tr><td>0:45</td><td>Module 2 begins</td><td>Connecting MCP actions. Watch for wrong MCP URL — most errors happen here.</td></tr>
+                    <tr><td>1:00</td><td>Module 3 begins</td><td>First test sessions. Scenario 1 is fast — most participants finish in 3 min. Scenario 2 requires running the preview twice (Part A and Part B).</td></tr>
+                    <tr><td>1:20</td><td>Module 4 begins</td><td>Scenario 3 is the deepest. Give participants time to run both Part A and Part B. Debrief after scenario 3 before moving on.</td></tr>
+                    <tr><td>1:50</td><td>Debrief Scenario 3</td><td>Ask the class: "What happened when you said you were selling your car? Why does it route differently?"</td></tr>
+                    <tr><td>2:00</td><td>Scenarios 4+5</td><td>Faster — 10-15 min total</td></tr>
+                    <tr><td>2:15</td><td>Module 5 optional</td><td>For fast finishers — have them try modifying the retention script</td></tr>
+                    <tr><td>2:20</td><td>Wrap-up</td><td>Show the transfer log on projector. Discuss: "In production, this log is how you audit routing accuracy."</td></tr>
+                    <tr><td>2:30</td><td>End</td><td></td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="module-notes">
+            <div class="module-header">
+                <h2>Module Notes <span class="timing-badge">Instructor cues</span></h2>
+                <p>Use these notes as real-time coaching and debrief prompts during delivery.</p>
+            </div>
+
+            <h3 id="m1-notes">M1 Notes</h3>
+            <p><strong>Common issue:</strong> Participants paste instructions but forget to click Save. Symptom: agent doesn't ask for phone number, just says "how can I help?" Fix: go to Profile tab, scroll to Instructions, verify the content is there, click Save, republish.</p>
+            <div class="talking-point">"Notice how the instructions are structured exactly like the IVR flow document — step by step, with explicit branch conditions. The AI doesn't need to figure out the logic — you've written it out. The AI's job is to use natural language to execute the logic."</div>
+
+            <h3 id="m2-notes">M2 Notes</h3>
+            <p>The MCP server URL is the most frequent error source. If the action shows "connection failed," have participants verify they typed the URL exactly (no trailing slash, https not http).</p>
+            <div class="instructor-note">
+                If Render spins down the server (free tier), the first request may take 30-60 seconds while it wakes up. This looks like a failed connection but resolves itself. Tell participants: "If the first test takes a while to respond, that's normal — the server is warming up."
+            </div>
+
+            <h3 id="m3-notes">M3 Notes</h3>
+            <p>For Scenario 2, remind participants they need to start a NEW preview session for Part B. The agent holds conversation context within a session — if they already said "yes I'm calling about my claim" in Part A, they can't re-test Part B in the same session.</p>
+
+            <h3 id="m4-notes">M4 Notes</h3>
+            <h4>Scenario 3 debrief (do this as a group)</h4>
+            <p><strong>Ask:</strong> "Why do we ask if they're selling the asset before asking about the 30-day timeline?"</p>
+            <p><strong>Answer:</strong> A customer selling their home or car is a legitimate cancel — they don't need to be saved, and sending them to Retention wastes a specialist's time and frustrates the customer. The first question filters out the legitimate cancels before investing in the retention conversation.</p>
+            <p><strong>Ask:</strong> "What changed when you modified the retention question in Module 5?"</p>
+            <p><strong>Point:</strong> Small instruction changes produce measurably different outcomes. This is why instruction design is a discipline — it's not "just prompting."</p>
+        </section>
+
+        <section id="troubleshooting">
+            <h2>Common Issues</h2>
+            <table>
+                <thead>
+                    <tr><th>Symptom</th><th>Cause</th><th>Resolution</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Agent doesn't ask for phone number</td><td>Instructions not saved or published</td><td>Profile tab → verify instructions present → Save → Publish</td></tr>
+                    <tr><td>Lookup returns "not found" for 555-0001</td><td>MCP URL wrong or server down</td><td>Check /health endpoint; verify URL has no trailing slash</td></tr>
+                    <tr><td>Agent reveals internal flags to caller</td><td>Instructions not followed</td><td>Check if instructions were saved; consider adding explicit "NEVER say retention_flag" line</td></tr>
+                    <tr><td>Agent skips qualifying questions for Scenario 3</td><td>Agent interpreted cancel as simple → routed directly</td><td>Ask participant to use stronger cancel language: "I want to cancel my policy immediately"</td></tr>
+                    <tr><td>Agent keeps asking questions after simulate_transfer</td><td>Missing closing instruction</td><td>Verify the "Then end the conversation" lines are in the instructions</td></tr>
+                    <tr><td>Transfer log shows wrong intent</td><td>Agent misclassified intent</td><td>Common with ambiguous phrasing — good teaching moment about intent design</td></tr>
+                    <tr><td>Render server cold start (30s delay)</td><td>Free tier spins down</td><td>Wait for first response; subsequent calls are fast</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        const sections = document.querySelectorAll('section[id], h3[id]');
+        const navItems = document.querySelectorAll('.nav-item');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.pageYOffset >= sectionTop) current = section.getAttribute('id');
+            });
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — IVR Intent Engine Lab</title>
+    <style>
+        :root {
+            --primary: #3070E7;
+            --primary-light: #EBF2FF;
+            --text: #0F1729;
+            --text-muted: #64748B;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border: #E2E8F0;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { margin-bottom: 40px; }
+        header h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+        header p { color: var(--text-muted); font-size: 16px; }
+        header a { color: var(--primary); text-decoration: none; font-weight: 500; }
+        header a:hover { text-decoration: underline; }
+        .toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px 32px; margin-bottom: 40px; }
+        .toc h2 { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .toc ul { list-style: none; columns: 2; column-gap: 32px; }
+        .toc li { margin-bottom: 8px; }
+        .toc a { color: var(--primary); text-decoration: none; font-size: 14px; }
+        .toc a:hover { text-decoration: underline; }
+        .faq-section { margin-bottom: 48px; }
+        .faq-section h2 { font-size: 20px; font-weight: 600; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: inline-block; }
+        .faq-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+        .faq-question { padding: 18px 24px; cursor: pointer; font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+        .faq-question:hover { background: var(--primary-light); }
+        .faq-question::after { content: '+'; font-size: 20px; font-weight: 300; color: var(--primary); transition: transform 0.2s; }
+        .faq-item.open .faq-question::after { content: '−'; }
+        .faq-answer { padding: 0 24px 18px; display: none; font-size: 14px; color: #374151; }
+        .faq-item.open .faq-answer { display: block; }
+        .faq-answer p { margin-bottom: 12px; }
+        .faq-answer ul, .faq-answer ol { margin: 8px 0 12px 20px; }
+        .faq-answer li { margin-bottom: 6px; }
+        .faq-answer code { background: #F1F5F9; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #1E293B; }
+        .faq-answer strong { color: var(--text); }
+        .tip { background: #F0FDF4; border-left: 4px solid var(--success); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 13px; }
+        .warning { background: #FFFBEB; border-left: 4px solid var(--warning); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 13px; }
+        @media (max-width: 600px) {
+            .toc ul { columns: 1; }
+            body { padding: 20px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FAQ — IVR Intent Engine Lab</h1>
+            <p>Farmers Insurance — Voice Advantage Routing Use Case</p>
+            <p style="margin-top: 12px;"><a href="index.html">← Back to Lab Home</a> · <a href="participant-guide.html">Participant Guide</a></p>
+        </header>
+
+        <nav class="toc">
+            <h2>Sections</h2>
+            <ul>
+                <li><a href="#about">About the Lab</a></li>
+                <li><a href="#testing">Testing</a></li>
+                <li><a href="#server">The RADD Server</a></li>
+                <li><a href="#behavior">Agent Behavior</a></li>
+            </ul>
+        </nav>
+
+        <div id="about" class="faq-section">
+            <h2>About the Lab</h2>
+
+            <div class="faq-item open">
+                <div class="faq-question">How is this lab different from Lab 1?</div>
+                <div class="faq-answer">
+                    <p>Lab 1 teaches the fundamentals of Webex AI Agent Studio: creating an agent, building a knowledge base, connecting MCP actions, and testing. This lab (Lab 2) applies those same tools to a realistic IVR routing scenario based on a real Farmers Insurance design document. The focus shifts from "how to use the tools" to "how to design AI behavior for complex routing logic."</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Do I need to complete Lab 1 first?</div>
+                <div class="faq-answer">
+                    <p>Recommended but not required. If you're already comfortable with Webex AI Agent Studio (creating agents, adding actions), you can jump straight to this lab. If you've never used it before, Lab 1 is a gentler introduction.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What is RADD?</div>
+                <div class="faq-answer">
+                    <p>RADD stands for Real-time Agent Data Display — a Farmers Insurance API that returns caller profile data in real-time when a call arrives. In the real system, the caller's phone number is captured automatically from the call (called ANI — Automatic Number Identification) and used to look up their account before the AI even speaks. In this lab, we simulate RADD with a mock API server, and since we're using AI Agent Studio's preview mode (no real phone call), you type the phone number instead.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Why do I type a phone number instead of the call arriving with one automatically?</div>
+                <div class="faq-answer">
+                    <p>In a real deployment, the phone number would come from the call itself (ANI) — the IVR would look it up automatically before saying a word. In AI Agent Studio's preview mode, there's no real phone call, so there's no automatic ANI. The agent asks for your phone number as a proxy, and you type one of the five test numbers to simulate being that caller. The behavior is equivalent — the key difference is manual vs. automatic input.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="testing" class="faq-section">
+            <h2>Testing</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I test the same scenario multiple times?</div>
+                <div class="faq-answer">
+                    <p>Yes — each time you open a new preview session, you start fresh. The agent doesn't remember previous sessions.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What if the agent doesn't behave as expected?</div>
+                <div class="faq-answer">
+                    <p>First check: did the agent call <code>lookup_caller_by_phone</code>? You can see tool calls in the preview panel. If it didn't call the lookup, the instructions may not be saved. Go to Profile → Instructions, verify the content is there, click Save, and republish.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The agent is routing correctly but the simulate_transfer details look wrong in the transfer log. Is that a problem?</div>
+                <div class="faq-answer">
+                    <p>The transfer log records exactly what your agent passed to <code>simulate_transfer</code> — including the intent label and destination string. If these differ from what the instructions specify, it means the agent chose slightly different wording. This is normal LLM behavior — the intent is correct even if the exact string varies. In production, you'd add enum constraints to standardize the values.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I test with phone numbers other than the five provided?</div>
+                <div class="faq-answer">
+                    <p>Yes, but they'll all return "not found" since only those five are in the simulation database. This is a good way to test the unknown caller path manually without using 555-0099.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="server" class="faq-section">
+            <h2>The RADD Server</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">What happens if the RADD simulation server is down?</div>
+                <div class="faq-answer">
+                    <p>The first request to the server after a period of inactivity may take 30-60 seconds (the Render free tier spins the server down when idle). If you see a long pause or a connection error on first test, wait a moment and try again. After the first successful call, the server stays warm for the rest of your session.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I check if the server is running?</div>
+                <div class="faq-answer">
+                    <p>Open <a href="https://farmers-radd-sim-server.onrender.com/health" target="_blank" rel="noopener noreferrer">https://farmers-radd-sim-server.onrender.com/health</a> in your browser. You should see: <code>{"status":"ok","server":"Farmers RADD Simulation Server","tools":2,"caller_profiles":5}</code></p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I see all the test calls that have been made?</div>
+                <div class="faq-answer">
+                    <p>Yes — <a href="https://farmers-radd-sim-server.onrender.com/transfer-log" target="_blank" rel="noopener noreferrer">https://farmers-radd-sim-server.onrender.com/transfer-log</a> shows the last 20 transfer decisions recorded by any participant's agent. This resets when the server restarts.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="behavior" class="faq-section">
+            <h2>Agent Behavior</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Why does the agent need such detailed instructions? Can't it figure out the routing logic itself?</div>
+                <div class="faq-answer">
+                    <p>An AI agent without instructions will attempt to be helpful, but it won't know YOUR business rules — which customers get retention conversations, when to offer automated payments, what to do with open claims. The instructions are how you encode your routing logic into the AI. Think of them as the training manual the agent reads before every single response.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">I changed my agent's instructions but it still behaves the same way. Why?</div>
+                <div class="faq-answer">
+                    <p>Did you click Save AND Publish? Saving updates the configuration but publishing is what makes the new version active for testing. Also make sure you start a new preview session after publishing — open sessions use the previously published version.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The retention conversation seems too long / too short. How do I adjust it?</div>
+                <div class="faq-answer">
+                    <p>The retention script in the instructions can be modified freely. Try making the empathetic opening shorter, or changing the qualifying questions. The Tune &amp; Explore module in Module 5 walks through this. Small wording changes can significantly affect how customers respond.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What does the agent do if a caller is angry or rude?</div>
+                <div class="faq-answer">
+                    <p>The instructions include a rule to "acknowledge their feelings before proceeding." For a more robust implementation, you could add a specific angry-caller path in the instructions — for example, a rule that if the caller expresses frustration, the agent acknowledges before proceeding with the routing questions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach(function(question) {
+            question.addEventListener('click', function() {
+                this.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>
