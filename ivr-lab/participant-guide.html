@@ -1003,7 +1003,7 @@ Then end the conversation. Do not continue chatting after confirming the transfe
                     <tr><th>Field</th><th>Value</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>MCP Server URL</td><td>https://farmers-radd-sim-server.onrender.com/mcp</td></tr>
+                    <tr><td>MCP Server URL</td><td>https://node-services-hub.onrender.com/farmers-ivr/mcp</td></tr>
                     <tr><td>Action to add</td><td>lookup_caller_by_phone</td></tr>
                 </tbody>
             </table>
@@ -1032,7 +1032,7 @@ Then end the conversation. Do not continue chatting after confirming the transfe
                 </tbody>
             </table>
             <div class="info-box">
-                <strong>What is this action?</strong> <code>simulate_transfer</code> represents the IVR's routing decision. In a real Farmers deployment, this is where the call would be sent to a specific queue (like <code>SOFDSV_C_RETADVANTAGE_VA-2</code> for retention). In our lab, it logs the transfer decision so you can verify the agent routed correctly. Check the transfer log at <code>https://farmers-radd-sim-server.onrender.com/transfer-log</code> after each test.
+                <strong>What is this action?</strong> <code>simulate_transfer</code> represents the IVR's routing decision. In a real Farmers deployment, this is where the call would be sent to a specific queue (like <code>SOFDSV_C_RETADVANTAGE_VA-2</code> for retention). In our lab, it logs the transfer decision so you can verify the agent routed correctly. Check the transfer log at <code>https://node-services-hub.onrender.com/farmers-ivr/transfer-log</code> after each test.
             </div>
             <div class="info-box success">
                 <strong>✓ Checkpoint:</strong> You now have both actions. Your agent can look up callers AND record transfer decisions.
@@ -1283,7 +1283,7 @@ Then end the conversation. Do not continue chatting after confirming the transfe
             <p>After all your testing, review what the transfer log captured:</p>
             <div class="copy-block">
                 <button class="copy-btn">📋 Copy</button>
-                <code>https://farmers-radd-sim-server.onrender.com/transfer-log</code>
+                <code>https://node-services-hub.onrender.com/farmers-ivr/transfer-log</code>
             </div>
             <p>The log shows every <code>simulate_transfer</code> call made during your tests — the intent, destination, policy_id, and transfer_reason. This is what an operations team would monitor to validate routing accuracy.</p>
             <p><strong>What to look for:</strong> Are all your test scenarios represented? Are the intents and destinations what you expected? Did the Retention Team only receive calls with transfer_reason = "Retention_Risk"?</p>

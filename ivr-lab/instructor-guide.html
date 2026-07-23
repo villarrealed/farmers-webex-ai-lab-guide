@@ -277,8 +277,8 @@
             <h2>Environment Setup</h2>
             <h3>Pre-lab checklist</h3>
             <ol>
-                <li>Verify RADD sim server is running: GET <code>https://farmers-radd-sim-server.onrender.com/health</code> → should return <code>{ "status": "ok" }</code></li>
-                <li>Verify MCP endpoint responds: POST to <code>https://farmers-radd-sim-server.onrender.com/mcp</code> with <code>tools/list</code></li>
+                <li>Verify RADD sim server is running: GET <code>https://node-services-hub.onrender.com/farmers-ivr/health</code> → should return <code>{ "status": "ok" }</code></li>
+                <li>Verify MCP endpoint responds: POST to <code>https://node-services-hub.onrender.com/farmers-ivr/mcp</code> with <code>tools/list</code></li>
                 <li>Clear transfer log before each session (it's in-memory — just restart the server, or it auto-clears after 50 entries)</li>
                 <li>Confirm all 10 lab user accounts can log into Control Hub</li>
                 <li>Have the scenario reference table visible on a projector</li>
@@ -286,9 +286,9 @@
 
             <h3>Server URLs</h3>
             <ul>
-                <li><strong>MCP endpoint:</strong> <code>https://farmers-radd-sim-server.onrender.com/mcp</code></li>
-                <li><strong>Transfer log:</strong> <code>https://farmers-radd-sim-server.onrender.com/transfer-log</code></li>
-                <li><strong>Health:</strong> <code>https://farmers-radd-sim-server.onrender.com/health</code></li>
+                <li><strong>MCP endpoint:</strong> <code>https://node-services-hub.onrender.com/farmers-ivr/mcp</code></li>
+                <li><strong>Transfer log:</strong> <code>https://node-services-hub.onrender.com/farmers-ivr/transfer-log</code></li>
+                <li><strong>Health:</strong> <code>https://node-services-hub.onrender.com/farmers-ivr/health</code></li>
             </ul>
         </section>
 
