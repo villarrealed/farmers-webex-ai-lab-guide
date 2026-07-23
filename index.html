@@ -3,72 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmers Insurance - Webex AI Lab Guide</title>
+    <title>Farmers Insurance - Webex AI Agent Labs</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 60px 40px; background: #F8FAFC; color: #0F1729; }
-        h1 { font-size: 32px; font-weight: 300; margin-bottom: 8px; }
-        .subtitle { color: #64748B; margin-bottom: 32px; font-size: 16px; }
-        a { color: #3070E7; text-decoration: none; font-weight: 500; }
+        :root {
+            --cisco-blue: #3070E7;
+            --cisco-dark-blue: #0F1729;
+            --cisco-navy: #07182D;
+            --cisco-green: #22C55E;
+            --cisco-yellow: #F59E0B;
+            --cisco-orange: #FF9000;
+            --cisco-gray: #64748B;
+            --cisco-light-gray: #F8FAFC;
+            --cisco-secondary: #94A3B8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 60px 40px 40px;
+            background: var(--cisco-light-gray);
+            color: var(--cisco-dark-blue);
+            line-height: 1.6;
+        }
+
+        .page-wrap { max-width: 980px; margin: 0 auto; }
+
+        header.hero { margin-bottom: 40px; }
+        h1 { font-size: 34px; font-weight: 300; margin: 0 0 8px; }
+        .subtitle { color: var(--cisco-gray); margin: 0; font-size: 16px; }
+
+        a { color: var(--cisco-blue); text-decoration: none; font-weight: 500; }
         a:hover { text-decoration: underline; }
 
-        .seat-selector { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px 32px; margin-bottom: 36px; max-width: 700px; }
-        .seat-selector h2 { font-size: 18px; font-weight: 600; margin: 0 0 8px; }
-        .seat-selector p { color: #64748B; font-size: 14px; margin-bottom: 16px; }
-        .seat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-        .seat-btn { background: #F1F5F9; border: 2px solid #E2E8F0; border-radius: 8px; padding: 14px 8px; text-align: center; cursor: pointer; font-size: 15px; font-weight: 600; color: #334155; transition: all 0.15s ease; }
-        .seat-btn:hover { border-color: #3070E7; background: #EBF2FF; color: #3070E7; }
-        .seat-btn.selected { border-color: #3070E7; background: #3070E7; color: white; }
+        /* ---------- Step 1: Seat selector ---------- */
+        .seat-selector {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 40px;
+        }
+        .step-label {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--cisco-blue);
+            background: rgba(48,112,231,0.08);
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .seat-selector h2 { font-size: 19px; font-weight: 600; margin: 0 0 8px; }
+        .seat-selector > p { color: var(--cisco-gray); font-size: 14px; margin-bottom: 20px; }
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+        }
+        .seat-btn {
+            background: #F1F5F9;
+            border: 2px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 14px 4px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #334155;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .seat-btn:hover { border-color: var(--cisco-blue); background: #EBF2FF; color: var(--cisco-blue); }
+        .seat-btn.selected {
+            border-color: var(--cisco-blue);
+            background: var(--cisco-blue);
+            color: white;
+            box-shadow: 0 2px 8px rgba(48,112,231,0.35);
+        }
 
-        .links { display: flex; gap: 24px; margin-top: 32px; flex-wrap: wrap; }
-        .link-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; flex: 1; min-width: 200px; max-width: 300px; }
-        .link-card h3 { margin: 0 0 8px; font-size: 16px; }
-        .link-card p { font-size: 14px; margin-bottom: 12px; color: #64748B; }
-        .link-card .link-disabled { color: #94A3B8; pointer-events: none; }
+        .seat-status {
+            margin-top: 18px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: rgba(34,197,94,0.08);
+            border: 1px solid rgba(34,197,94,0.3);
+            color: #166534;
+            font-weight: 500;
+        }
+        .seat-status.visible { display: flex; }
+        .seat-status .check { color: var(--cisco-green); font-weight: 700; }
 
-        .credential-preview { margin-top: 16px; padding: 12px 16px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; font-size: 13px; display: none; }
-        .credential-preview strong { color: #166534; }
-        .credential-preview code { background: #DCFCE7; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+        .seat-hint {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--cisco-secondary);
+        }
+        .seat-hint.hidden { display: none; }
+
+        /* ---------- Step 2: Lab cards ---------- */
+        .step2-title {
+            font-size: 19px;
+            font-weight: 600;
+            margin: 0 0 16px;
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 36px;
+        }
+
+        .lab-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 28px 28px 24px;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .lab-card.active {
+            opacity: 1;
+            cursor: default;
+        }
+
+        .lab-card.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(15,23,41,0.1);
+        }
+
+        .lab-badge {
+            display: inline-block;
+            align-self: flex-start;
+            background: var(--cisco-blue);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+        }
+
+        .lab-card h3 {
+            font-size: 24px;
+            font-weight: 500;
+            margin: 0 0 2px;
+            color: var(--cisco-dark-blue);
+        }
+
+        .lab-card .lab-subtitle {
+            font-size: 13px;
+            color: var(--cisco-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .lab-card .lab-divider {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 0 0 16px;
+        }
+
+        .lab-card .lab-desc {
+            font-size: 14px;
+            color: #334155;
+            margin: 0 0 18px;
+            flex: 1;
+        }
+
+        .lab-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 22px;
+        }
+
+        .lab-tag {
+            background: #F1F5F9;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 5px 12px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .lab-card.active .lab-tag {
+            background: rgba(48,112,231,0.07);
+            color: var(--cisco-blue);
+            border-color: rgba(48,112,231,0.2);
+        }
+
+        .lab-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 13px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            background: #E2E8F0;
+            color: #94A3B8;
+            pointer-events: none;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+        }
+
+        .lab-btn.enabled {
+            background: var(--cisco-blue);
+            color: white;
+            pointer-events: auto;
+        }
+
+        .lab-btn.enabled:hover {
+            background: #2560D0;
+            text-decoration: none;
+        }
+
+        /* ---------- Instructor / admin row ---------- */
+        .admin-row {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+        }
+
+        .admin-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 18px;
+            align-items: center;
+        }
+
+        .admin-row a {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--cisco-gray);
+        }
+
+        .admin-row a:hover { color: var(--cisco-blue); }
+
+        .admin-divider {
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 720px) {
+            body { padding: 32px 20px; }
+            .seat-grid { grid-template-columns: repeat(5, 1fr); }
+            .lab-grid { grid-template-columns: 1fr; }
+            .admin-row { flex-direction: column; align-items: flex-start; }
+        }
     </style>
 </head>
 <body>
-    <h1>Farmers Insurance — Webex AI Agent Lab</h1>
-    <p class="subtitle">Hands-on lab for building AI-powered policy servicing with Webex AI Agent Studio</p>
+    <div class="page-wrap">
+        <header class="hero">
+            <h1>Farmers Insurance — Webex AI Agent Labs</h1>
+            <p class="subtitle">Hands-on labs for building AI-powered contact center experiences with Webex AI Agent Studio</p>
+        </header>
 
-    <div class="seat-selector">
-        <h2>Select Your Seat Number</h2>
-        <p>Choose your assigned participant number (1–10). This will pre-load your credentials in the Participant Guide.</p>
-        <div class="seat-grid">
-            <div class="seat-btn" data-seat="1">Seat 1</div>
-            <div class="seat-btn" data-seat="2">Seat 2</div>
-            <div class="seat-btn" data-seat="3">Seat 3</div>
-            <div class="seat-btn" data-seat="4">Seat 4</div>
-            <div class="seat-btn" data-seat="5">Seat 5</div>
-            <div class="seat-btn" data-seat="6">Seat 6</div>
-            <div class="seat-btn" data-seat="7">Seat 7</div>
-            <div class="seat-btn" data-seat="8">Seat 8</div>
-            <div class="seat-btn" data-seat="9">Seat 9</div>
-            <div class="seat-btn" data-seat="10">Seat 10</div>
+        <!-- STEP 1: Seat Selector -->
+        <div class="seat-selector">
+            <span class="step-label">Step 1</span>
+            <h2>Select Your Seat Number</h2>
+            <p>Choose your assigned participant number (1–10). This is shared across both labs and pre-loads your credentials in whichever Participant Guide you open.</p>
+            <div class="seat-grid">
+                <div class="seat-btn" data-seat="1">1</div>
+                <div class="seat-btn" data-seat="2">2</div>
+                <div class="seat-btn" data-seat="3">3</div>
+                <div class="seat-btn" data-seat="4">4</div>
+                <div class="seat-btn" data-seat="5">5</div>
+                <div class="seat-btn" data-seat="6">6</div>
+                <div class="seat-btn" data-seat="7">7</div>
+                <div class="seat-btn" data-seat="8">8</div>
+                <div class="seat-btn" data-seat="9">9</div>
+                <div class="seat-btn" data-seat="10">10</div>
+            </div>
+            <div class="seat-status" id="seat-status">
+                <span class="check">✓</span>
+                <span id="seat-status-text">Seat selected — credentials will load in your guide</span>
+            </div>
+            <p class="seat-hint" id="seat-hint">Pick a seat above to unlock the lab guides below.</p>
         </div>
-        <div class="credential-preview" id="cred-preview">
-            <strong>Your credentials:</strong> <code id="cred-user"></code> / <code id="cred-pass"></code>
-        </div>
-    </div>
 
-    <div class="links">
-        <div class="link-card">
-            <h3>Participant Guide</h3>
-            <p>Step-by-step lab instructions</p>
-            <a id="participant-link" class="link-disabled" href="#">Select a seat above →</a>
+        <!-- STEP 2: Lab Selector -->
+        <h2 class="step2-title"><span class="step-label">Step 2</span><br>Select Your Lab</h2>
+
+        <div class="lab-grid">
+            <div class="lab-card" id="lab1-card">
+                <span class="lab-badge">Lab 1</span>
+                <h3>Service Operations</h3>
+                <div class="lab-subtitle">Use Case</div>
+                <hr class="lab-divider">
+                <p class="lab-desc">Build an autonomous AI agent that helps Farmers Insurance policyholders add vehicles to their policy after-hours — no hold queues, no business hours restrictions. The agent verifies identity, collects vehicle details, processes the addition, and delivers proof of insurance by SMS, email, or the Farmers app.</p>
+                <div class="lab-tags">
+                    <span class="lab-tag">Identity Verification</span>
+                    <span class="lab-tag">MCP Actions</span>
+                    <span class="lab-tag">Knowledge Base</span>
+                    <span class="lab-tag">Proof of Insurance</span>
+                </div>
+                <a href="#" class="lab-btn" id="lab1-btn">Open Participant Guide →</a>
+            </div>
+
+            <div class="lab-card" id="lab2-card">
+                <span class="lab-badge">Lab 2</span>
+                <h3>Voice Advantage</h3>
+                <div class="lab-subtitle">Use Case</div>
+                <hr class="lab-divider">
+                <p class="lab-desc">Build the AI intent engine behind a production IVR for Farmers Insurance agency phone lines. The agent looks up each caller by phone number, detects their intent through natural conversation, and routes retention-risk customers through a qualifying conversation before transfer — no DTMF menus required.</p>
+                <div class="lab-tags">
+                    <span class="lab-tag">RADD Lookup</span>
+                    <span class="lab-tag">Intent Detection</span>
+                    <span class="lab-tag">Retention Routing</span>
+                    <span class="lab-tag">IVR Simulation</span>
+                </div>
+                <a href="#" class="lab-btn" id="lab2-btn">Open Participant Guide →</a>
+            </div>
         </div>
-        <div class="link-card">
-            <h3>Instructor Guide</h3>
-            <p>Talking points, answers, and timing</p>
-            <a href="instructor-guide.html">Open Guide →</a>
-        </div>
-        <div class="link-card">
-            <h3>FAQ</h3>
-            <p>Common questions and troubleshooting</p>
-            <a href="faq.html">Open FAQ →</a>
+
+        <!-- Instructor / Admin row -->
+        <div class="admin-row">
+            <div class="admin-group">
+                <a href="instructor-guide.html">Lab 1 Instructor Guide</a>
+                <span class="admin-divider">·</span>
+                <a href="faq.html">Lab 1 FAQ</a>
+                <span class="admin-divider">·</span>
+                <a href="ivr-lab/instructor-guide.html">Lab 2 Instructor Guide</a>
+                <span class="admin-divider">·</span>
+                <a href="ivr-lab/faq.html">Lab 2 FAQ</a>
+            </div>
+            <div class="admin-group">
+                <a href="https://node-services-hub.onrender.com/farmers-ivr/transfer-log" target="_blank" rel="noopener noreferrer">Transfer Log ↗</a>
+                <span class="admin-divider">·</span>
+                <a href="https://node-services-hub.onrender.com/farmers-ivr/health" target="_blank" rel="noopener noreferrer">RADD Status ↗</a>
+            </div>
         </div>
     </div>
 
@@ -87,23 +375,34 @@
             { username: 'labuser10@edvill-7xdo.wbx.ai', password: 'Provided by your administrator' },
         ];
 
+        var lab1Card = document.getElementById('lab1-card');
+        var lab2Card = document.getElementById('lab2-card');
+        var lab1Btn = document.getElementById('lab1-btn');
+        var lab2Btn = document.getElementById('lab2-btn');
+        var seatStatus = document.getElementById('seat-status');
+        var seatStatusText = document.getElementById('seat-status-text');
+        var seatHint = document.getElementById('seat-hint');
+
         document.querySelectorAll('.seat-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.seat-btn').forEach(function(b) { b.classList.remove('selected'); });
                 btn.classList.add('selected');
                 selectedSeat = parseInt(btn.getAttribute('data-seat'));
 
-                // Update participant guide link
-                var link = document.getElementById('participant-link');
-                link.href = 'participant-guide.html?seat=' + selectedSeat;
-                link.textContent = 'Open Guide (Seat ' + selectedSeat + ') →';
-                link.classList.remove('link-disabled');
+                // Update seat status message
+                seatStatusText.textContent = 'Seat ' + selectedSeat + ' selected — credentials will load in your guide';
+                seatStatus.classList.add('visible');
+                seatHint.classList.add('hidden');
 
-                // Show credentials preview
-                var cred = labUsers[selectedSeat - 1];
-                document.getElementById('cred-user').textContent = cred.username;
-                document.getElementById('cred-pass').textContent = cred.password;
-                document.getElementById('cred-preview').style.display = 'block';
+                // Enable Lab 1 card + button
+                lab1Card.classList.add('active');
+                lab1Btn.classList.add('enabled');
+                lab1Btn.href = 'participant-guide.html?seat=' + selectedSeat;
+
+                // Enable Lab 2 card + button
+                lab2Card.classList.add('active');
+                lab2Btn.classList.add('enabled');
+                lab2Btn.href = 'ivr-lab/participant-guide.html?seat=' + selectedSeat;
             });
         });
     </script>
